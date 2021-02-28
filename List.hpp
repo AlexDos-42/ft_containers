@@ -5,6 +5,8 @@
 # include <limits>
 # include <iostream>
 # include "node.hpp"
+#include "BidirectionalIterator.hpp"
+
 namespace ft
 {
 	template < class T>
@@ -29,10 +31,10 @@ namespace ft
 			}
 			//template <class InputIterator>
 			//list (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type());
-			list (const list& x): m_length(x->m_length) {
+			list (const list& x): m_length(x.m_length) {
 				racine = new Node<T>();
-				racine->m_next = x->racine->m_next;
-				racine->m_back = x->racine->m_back;
+				racine->m_next = x.racine->m_next;
+				racine->m_back = x.racine->m_back;
 			}
 			~list() {
 				clear();
@@ -47,10 +49,18 @@ namespace ft
 			//}
 
 			///////// ITERATORS /////////
-			// iterator begin();
-			// const_iterator begin() const;
-			// iterator end();
-			// const_iterator end() const;
+			iterator<T>	begin() {
+			return iterator<T>(racine->m_next);
+			}
+			// const_iterator	begin() const {
+			// 	return const_iterator(this->head->next);
+			// }
+			iterator<T>	end() {
+				return iterator<T>(racine->m_back);
+			}
+			// const_iterator	end() const {
+			// 	return const_iterator(this->tail);
+			// }
 			// reverse_iterator rbegin();
 			// const_reverse_iterator rbegin() const;
 			// reverse_iterator rend();

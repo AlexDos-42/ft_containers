@@ -1,19 +1,39 @@
 #ifndef QUEUE
 # define QUEUE
 
+# include "List.hpp"
+
 namespace ft
 {
-	template <class T>
+	template <class T, class Container = list<T> >
 	class queue
 	{
-        //explicit stack (const container_type& ctnr = container_type());
-		// bool empty() const;
-		// size_type size() const;
-		// value_type& front();
-		// const value_type& front() const;
-		// value_type& back();
-		// const value_type& back() const;
-		// void push (const value_type& val);
+		public:
+		Container q;
+
+		public:
+        explicit queue (const Container& ctnr = Container()): q(ctnr){}
+		bool empty() const {
+			return q.empty();
+		}
+		size_t size() const {
+			return q.size();
+		}
+		T& front() {
+			return q.front();
+		}
+		const T& front() const {
+			return q.front();
+		}
+		T& back() {
+			return q.back();
+		}
+		const T& back() const {
+			return q.back();
+		}
+		void push (const T& val) {
+			q.push_back(val);
+		}
 		// template <class... Args> void emplace (Args&&... args);
 		// void pop();
 		// void swap (queue& x) noexcept(/*see below*/);
