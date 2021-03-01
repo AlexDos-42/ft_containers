@@ -25,7 +25,7 @@ namespace ft
 				m_value = copy.m_value;
 				return (*this);
 			}
-
+			
 			void	initLink(Node *back, Node *next) {
 				m_back = back;
 				m_next = next;

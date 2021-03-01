@@ -29,8 +29,8 @@ namespace ft
 				for ( m_length = 0; m_length < n; m_length++)
 					push_front(val->m_value);
 			}
-			//template <class InputIterator>
-			//list (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type());
+			//template <class iterator>
+			//list (iterator<T> first, iterator<T> last, const allocator_type& alloc = allocator_type());
 			list (const list& x): m_length(x.m_length) {
 				racine = new Node<T>();
 				racine->m_next = x.racine->m_next;
@@ -50,21 +50,29 @@ namespace ft
 
 			///////// ITERATORS /////////
 			iterator<T>	begin() {
-			return iterator<T>(racine->m_next);
+				return iterator<T>(racine->m_next);
 			}
-			// const_iterator	begin() const {
-			// 	return const_iterator(this->head->next);
-			// }
+			constiterator<T>	begin() const {
+				return constiterator<T>(racine->m_next);
+			}
 			iterator<T>	end() {
-				return iterator<T>(racine->m_back);
+				return iterator<T>(racine);
 			}
-			// const_iterator	end() const {
-			// 	return const_iterator(this->tail);
-			// }
-			// reverse_iterator rbegin();
-			// const_reverse_iterator rbegin() const;
-			// reverse_iterator rend();
-			// const_reverse_iterator rend() const;
+			constiterator<T>	end() const {
+				return constiterator<T>(racine->m_next);
+			}
+			reverseiterator<T> rbegin() {
+				return reverseiterator<T>(racine->m_back);
+			}
+			reverseconstiterator<T> rbegin() const {
+				return reverseconstiterator<T>(racine->m_back);
+			}
+			reverseiterator<T> rend() {
+				return reverseiterator<T>(racine);
+			}
+			reverseconstiterator<T> rend() const {
+				return reverseconstiterator<T>(racine);
+			}
 
 			///////// CAPACITY /////////
 			size_t size(void) const {
@@ -100,8 +108,8 @@ namespace ft
 			}
 
 			///////// MODIFIERS /////////
-			// template <class InputIterator>
-			// void assign (InputIterator first, InputIterator last);
+			// template <class iterator<T> >
+			// void assign (iterator<T> first, iterator<T> last);
 			void assign (size_t n, const T& val) {
 				clear();
 				while (n--)

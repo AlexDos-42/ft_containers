@@ -10,16 +10,19 @@ int main (void)
 
 	test.push_front(4);
 	test.push_back(100);
-	std::cout << "Size = " << test.size() << std::endl;
+	test.push_front(45);
+	test.push_front(2);
+	test.push_front(66);
+	test.push_front(2);
+	test.push_front(10023);
+	test.push_front(42);
+	test.push_front(53);
+	test.push_front(13);
 	test.push_front(7);
-	std::cout << "Empty ? " << test.empty() << std::endl;
-	std::cout << "Size ? " << test.size() << std::endl;
-	std::cout << "front = " << test.front() << std::endl;
-	std::cout << "back = " << test.back() << std::endl;
-	for (ft::iterator it = test.begin(); it != test.end(); it++)
+	for (ft::iterator<int> it = test.begin(); it != test.end(); it++)
 		std::cout << *it << " ";
 	test.clear();
-	std::cout << "Size = " << test.size() << std::endl;
+	std::cout << std::endl << "Size = " << test.size() << std::endl;
 	std::cout << "Empty ? " << test.empty() << std::endl;
 	std::cout << test.max_size() << std::endl;
 
