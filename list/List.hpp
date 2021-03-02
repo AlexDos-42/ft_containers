@@ -4,8 +4,8 @@
 # include <cstddef>
 # include <limits>
 # include <iostream>
-# include "node.hpp"
-#include "BidirectionalIterator.hpp"
+# include "../utils/node.hpp"
+#include "../iterators/BidirectionalIterator.hpp"
 
 namespace ft
 {
@@ -15,6 +15,9 @@ namespace ft
 		private:
 			size_t m_length;
 			Node<T> *racine;
+			Node<T>*	creatNode(const T& val) {
+				return new Node<T>(val);
+			}
 		public:
 			//explicit list (const allocator_type& alloc = allocator_type());
 			list(): m_length(0) {
@@ -29,8 +32,8 @@ namespace ft
 				for ( m_length = 0; m_length < n; m_length++)
 					push_front(val->m_value);
 			}
-			//template <class iterator>
-			//list (iterator<T> first, iterator<T> last, const allocator_type& alloc = allocator_type());
+			template <class iterator >
+			list (iterator first, iterator last, const T& alloc = T());
 			list (const list& x): m_length(x.m_length) {
 				racine = new Node<T>();
 				racine->m_next = x.racine->m_next;
@@ -40,13 +43,13 @@ namespace ft
 				clear();
 				delete racine;
 			}
-			
-			//list& operator= (const list& x);{
-			//	m_begin = x->m_begin;
-			//	m_end = x->m_end;
-			//	m_length = x->m_length;
-			// 	return (*this);
-			//}
+			list& operator= (const list& x){
+				clear();
+				racine = x->racine;
+				m_length = x->m_length;
+				assign(x.begin, x.end);
+				return (*this);
+			}
 
 			///////// ITERATORS /////////
 			iterator<T>	begin() {
@@ -108,25 +111,27 @@ namespace ft
 			}
 
 			///////// MODIFIERS /////////
-			// template <class iterator<T> >
-			// void assign (iterator<T> first, iterator<T> last);
+			template <class iterator>
+			void assign (iterator first, iterator last){
+				clear();
+				while (first != last)
+					push_back(*first++);
+			}
 			void assign (size_t n, const T& val) {
 				clear();
 				while (n--)
 					push_front(val);
 			}
 
-			// iterator insert (iterator position, const value_type& val);
+			iterator<T> insert (iterator<T> position, const T& val){
+
+			}
 			// void insert (iterator position, size_type n, const value_type& val);
-			// template <class InputIterator>
+			// template <class iterator>
 			// void insert (iterator position, InputIterator first, InputIterator last);
 
 			// iterator erase (iterator position);
 			// iterator erase (iterator first, iterator last);
-
-			Node<T>*	creatNode(const T& val) {
-				return new Node<T>(val);
-			}
 			
 			void push_back (const T& val)
 			{
@@ -214,7 +219,27 @@ namespace ft
 
 			///////// OBSERVERS /////////
 			// allocator_type get_allocator() const;
-	};
+	};	
+	// template <class T, class Alloc>
+	// bool operator== (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs);
+
+	// template <class T, class Alloc>
+	// bool operator!= (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs);
+
+	// template <class T, class Alloc>
+	// bool operator<  (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs);
+
+	// template <class T, class Alloc>
+	// bool operator<= (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs);
+
+	// template <class T, class Alloc>
+	// bool operator>  (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs);
+
+	// template <class T, class Alloc>
+	// bool operator>= (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs);
+
+	// template <class T, class Alloc>
+	// void swap (list<T,Alloc>& x, list<T,Alloc>& y);
 }
 
 #endif

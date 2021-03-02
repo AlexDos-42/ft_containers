@@ -1,7 +1,7 @@
 #ifndef STACK
 # define STACK
 
-# include "List.hpp"
+# include "../list/List.hpp"
 
 namespace ft
 {
