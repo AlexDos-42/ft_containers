@@ -12,7 +12,7 @@ namespace ft
 		Container s;
 
 		public:
-        explicit stack (const Container& ctnr = Container()): q(ctnr){}
+        explicit stack (const Container& ctnr = Container()): s(ctnr){}
 		bool empty() const {
 			return s.empty();
 		}

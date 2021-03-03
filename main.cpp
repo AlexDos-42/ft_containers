@@ -1,5 +1,7 @@
 #include "list/List.hpp"
 #include "queue/Queue.hpp"
+#include "vector/Vector.hpp"
+#include "stack/Stack.hpp"
 #include <iostream>
 #include "iterators/BidirectionalIterator.hpp"
 
@@ -29,7 +31,13 @@ void list()
 	test.push_front(7);
 	for (ft::iterator<int> it = test.begin(); it != test.end(); it++)
 		std::cout << *it << " ";
+	std::cout << std::endl;
+	ft::list<std::string> second;
+	second.assign(8, "Bonjour");
+	for (ft::iterator<std::string> it = second.begin(); it != second.end(); it++)
+		std::cout << *it << " ";
 	test.clear();
+	second.clear();
 	std::cout << std::endl << "Size = " << test.size() << std::endl;
 	std::cout << "Empty ? " << test.empty() << std::endl;
 	std::cout << test.max_size() << std::endl;
