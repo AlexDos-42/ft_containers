@@ -15,9 +15,39 @@ namespace ft
 		private:
 			size_t m_length;
 			Node<T> *racine;
-			Node<T>*	creatNode(const T& val) {
+			Node<T>	*creatNode(const T& val) {
 				return new Node<T>(val);
 			}
+			Node<T>	target(const T*addr){
+				Node<T>		*target = racine->m_next;
+
+				while (target != racine)
+				{
+					if (target->m_value == addr)
+						return target;
+					target = target->m_next;
+				}
+				if (target->m_value == addr)
+					return target;
+				return NULL;
+			}
+			void	add(const T& val, Node<T> *target){
+				if (target == racine->m_next)
+					push_front(val);
+				else if (target == racine)
+					push_back(val);
+				else
+				{
+					if (!m_length)
+						push_front(val);
+					else {
+						Node<T>		*add = creatNode(val);
+						add->insert(target->prev, target);
+						++m_length;
+					}
+				}
+			}
+
 		public:
 			//explicit list (const allocator_type& alloc = allocator_type());
 			list(): m_length(0) {
@@ -124,7 +154,7 @@ namespace ft
 			}
 
 			iterator<T> insert (iterator<T> position, const T& val){
-
+				return iterator<T>(add(val, target(position)));
 			}
 			// void insert (iterator position, size_type n, const value_type& val);
 			// template <class iterator>
@@ -216,9 +246,6 @@ namespace ft
 			// void sort (Compare comp);
 
 			// void reverse();
-
-			///////// OBSERVERS /////////
-			// allocator_type get_allocator() const;
 	};	
 	// template <class T, class Alloc>
 	// bool operator== (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs);
