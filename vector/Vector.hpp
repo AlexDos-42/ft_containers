@@ -4,12 +4,19 @@
 # include <cstddef>
 # include <limits>
 # include <iostream>
+#include "../iterators/VectorIterator.hpp"
 
 namespace ft
 {
 	template < class T, class Alloc = std::allocator<T> >
 	class vector
 	{
+		public:
+		typedef VectorIterator<T>					iterator;
+		typedef ConstVectorIterator<T>				const_iterator;
+		typedef ReverseVectorIterator<T>			reverse_iterator;
+		typedef ConstReverseVectorIterator<T>		const_reverse_iterator;
+
 		private:
 			T*			m_ptr;
 			size_t		m_length;
@@ -24,10 +31,15 @@ namespace ft
 				for (size_t i = 0; i < n; i++)
 					_allocator.construct(m_ptr[i], val);
 			}
-			// template <class Iterator>
-			// vector (Iterator first, Iterator last,
-			// const allocator_type& alloc = allocator_type());	
-			// vector (const vector& x);
+			template <class Iterator>
+			//vector (Iterator first, Iterator last, const Alloc& alloc = Alloc()):
+			//		: _allocator(alloc), m_ptr(0), m_length(0), m_capacity(0) {
+				//assign(first, last);
+			//}	
+			vector (const vector& x):
+					m_ptr(0), m_length(0), m_capacity(0) {
+				*this = x;
+			}
 			~vector(){
 				for (size_t i = 0; i < m_length; ++i)
 					_allocator.destroy(m_ptr[i]);
@@ -36,10 +48,18 @@ namespace ft
 			// vector& operator= (const vector& x);
 
 			///////// ITERATORS /////////
-			// iterator begin() noexcept;
-			// const_iterator begin() const noexcept;
-			// iterator end();
-			// const_iterator end() const;
+			iterator begin() {
+				return iterator(m_ptr);
+			}
+			// const_iterator begin() const {
+			// 	return constiterator(m_ptr);
+			// }
+			iterator end(){
+				return iterator(m_ptr[m_length]);
+			}
+			// const_iterator end() const{
+			// 	return constiterator(m_ptr[m_length]);
+			// }
 			// reverse_iterator rbegin();
 			// const_reverse_iterator rbegin() const;
 			// reverse_iterator rend();

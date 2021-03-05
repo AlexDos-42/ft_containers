@@ -10,42 +10,47 @@ namespace ft
 			Node<T>		*ptr;
 		public:
 			iterator() {}
-			iterator(iterator const &ref) {*this = ref;}
+			iterator(iterator const &ref) {
+				*this = ref;
+			}
 			iterator(Node<T> *_ptr) : ptr(_ptr) {}
 			~iterator() {}
-			iterator			&operator=(iterator const &ref) { ptr = ref.ptr; return *this; }
+			iterator			&operator=(iterator const &ref) {
+				ptr = ref.ptr;
+				return *this;
+			}
 		
-		iterator	&operator++() {
-			ptr = ptr->m_next;
-			return *this;
-		}
-		iterator	&operator--() {
-			ptr = ptr->m_back;
-			return *this;
-		}
-		iterator	operator++(int) {
-			iterator	tmp(*this);
-			++(*this);
-			return tmp;
-		}
-		iterator	operator--(int) {
-			iterator	tmp(*this);
-			--(*this);
-			return tmp;
-		}
-		T* operator->() const {
-			return ptr->m_value;
-		}
-		T operator*() const {
-			return ptr->m_value;
-		}
-		
-		bool	operator==(iterator const &ref) const {
-			return ptr->m_value == ref.ptr->m_value;
-		}
-		bool	operator!=(iterator const &ref) const {
-			return !(*this == ref);
-		}
+			iterator	&operator++() {
+				ptr = ptr->m_next;
+				return *this;
+			}
+			iterator	&operator--() {
+				ptr = ptr->m_back;
+				return *this;
+			}
+			iterator	operator++(int) {
+				iterator	tmp(*this);
+				++(*this);
+				return tmp;
+			}
+			iterator	operator--(int) {
+				iterator	tmp(*this);
+				--(*this);
+				return tmp;
+			}
+			T* operator->() const {
+				return ptr->m_value;
+			}
+			T operator*() const {
+				return ptr->m_value;
+			}
+			
+			bool	operator==(iterator const &ref) const {
+				return ptr->m_value == ref.ptr->m_value;
+			}
+			bool	operator!=(iterator const &ref) const {
+				return !(*this == ref);
+			}
 	};
 
 	template <typename T>
@@ -55,7 +60,9 @@ namespace ft
 			Node<T>		*ptr;
 		public:
 			constiterator() {}
-			constiterator(constiterator const &ref) {*this = ref;}
+			constiterator(constiterator const &ref) {
+				*this = ref;
+			}
 			constiterator(Node<T> *_ptr) : ptr(_ptr) {}
 			~constiterator() {}
 			constiterator	&operator=(constiterator const &ref) {
@@ -103,7 +110,9 @@ namespace ft
 			Node<T>		*ptr;
 		public:
 			reverseiterator() {}
-			reverseiterator(reverseiterator const &ref) {*this = ref;}
+			reverseiterator(reverseiterator const &ref) {
+				*this = ref;
+			}
 			reverseiterator(Node<T> *_ptr) : ptr(_ptr) {}
 			~reverseiterator() {}
 			reverseiterator	&operator=(reverseiterator const &ref) {
@@ -151,7 +160,9 @@ namespace ft
 			Node<T>		*ptr;
 		public:
 			reverseconstiterator() {}
-			reverseconstiterator(reverseconstiterator const &ref) {*this = ref;}
+			reverseconstiterator(reverseconstiterator const &ref) {
+				*this = ref;
+			}
 			reverseconstiterator(Node<T> *_ptr) : ptr(_ptr) {}
 			~reverseconstiterator() {}
 			reverseconstiterator	&operator=(reverseconstiterator const &ref) {

@@ -33,7 +33,11 @@ void list()
 		std::cout << *it << " ";
 	std::cout << std::endl;
 	ft::list<std::string> second;
-	second.assign(8, "Bonjour");
+	second.assign(7, "Bonjour");
+	for (ft::iterator<std::string> it = second.begin() ; it != second.end(); it++)
+		std::cout << *it << " ";
+	std::cout << std::endl;
+	second.resize(10, "BYE");
 	for (ft::iterator<std::string> it = second.begin(); it != second.end(); it++)
 		std::cout << *it << " ";
 	test.clear();
