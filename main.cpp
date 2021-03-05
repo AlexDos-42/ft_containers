@@ -5,6 +5,27 @@
 #include <iostream>
 #include "iterators/BidirectionalIterator.hpp"
 
+void map()
+{
+	std::cout << std::endl << "////////// MAP //////////"  << std::endl;
+	
+	std::cout << "////////// MAP //////////"  << std::endl << std::endl;
+}
+
+void stack()
+{
+	std::cout << std::endl << "////////// STACK //////////"  << std::endl;
+
+	std::cout << "////////// STACK //////////"  << std::endl << std::endl;
+}
+
+void vector()
+{
+	std::cout << std::endl << "////////// VECTOR //////////"  << std::endl;
+
+	std::cout << "////////// VECTOR //////////"  << std::endl << std::endl;
+}
+
 void queue()
 {
 	std::cout << std::endl << "////////// QUEUE //////////"  << std::endl;
@@ -46,6 +67,12 @@ void list()
 	std::cout << "Empty ? " << test.empty() << std::endl;
 	std::cout << test.max_size() << std::endl;
 	std::cout << "////////// LIST //////////"  << std::endl << std::endl;
+	std::cout << "\e[94mContinue ? (y/n)\e[0m" << std::endl;
+	std::cout << "\t➜ ";
+	std::string l;
+	std::cin >> l;
+	if (l == "y")
+		return;
 }
 
 int main (void)
@@ -57,15 +84,24 @@ int main (void)
 	{
 		std::cout << "\e[94mWhat container do you want ?" << std::endl;
 		std::cout << "tape 1: List" << std::endl;
-		std::cout << "tape 2: Queue" << std::endl;
-		std::cout << "tape 3: exit\e[0m" << std::endl;
+		std::cout << "tape 2: Vector" << std::endl;
+		std::cout << "tape 3: Map" << std::endl;
+		std::cout << "tape 4: Stack" << std::endl;
+		std::cout << "tape 5: Queue" << std::endl;
+		std::cout << "tape 6: exit\e[0m" << std::endl;
 		std::cout << "\t➜ ";
 		std::cin >> str;
 		if (str == "1" || str == "list" || str == "List")
 			list();
-		else if (str == "2" || str == "queue" || str == "Queue")
-			queue();   
-		else if (str == "3" || str == "exit")
+		else if (str == "2" || str == "vector" || str == "Vector")
+			vector();
+		else if (str == "3" || str == "map" || str == "Map")
+			map();
+		else if (str == "4" || str == "stack" || str == "Stack")
+			stack();
+		else if (str == "5" || str == "queue" || str == "Queue")
+			queue();
+		else if (str == "6" || str == "exit")
 			break ;
 	}
 	return (0);
