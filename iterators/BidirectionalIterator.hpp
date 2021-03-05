@@ -4,37 +4,37 @@
 namespace ft
 {
 	template <typename T>
-	class iterator
+	class BidirectIterator
 	{
 		private:
 			Node<T>		*ptr;
 		public:
-			iterator() {}
-			iterator(iterator const &ref) {
+			BidirectIterator() {}
+			BidirectIterator(BidirectIterator const &ref) {
 				*this = ref;
 			}
-			iterator(Node<T> *_ptr) : ptr(_ptr) {}
-			~iterator() {}
-			iterator			&operator=(iterator const &ref) {
+			BidirectIterator(Node<T> *_ptr) : ptr(_ptr) {}
+			~BidirectIterator() {}
+			BidirectIterator			&operator=(BidirectIterator const &ref) {
 				ptr = ref.ptr;
 				return *this;
 			}
 		
-			iterator	&operator++() {
+			BidirectIterator	&operator++() {
 				ptr = ptr->m_next;
 				return *this;
 			}
-			iterator	&operator--() {
+			BidirectIterator	&operator--() {
 				ptr = ptr->m_back;
 				return *this;
 			}
-			iterator	operator++(int) {
-				iterator	tmp(*this);
+			BidirectIterator	operator++(int) {
+				BidirectIterator	tmp(*this);
 				++(*this);
 				return tmp;
 			}
-			iterator	operator--(int) {
-				iterator	tmp(*this);
+			BidirectIterator	operator--(int) {
+				BidirectIterator	tmp(*this);
 				--(*this);
 				return tmp;
 			}
@@ -45,46 +45,46 @@ namespace ft
 				return ptr->m_value;
 			}
 			
-			bool	operator==(iterator const &ref) const {
+			bool	operator==(BidirectIterator const &ref) const {
 				return ptr->m_value == ref.ptr->m_value;
 			}
-			bool	operator!=(iterator const &ref) const {
+			bool	operator!=(BidirectIterator const &ref) const {
 				return !(*this == ref);
 			}
 	};
 
 	template <typename T>
-	class constiterator
+	class ConstBidirectIterator
 	{
 		private:
 			Node<T>		*ptr;
 		public:
-			constiterator() {}
-			constiterator(constiterator const &ref) {
+			ConstBidirectIterator() {}
+			ConstBidirectIterator(ConstBidirectIterator const &ref) {
 				*this = ref;
 			}
-			constiterator(Node<T> *_ptr) : ptr(_ptr) {}
-			~constiterator() {}
-			constiterator	&operator=(constiterator const &ref) {
+			ConstBidirectIterator(Node<T> *_ptr) : ptr(_ptr) {}
+			~ConstBidirectIterator() {}
+			ConstBidirectIterator	&operator=(ConstBidirectIterator const &ref) {
 				ptr = ref.ptr;
 				return *this;
 			}
 		
-			constiterator	&operator++() {
+			ConstBidirectIterator	&operator++() {
 				ptr = ptr->m_next;
 				return *this;
 			}
-			constiterator	&operator--() {
+			ConstBidirectIterator	&operator--() {
 				ptr = ptr->m_back;
 				return *this;
 			}
-			constiterator	operator++(int) {
-				constiterator	tmp(*this);
+			ConstBidirectIterator	operator++(int) {
+				ConstBidirectIterator	tmp(*this);
 				++(*this);
 				return tmp;
 			}
-			constiterator	operator--(int) {
-				constiterator	tmp(*this);
+			ConstBidirectIterator	operator--(int) {
+				ConstBidirectIterator	tmp(*this);
 				--(*this);
 				return tmp;
 			}
@@ -95,46 +95,46 @@ namespace ft
 				return ptr->m_value;
 			}
 			
-			bool	operator==(constiterator const &ref) const {
+			bool	operator==(ConstBidirectIterator const &ref) const {
 				return ptr->m_value == ref.ptr->m_value;
 			}
-			bool	operator!=(constiterator const &ref) const {
+			bool	operator!=(ConstBidirectIterator const &ref) const {
 				return !(*this == ref);
 			}
 	};
 
 	template <typename T>
-	class reverseiterator
+	class ReverseBidirectIterator
 	{
 		private:
 			Node<T>		*ptr;
 		public:
-			reverseiterator() {}
-			reverseiterator(reverseiterator const &ref) {
+			ReverseBidirectIterator() {}
+			ReverseBidirectIterator(ReverseBidirectIterator const &ref) {
 				*this = ref;
 			}
-			reverseiterator(Node<T> *_ptr) : ptr(_ptr) {}
-			~reverseiterator() {}
-			reverseiterator	&operator=(reverseiterator const &ref) {
+			ReverseBidirectIterator(Node<T> *_ptr) : ptr(_ptr) {}
+			~ReverseBidirectIterator() {}
+			ReverseBidirectIterator	&operator=(ReverseBidirectIterator const &ref) {
 				ptr = ref.ptr;
 				return *this;
 			}
 		
-			reverseiterator	&operator++() {
+			ReverseBidirectIterator	&operator++() {
 				ptr = ptr->m_back;
 				return *this;
 			}
-			reverseiterator	&operator--() {
+			ReverseBidirectIterator	&operator--() {
 				ptr = ptr->m_next;
 				return *this;
 			}
-			reverseiterator	operator++(int) {
-				reverseiterator	tmp(*this);
+			ReverseBidirectIterator	operator++(int) {
+				ReverseBidirectIterator	tmp(*this);
 				--(*this);
 				return tmp;
 			}
-			reverseiterator	operator--(int) {
-				reverseiterator	tmp(*this);
+			ReverseBidirectIterator	operator--(int) {
+				ReverseBidirectIterator	tmp(*this);
 				++(*this);
 				return tmp;
 			}
@@ -145,46 +145,46 @@ namespace ft
 				return ptr->m_value;
 			}
 			
-			bool	operator==(reverseiterator const &ref) const {
+			bool	operator==(ReverseBidirectIterator const &ref) const {
 				return ptr->m_value == ref.ptr->m_value;
 			}
-			bool	operator!=(reverseiterator const &ref) const {
+			bool	operator!=(ReverseBidirectIterator const &ref) const {
 				return !(*this == ref);
 			}
 	};
 
 	template <typename T>
-	class reverseconstiterator
+	class ConstReverseBidirectIterator
 	{
 		private:
 			Node<T>		*ptr;
 		public:
-			reverseconstiterator() {}
-			reverseconstiterator(reverseconstiterator const &ref) {
+			ConstReverseBidirectIterator() {}
+			ConstReverseBidirectIterator(ConstReverseBidirectIterator const &ref) {
 				*this = ref;
 			}
-			reverseconstiterator(Node<T> *_ptr) : ptr(_ptr) {}
-			~reverseconstiterator() {}
-			reverseconstiterator	&operator=(reverseconstiterator const &ref) {
+			ConstReverseBidirectIterator(Node<T> *_ptr) : ptr(_ptr) {}
+			~ConstReverseBidirectIterator() {}
+			ConstReverseBidirectIterator	&operator=(ConstReverseBidirectIterator const &ref) {
 				ptr = ref.ptr;
 				return *this;
 			}
 		
-			reverseconstiterator	&operator++() {
+			ConstReverseBidirectIterator	&operator++() {
 				ptr = ptr->m_back;
 				return *this;
 			}
-			reverseconstiterator	&operator--() {
+			ConstReverseBidirectIterator	&operator--() {
 				ptr = ptr->m_next;
 				return *this;
 			}
-			reverseconstiterator	operator++(int) {
-				reverseconstiterator	tmp(*this);
+			ConstReverseBidirectIterator	operator++(int) {
+				ConstReverseBidirectIterator	tmp(*this);
 				--(*this);
 				return tmp;
 			}
-			reverseconstiterator	operator--(int) {
-				reverseconstiterator	tmp(*this);
+			ConstReverseBidirectIterator	operator--(int) {
+				ConstReverseBidirectIterator	tmp(*this);
 				++(*this);
 				return tmp;
 			}
@@ -195,10 +195,10 @@ namespace ft
 				return ptr->m_value;
 			}
 			
-			bool	operator==(reverseconstiterator const &ref) const {
+			bool	operator==(ConstReverseBidirectIterator const &ref) const {
 				return ptr->m_value == ref.ptr->m_value;
 			}
-			bool	operator!=(reverseconstiterator const &ref) const {
+			bool	operator!=(ConstReverseBidirectIterator const &ref) const {
 				return !(*this == ref);
 			}
 	};

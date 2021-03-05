@@ -9,9 +9,14 @@
 
 namespace ft
 {
-	template < class T>
+	template < class T, class Alloc = std::allocator<T> >
 	class list
 	{
+		public:
+			typedef BidirectIterator<T>					iterator;
+			typedef ConstBidirectIterator<T>			const_iterator;
+			typedef ReverseBidirectIterator<T>			reverse_iterator;
+			typedef ConstReverseBidirectIterator<T>		const_reverse_iterator;
 		private:
 			size_t m_length;
 			Node<T> *racine;
@@ -49,8 +54,7 @@ namespace ft
 			}
 
 		public:
-			//explicit list (const allocator_type& alloc = allocator_type());
-			list(): m_length(0) {
+			explicit list(): m_length(0) {
 				racine = new Node<T>();
 				racine->m_next = racine;
 				racine->m_back = racine;
@@ -82,29 +86,29 @@ namespace ft
 			}
 
 			///////// ITERATORS /////////
-			iterator<T>	begin() {
-				return iterator<T>(racine->m_next);
+			iterator	begin() {
+				return iterator(racine->m_next);
 			}
-			constiterator<T>	begin() const {
-				return constiterator<T>(racine->m_next);
+			const_iterator	begin() const {
+				return constiterator(racine->m_next);
 			}
-			iterator<T>	end() {
-				return iterator<T>(racine);
+			iterator	end() {
+				return iterator(racine);
 			}
-			constiterator<T>	end() const {
-				return constiterator<T>(racine->m_next);
+			const_iterator	end() const {
+				return const_iterator(racine->m_next);
 			}
-			reverseiterator<T> rbegin() {
-				return reverseiterator<T>(racine->m_back);
+			reverse_iterator rbegin() {
+				return reverse_iterator(racine->m_back);
 			}
-			reverseconstiterator<T> rbegin() const {
-				return reverseconstiterator<T>(racine->m_back);
+			const_reverse_iterator rbegin() const {
+				return const_reverse_iterator(racine->m_back);
 			}
-			reverseiterator<T> rend() {
-				return reverseiterator<T>(racine);
+			reverse_iterator rend() {
+				return reverse_iterator(racine);
 			}
-			reverseconstiterator<T> rend() const {
-				return reverseconstiterator<T>(racine);
+			const_reverse_iterator rend() const {
+				return const_reverse_iterator(racine);
 			}
 
 			///////// CAPACITY /////////
@@ -153,15 +157,15 @@ namespace ft
 					push_front(val);
 			}
 
-			iterator<T> insert (iterator<T> position, const T& val){
-				return iterator<T>(add(val, target(position)));
+			iterator insert (iterator position, const T& val){
+				return iterator(add(val, target(position)));
 			}
-			// void insert (iterator position, size_type n, const value_type& val);
-			// template <class iterator>
-			// void insert (iterator position, InputIterator first, InputIterator last);
+			void insert (iterator position, size_t n, const T& val);
+			template <class iterator>
+			void insert (iterator position, iterator first, iterator last);
 
-			// iterator erase (iterator position);
-			// iterator erase (iterator first, iterator last);
+			iterator erase (iterator position);
+			iterator erase (iterator first, iterator last);
 			
 			void push_back (const T& val)
 			{
@@ -223,50 +227,45 @@ namespace ft
 				while(m_length)
 					pop_front();
 			}
-			// void swap (list& x);
+			void swap (list& x);
+
 			///////// LIST OPERATIONS /////////
-			// void splice (iterator position, list& x);
-			// void splice (iterator position, list& x, iterator i);
-			// void splice (iterator position, list& x, iterator first, iterator last);
+			void splice (iterator position, list& x);
+			void splice (iterator position, list& x, iterator i);
+			void splice (iterator position, list& x, iterator first, iterator last);
 
-			// void remove (const value_type& val);
-			// template <class Predicate>
-			// void remove_if (Predicate pred);
+			void remove (const T& val);
+			template <class Predicate>
+			void remove_if (Predicate pred);
 
-			// void unique();
-			// template <class BinaryPredicate>
-			// void unique (BinaryPredicate binary_pred);
+			void unique();
+			template <class BinaryPredicate>
+			void unique (BinaryPredicate binary_pred);
 
-			// void merge (list& x);
-			// template <class Compare>
-			// void merge (list& x, Compare comp);
+			void merge (list& x);
+			template <class Compare>
+			void merge (list& x, Compare comp);
 
-			// void sort();
-			// template <class Compare>
-			// void sort (Compare comp);
+			void sort();
+			template <class Compare>
+			void sort (Compare comp);
 
-			// void reverse();
+			void reverse();
 	};	
-	// template <class T, class Alloc>
-	// bool operator== (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs);
-
-	// template <class T, class Alloc>
-	// bool operator!= (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs);
-
-	// template <class T, class Alloc>
-	// bool operator<  (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs);
-
-	// template <class T, class Alloc>
-	// bool operator<= (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs);
-
-	// template <class T, class Alloc>
-	// bool operator>  (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs);
-
-	// template <class T, class Alloc>
-	// bool operator>= (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs);
-
-	// template <class T, class Alloc>
-	// void swap (list<T,Alloc>& x, list<T,Alloc>& y);
+	template <class T>
+	bool operator== (const list<T>& lhs, const list<T>& rhs);
+	template <class T>
+	bool operator!= (const list<T>& lhs, const list<T>& rhs);
+	template <class T>
+	bool operator<  (const list<T>& lhs, const list<T>& rhs);
+	template <class T>
+	bool operator<= (const list<T>& lhs, const list<T>& rhs);
+	template <class T>
+	bool operator>  (const list<T>& lhs, const list<T>& rhs);
+	template <class T>
+	bool operator>= (const list<T>& lhs, const list<T>& rhs);
+	template <class T>
+	void swap (list<T>& x, list<T>& y);
 }
 
 #endif

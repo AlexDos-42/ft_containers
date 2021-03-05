@@ -31,7 +31,7 @@ namespace ft
 				m_next = next;
 			}
 			Node<T>*	getNext() {
-			return this->m_next;
+				return this->m_next;
 			}
 			Node<T>*	getBack() {
 				return this->m_back;

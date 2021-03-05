@@ -29,16 +29,16 @@ void list()
 	test.push_front(53);
 	test.push_front(13);
 	test.push_front(7);
-	for (ft::iterator<int> it = test.begin(); it != test.end(); it++)
+	for (ft::list<int>::iterator it = test.begin(); it != test.end(); it++)
 		std::cout << *it << " ";
 	std::cout << std::endl;
 	ft::list<std::string> second;
 	second.assign(7, "Bonjour");
-	for (ft::iterator<std::string> it = second.begin() ; it != second.end(); it++)
+	for (ft::list<std::string>::iterator it = second.begin() ; it != second.end(); it++)
 		std::cout << *it << " ";
 	std::cout << std::endl;
 	second.resize(10, "BYE");
-	for (ft::iterator<std::string> it = second.begin(); it != second.end(); it++)
+	for (ft::list<std::string>::iterator it = second.begin(); it != second.end(); it++)
 		std::cout << *it << " ";
 	test.clear();
 	second.clear();
