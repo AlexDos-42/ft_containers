@@ -5,6 +5,19 @@
 #include <iostream>
 #include "iterators/BidirectionalIterator.hpp"
 
+void next()
+{
+	std::string l;
+	while (1)
+	{
+		std::cout << "\e[94mContinue ? (y/n)\e[0m" << std::endl;
+		std::cout << "\t➜ ";
+		std::cin >> l;
+		if (l == "y")
+			return;
+	}
+}
+
 void map()
 {
 	std::cout << std::endl << "////////// MAP //////////"  << std::endl;
@@ -22,8 +35,50 @@ void stack()
 void vector()
 {
 	std::cout << std::endl << "////////// VECTOR //////////"  << std::endl;
-
+	ft::vector<int> first;
+	ft::vector<int> second;
+	first.push_back(1);
+	first.push_back(3);
+	first.push_back(5);
+	first.push_back(7);
+	second.push_back(2);
+	second.push_back(4);
+	second.push_back(6);
+	second.push_back(8);
+	for (ft::vector<int>::iterator it = first.begin(); it != first.end(); it++)
+		std::cout << *it << " ";
+	std::cout << std::endl;
+	for (ft::vector<int>::iterator it = second.begin(); it != second.end(); it++)
+		std::cout << *it << " ";
+	std::cout << std::endl;
+	swap(first, second);
+	for (ft::vector<int>::iterator it = first.begin(); it != first.end(); it++)
+		std::cout << *it << " ";
+	std::cout << std::endl;
+	for (ft::vector<int>::iterator it = second.begin(); it != second.end(); it++)
+		std::cout << *it << " ";
+	std::cout << std::endl;
+	first.swap(second);
+	for (ft::vector<int>::iterator it = first.begin(); it != first.end(); it++)
+		std::cout << *it << " ";
+	std::cout << std::endl;
+	for (ft::vector<int>::iterator it = second.begin(); it != second.end(); it++)
+		std::cout << *it << " ";
+	std::cout << std::endl;
+	second.assign(10, 12);
+	for (ft::vector<int>::iterator it = second.begin(); it != second.end(); it++)
+		std::cout << *it << " ";
+	std::cout << std::endl;
+	std::cout << "first size ? " << first.size() << std::endl;
+	std::cout << "front first ? " << first.front() << std::endl;
+	std::cout << "back first ? " << first.back() << std::endl;
+	first.pop_back();
+	first.clear();
+	std::cout << "first empty ? " << first.empty() << std::endl;
+	std::cout << "first max size ? " << first.max_size() << std::endl;
+	second.clear();
 	std::cout << "////////// VECTOR //////////"  << std::endl << std::endl;
+	next();
 }
 
 void queue()
@@ -33,6 +88,7 @@ void queue()
 
 	std::cout << "Size = " << Qtest.size() << std::endl;
 	std::cout << "////////// QUEUE //////////"  << std::endl << std::endl;
+	next();
 }
 
 void list()
@@ -67,12 +123,7 @@ void list()
 	std::cout << "Empty ? " << test.empty() << std::endl;
 	std::cout << test.max_size() << std::endl;
 	std::cout << "////////// LIST //////////"  << std::endl << std::endl;
-	std::cout << "\e[94mContinue ? (y/n)\e[0m" << std::endl;
-	std::cout << "\t➜ ";
-	std::string l;
-	std::cin >> l;
-	if (l == "y")
-		return;
+	next();
 }
 
 int main (void)

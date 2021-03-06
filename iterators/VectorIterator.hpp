@@ -13,9 +13,9 @@ namespace ft
 			VectorIterator(VectorIterator const &ref) {
 				*this = ref;
 			}
-			VectorIterator(T* *_ptr) : ptr(_ptr) {}
+			VectorIterator(T *_ptr): ptr(_ptr) {}
 			~VectorIterator() {}
-			VectorIterator		&operator=(VectorIterator const &ref) {
+			VectorIterator	&operator=(VectorIterator const &ref) {
 				ptr = ref.ptr;
 				return *this;
 			}
@@ -39,10 +39,10 @@ namespace ft
 				return tmp;
 			}
 			T* operator->() const {
-				return ptr->m_value;
+				return ptr;
 			}
 			T operator*() const {
-				return ptr->m_value;
+				return *ptr;
 			}
 			
 			bool	operator==(VectorIterator const &ref) const {
@@ -63,7 +63,7 @@ namespace ft
 			ConstVectorIterator(ConstVectorIterator const &ref) {
 				*this = ref;
 			}
-			ConstVectorIterator(T* *_ptr) : ptr(_ptr) {}
+			ConstVectorIterator(T* _ptr) : ptr(_ptr) {}
 			~ConstVectorIterator() {}
 			ConstVectorIterator		&operator=(ConstVectorIterator const &ref) {
 				ptr = ref.ptr;
@@ -113,7 +113,7 @@ namespace ft
 			ReverseVectorIterator(ReverseVectorIterator const &ref) {
 				*this = ref;
 			}
-			ReverseVectorIterator(T* *_ptr) : ptr(_ptr) {}
+			ReverseVectorIterator(T* _ptr) : ptr(_ptr) {}
 			~ReverseVectorIterator() {}
 			ReverseVectorIterator		&operator=(ReverseVectorIterator const &ref) {
 				ptr = ref.ptr;
@@ -163,7 +163,7 @@ namespace ft
 			ConstReverseVectorIterator(ConstReverseVectorIterator const &ref) {
 				*this = ref;
 			}
-			ConstReverseVectorIterator(T* *_ptr) : ptr(_ptr) {}
+			ConstReverseVectorIterator(T* _ptr) : ptr(_ptr) {}
 			~ConstReverseVectorIterator() {}
 			ConstReverseVectorIterator		&operator=(ConstReverseVectorIterator const &ref) {
 				ptr = ref.ptr;
