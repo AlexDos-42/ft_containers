@@ -5,6 +5,7 @@
 # include <limits>
 # include <iostream>
 #include "../iterators/VectorIterator.hpp"
+#include "../utils/others.hpp"
 
 namespace ft
 {
@@ -116,7 +117,11 @@ namespace ft
 				while (m_length--)
 					_allocator.destroy(m_ptr[m_length]);
 			}
-			void swap (vector& x);
+			void swap (vector& x) {
+				m_swap(m_length, x.m_length);
+				m_swap(m_capacity, x._capacity);
+				m_swap(m_ptr, x.m_ptr);
+			}
 			private:
 				void	m_realloc(size_t n = 0){
 					T*		tmp;
