@@ -136,17 +136,32 @@ namespace ft
 				}
 	};
 	template <class T, class Alloc>
-	bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+	bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs){
+		typename ft::vector<T>::const_iterator		lhs_it = lhs.begin();
+		typename ft::vector<T>::const_iterator		rhs_it = rhs.begin();
+		while (lhs_it != lhs.end())
+			if (*lhs_it++ != *rhs_it++)
+				return 0;
+		if (rhs_it != rhs.end())
+			return 0;
+		return 1;
+	}
 	template <class T, class Alloc>
-	bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-	template <class T, class Alloc>
-	bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-	template <class T, class Alloc>
-	bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-	template <class T, class Alloc>
-	bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-	template <class T, class Alloc>
-	bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+	bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs){
+		return !(lhs == rhs);
+	}
+	// template <class T, class Alloc>
+	// bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs){
+
+	// }
+	// template <class T, class Alloc>
+	// bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs){
+
+	// }
+	// template <class T, class Alloc>
+	// bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+	// template <class T, class Alloc>
+	// bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
 }
 
 #endif
