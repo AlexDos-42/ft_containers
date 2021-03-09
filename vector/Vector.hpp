@@ -37,11 +37,11 @@ namespace ft
 				for (size_t i = 0; i < n; i++)
 					_allocator.construct(&m_ptr[i], val);
 			}
-			//template <class Iterator>
-			//vector (iterator first, iterator last, const Alloc& alloc = Alloc()):
-			//		: _allocator(alloc), m_ptr(0), m_length(0), m_capacity(0) {
-				//assign(first, last);
-			//}	
+			template <class Iterator>
+			vector (iterator first, iterator last, const Alloc& alloc = Alloc()):
+					_allocator(alloc), m_ptr(0), m_length(0), m_capacity(0) {
+				assign(first, last);
+			}	
 			vector (const vector& x): m_ptr(0), m_length(0), m_capacity(0) {
 				*this = x;
 			}
@@ -50,7 +50,7 @@ namespace ft
 					_allocator.destroy(&m_ptr[i]);
 				_allocator.deallocate(m_ptr, m_capacity);
 			}
-			// vector& operator= (const vector& x);
+			vector& operator= (const vector& x);
 
 			///////// ITERATORS /////////
 			iterator begin() {
@@ -77,7 +77,32 @@ namespace ft
 			size_t max_size() const{
 				return _allocator.max_size();
 			}
-			//void resize (size_t n, T val = T()){}
+			void resize (size_t n, T val = T()){
+				if (n < m_length){
+					n = m_length - n;
+					for (size_t i = 0; i < n; ++i)
+					{
+						_allocator.destroy(m_ptr + (m_length - i));
+						--m_length;
+					}
+				}
+				else if (n > m_length)
+				{
+					while (n > m_capacity)
+						m_realloc();
+					if (m_length)
+					{
+						typename allocator_type::pointer	src = m_ptr + m_length;
+						typename allocator_type::pointer	dst = m_ptr + m_length + n;
+
+						for (int i = m_length - index - 1; i >= 0; --i)
+							_allocator.construct(dst + i, src[i]);
+					}
+					for (size_t i = 0; i < n - m_length; ++i)
+						_allocator.construct(m_ptr + (m_length + i), val);
+					m_length += n - m_length;
+				}
+			}
 			size_t capacity() const{
 				return m_capacity;
 			}
@@ -118,19 +143,17 @@ namespace ft
 
 			///////// MODIFIERS /////////
 			template <class iterator>
-			// void assign (iterator first, iterator last){
-			// 	size_t	size = 0;
-			// 	std::cout << "la ?"  << std::endl << std::endl;
-			// 	while (first != last--)
-			// 		++size;
-			// 	if (size > m_capacity)
-			// 		m_realloc();
-			// 	clear();
-			// 	for (size_t i = 0; i < size; ++i)
-			// 		push_back(first++);
-			// }	
-			void assign (size_t n, T &val){
-				std::cout << "ici ?"  << std::endl << std::endl;
+			void assign (iterator first, iterator last){
+				size_t	size = 0;
+				while (first != last--)
+					++size;
+				if (size > m_capacity)
+					m_realloc();
+				clear();
+				for (size_t i = 0; i < size; ++i)
+					push_back(first++);
+			}	
+			void assign (size_t n, const T &val){
 				if (n > m_capacity)
 					m_realloc();
 				clear();

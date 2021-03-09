@@ -2,9 +2,10 @@
 #include "queue/Queue.hpp"
 #include "vector/Vector.hpp"
 #include "stack/Stack.hpp"
+#include "map/Map.hpp"
 #include <iostream>
 #include "iterators/BidirectionalIterator.hpp"
-
+#include <algorithm>
 void next()
 {
 	std::string l;
@@ -65,7 +66,7 @@ void vector()
 	for (ft::vector<int>::iterator it = second.begin(); it != second.end(); it++)
 		std::cout << *it << " ";
 	std::cout << std::endl;
-	second.assign(10, 12);
+	second.assign((size_t)10, 10);
 	for (ft::vector<int>::iterator it = second.begin(); it != second.end(); it++)
 		std::cout << *it << " ";
 	std::cout << std::endl;
@@ -123,7 +124,7 @@ void list()
 	std::cout << "Empty ? " << test.empty() << std::endl;
 	std::cout << test.max_size() << std::endl;
 	std::cout << "////////// LIST //////////"  << std::endl << std::endl;
-	next();
+	//next();
 }
 
 int main (void)
