@@ -15,7 +15,7 @@ namespace ft
 	class vector
 	{
 		public:
-			typedef	T											value_type;
+			typedef	T										value_type;
 			typedef VectorIterator<T>							iterator;
 			typedef ConstVectorIterator<T>						const_iterator;
 			typedef ReverseVectorIterator<T>					reverse_iterator;
