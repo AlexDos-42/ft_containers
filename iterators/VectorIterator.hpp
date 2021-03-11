@@ -121,21 +121,21 @@ namespace ft
 			}
 		
 			ReverseVectorIterator	&operator++() {
-				ptr = ptr + 1;
+				ptr = ptr - 1;
 				return *this;
 			}
 			ReverseVectorIterator	&operator--() {
-				ptr = ptr - 1;
+				ptr = ptr + 1;
 				return *this;
 			}
 			ReverseVectorIterator	operator++(int) {
 				ReverseVectorIterator	tmp(*this);
-				operator++();
+				operator--();
 				return tmp;
 			}
 			ReverseVectorIterator	operator--(int) {
 				ReverseVectorIterator	tmp(*this);
-				operator--();
+				operator++();
 				return tmp;
 			}
 			T* operator->() const {
@@ -171,21 +171,21 @@ namespace ft
 			}
 		
 			ConstReverseVectorIterator	&operator++() {
-				ptr = ptr + 1;
+				ptr = ptr - 1;
 				return *this;
 			}
 			ConstReverseVectorIterator	&operator--() {
-				ptr = ptr - 1;
+				ptr = ptr + 1;
 				return *this;
 			}
 			ConstReverseVectorIterator	operator++(int) {
 				ConstReverseVectorIterator	tmp(*this);
-				operator++();
+				operator--();
 				return tmp;
 			}
 			ConstReverseVectorIterator	operator--(int) {
 				ConstReverseVectorIterator	tmp(*this);
-				operator--();
+				operator++();
 				return tmp;
 			}
 			T* operator->() const {

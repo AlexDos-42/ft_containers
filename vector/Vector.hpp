@@ -65,10 +65,18 @@ namespace ft
 			const_iterator end() const{
 			 	return const_iterator(&m_ptr[m_length]);
 			}
-			reverse_iterator rbegin();
-			const_reverse_iterator rbegin() const;
-			reverse_iterator rend();
-			const_reverse_iterator rend() const;
+			reverse_iterator rbegin(){
+				return reverse_iterator(end());
+			}
+			const_reverse_iterator rbegin() const{
+				return const_iterator(end());
+			}
+			reverse_iterator rend(){
+				return reverse_iterator(begin());
+			}
+			const_reverse_iterator rend() const{
+				return const_reverse_iterator(begin());
+			}
 
 			///////// CAPACITY /////////
 			size_t size() const{
@@ -144,9 +152,7 @@ namespace ft
 			///////// MODIFIERS /////////
 			template <class iterator>
 			void assign (iterator first, iterator last){
-				size_t	size = 0;
-				while (first != last--)
-					++size;
+				size_t	size = ft::distance(first, last);
 				if (size > m_capacity)
 					m_realloc();
 				clear();
@@ -160,10 +166,38 @@ namespace ft
 				for (size_t i = 0; i < n; ++i)
 					push_back(val);
 			}
-			iterator insert (iterator position, const T& val);	
-			void insert (iterator position, size_t n, const T& val);
+			iterator insert (iterator position, const T& val){
+				size_t n = ft::distance(begin(), position);
+				insert(position, 1, val);
+				return (iterator(&m_ptr[n]));
+			}
+			void insert (iterator position, size_t n, const T& val){
+				vector tmp(position, end());
+				m_length -= ft::distance(position, end());
+				while (n) {
+					push_back(val);
+					--n;
+				}
+				iterator it = tmp.begin();
+				while (it != tmp.end()) {
+					push_back(*it);
+					++it;
+				}
+			}
 			template <class iterator>
-			void insert (iterator position, iterator first, iterator last);
+			void insert (iterator position, iterator first, iterator last){
+				vector tmp(position, end());
+				m_length -= ft::distance(position, end());
+				while (first != last) {
+					push_back(*first);
+					++first;
+				}
+				iterator it = tmp.begin();
+				while (it != tmp.end()) {
+					push_back(*it);
+					++it;
+				}
+			}
 			iterator erase (iterator position);
 			iterator erase (iterator first, iterator last);
 			void push_back (const T& val){
@@ -222,18 +256,36 @@ namespace ft
 	bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs){
 		return !(lhs == rhs);
 	}
-	// template <class T, class Alloc>
-	// bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs){
+	template <class T, class Alloc>
+	bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs){
+		typename ft::vector<T>::const_iterator	lhs_begin = lhs.begin();
+		typename ft::vector<T>::const_iterator	lhs_end = lhs.end();
+		typename ft::vector<T>::const_iterator	rhs_begin = rhs.begin();
+		typename ft::vector<T>::const_iterator	rhs_end = rhs.end();
 
-	// }
-	// template <class T, class Alloc>
-	// bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs){
-
-	// }
-	// template <class T, class Alloc>
-	// bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-	// template <class T, class Alloc>
-	// bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+		while (lhs_begin != lhs_end)
+		{
+			if (rhs_begin == rhs_end || *rhs_begin < *lhs_begin)
+				return false;
+			else if (*lhs_begin < *rhs_begin)
+				return true;
+			++lhs_begin;
+			++rhs_begin;
+		}
+		return (rhs_begin != rhs_end);
+	}
+	template <class T, class Alloc>
+	bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs){
+		return (!(rhs < lhs));
+	}
+	template <class T, class Alloc>
+	bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs){
+		return (rhs < lhs);
+	}
+	template <class T, class Alloc>
+	bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs){
+		return (!(lhs < rhs));
+	}
 	template <class T, class Alloc>
   	void swap (vector<T,Alloc>& x, vector<T,Alloc>& y){
 		  x.swap(y);
