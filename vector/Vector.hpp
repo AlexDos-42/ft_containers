@@ -50,7 +50,16 @@ namespace ft
 					_allocator.destroy(&m_ptr[i]);
 				_allocator.deallocate(m_ptr, m_capacity);
 			}
-			vector& operator= (const vector& x);
+			vector& operator= (const vector& x){
+				for (size_t i = 0; i < m_length; ++i)
+					_allocator.destroy(&m_ptr[i]);
+				_allocator.deallocate(m_ptr, m_capacity);
+				m_ptr = _allocator.allocate(x.m_capacity());
+				m_length = x.m_length();
+				for (size_t i = 0; i < m_length; ++i)
+					m_ptr[i] = x.m_ptr[i];
+				return *this;
+			}
 
 			///////// ITERATORS /////////
 			iterator begin() {
