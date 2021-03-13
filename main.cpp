@@ -6,6 +6,8 @@
 #include <iostream>
 #include "iterators/BidirectionalIterator.hpp"
 #include <algorithm>
+#include "map/Map.hpp"
+
 void next()
 {
 	std::string l;
@@ -22,7 +24,8 @@ void next()
 void map()
 {
 	std::cout << std::endl << "////////// MAP //////////"  << std::endl;
-	
+	ft::map<int, int> first;
+	first.print();
 	std::cout << "////////// MAP //////////"  << std::endl << std::endl;
 }
 

@@ -6,6 +6,12 @@
 # include <iostream>
 # include <functional>
 # include "../utils/nodeMap.hpp"
+# include "../utils/Pairs.hpp"
+
+# define _RED			"\x1b[31m"
+# define _GREY			"\x1b[30m"
+# define _END			"\x1b[0m"
+# define _IWHITE		"\x1b[47m"
 
 namespace ft
 {
@@ -13,86 +19,139 @@ namespace ft
 	class map
 	{
 		public:
-            typedef	T											value_type;
-			// typedef MapIterator<T>					            iterator;
-			// typedef ConstMapIterator<T>			                const_iterator;
-			// typedef ReverseMapIterator<T>			            reverse_iterator;
-			// typedef ConstReverseMapIterator<T>		            const_reverse_iterator;
-            typedef Alloc										allocator_type;
-			typedef typename allocator_type::reference 			reference;
-			typedef typename allocator_type::const_reference  	const_reference;
-			typedef NodeMap<T, Compare>					NodeMap;
+			typedef	T											value_type;
+			// typedef MapIterator<T>							iterator;
+			// typedef ConstMapIterator<T>						const_iterator;
+			// typedef ReverseMapIterator<T>					reverse_iterator;
+			// typedef ConstReverseMapIterator<T>				const_reverse_iterator;
+			typedef Alloc										allocator_type;
+			typedef typename allocator_type::reference			reference;
+			typedef typename allocator_type::const_reference	const_reference;
+			typedef NodeMap<T, Compare>							NodeMap;
+			typedef ft::pair									pair;
+			
 		private:
 			NodeMap			*racine;
 			Alloc			_allocator;
 			Compare			m_comp;
 			size_t			m_lenght;
 		public:
-			explicit MapBase(const Compare& m_comp = key_compare(), const Alloc& _allocator = Alloc())
-				: _allocator(alloc), m_comp(comp), m_lenght(0){
-				racine = new NodeMap();
+			explicit map(const Compare& m_comp = Compare(), const Alloc& _allocator = Alloc())
+				: _allocator(_allocator), m_comp(m_comp), m_lenght(0){
+				new_root();
 				racine->left = NULL;
 				racine->right = NULL;
 				racine->parent = NULL;
-				racine->color = BLACK;
+				racine->m_color = BLACK;
 			}
+			//template <class InputIterator>
+			//map (iterator first, iterator last, const Compare& comp = Compare(), const Alloc& _allocator = Alloc());
+			map (const map& x);
+			~map() {
+				delete racine;
+			}
+			map& operator= (const map& x);
+
 			///////// ITERATORS /////////
-			
+			// iterator begin();
+			// const_iterator begin() const;
+			// iterator end();
+			// const_iterator end() const;
+			// reverse_iterator rbegin();
+			// const_reverse_iterator rbegin() const;
+			// reverse_iterator rend();
+			// const_reverse_iterator rend() const;	
 
 			///////// CAPACITY /////////
-			
+			bool empty() const {
+				return(!m_lenght);
+			}
+			size_t size() const{
+				return (m_lenght);
+			}
+			size_t max_size() const;
 
 			///////// ELEMENTS ACCESS /////////
-			
+			// mapped_type& operator[] (const key_type& k);
+			// mapped_type& at (const key_type& k);
+			// const mapped_type& at (const key_type& k) const;
 
 			///////// MODIFIERS /////////
-			
-			
+			pair<iterator, bool>	insert(const T& val) {
+			if (m_lenght == 0)
+				return (ft::make_pair(iterator(insert_root(val)), true));
+			NodeMap	*it(racine);
+			while (it) {
+				if (key_compare()(val.first, it->data.first)) {
+					if (it->left && it->left != this->_first)
+						it = it->left;
+					else return ft::make_pair(iterator(insert_left(it, val)), true);
+				}
+				else if (key_compare()(it->data.first, val.first)) {
+					if (it->right && it->right != this->_last)
+						it = it->right;
+					else return ft::make_pair(iterator(insert_right(it, val)), true);
+				}
+				else break ;
+			}
+			return ft::make_pair(iterator(it), false);
+		}
+			// iterator insert (iterator position, const value_type& val);
+			// template <class InputIterator>
+			// void insert (InputIterator first, InputIterator last);
+			// void erase (iterator position);
+			// size_t erase (const key_type& k);
+			// void erase (iterator first, iterator last);
+			void swap (map& x);
+			void clear();
 
-			///////// LIST OPERATIONS /////////
-			
+			///////// OBSERVERS /////////
+			// key_compare key_comp() const;
+			// value_compare value_comp() const;
 
-			// const int MaxEle=256,CarParLin=121;                                  //WV
-			// int nbE,lev,Lev[MaxEle],Prn[MaxEle];                                 //WV
-			// Node *Arr[MaxEle];                                                   //WV
-			// 																	//WV
-			// int RecurDisplay(Node *nod) { // nod != 0                            //WV
-			// if (nbE>=MaxEle) return 0;                                         //WV
-			// if (nod->left) {++lev; Prn[RecurDisplay(nod->left)]=nbE; --lev;}   //WV
-			// int num=nbE++;                                                     //WV
-			// Arr[num]=nod; Lev[num]=lev;                                        //WV
-			// if (nod->right) {++lev; Prn[RecurDisplay(nod->right)]=num; --lev;} //WV
-			// return num;                                                        //WV
-			// }                                                                    //WV
-			// void RBTree::display() {                                             //WV
-			// if (root) {nbE=0; lev=0;} else return;                             //WV
-			// RecurDisplay(root);                                                //WV
-			// char lin[MaxEle*CarParLin],*ln=lin,*l,*ll;                         //WV
-			// memset(lin,' ',nbE*CarParLin);                                     //WV
-			// for (int i=0; i<nbE; ++i,ln+=CarParLin) {                          //WV
-			// 	l=ln+6*Lev[i];                                                   //WV
-			// 	if (Lev[i]) {                                                    //WV
-			// 	int n=Prn[i]-i,m=CarParLin;                                    //WV
-			// 	ll=l;                                                          //WV
-			// 	if (n>0) *l=218; else {n=-n; m=-m; *l=192;} // '┌' ou '└'      //WV
-			// 	for (int k=1; k<n; ++k) {ll+=m; *ll=179;} // '│'               //WV
-			// 	}                                                                //WV
-			// 	*++l=196; *++l=196; *++l=196; *++l='>'; *++l=0; // "───>"        //WV
-			// }                                                                  //WV
-			// ln=lin;                                                            //WV
-			// for (int i=0; i<nbE; ++i,ln+=CarParLin) {                          //WV
-			// 	SetConsoleTextAttribute(console,Fnd); printf("%s",ln);           //WV
-			// 	if (Arr[i]->color==RED) {                                        //WV
-			// 	SetConsoleTextAttribute(console,Red);                          //WV
-			// 	printf(" %i n",Arr[i]->data);                                 //WV
-			// 	} else {                                                         //WV
-			// 	SetConsoleTextAttribute(console,Black);                        //WV
-			// 	printf(" *%i n",Arr[i]->data);                                //WV
-			// 	}                                                                //WV
-			// }                                                                  //WV
-			// SetConsoleTextAttribute(console,Fnd);                              //WV
-			// }  
-	};	
+			///////// OPERATIONS /////////
+			// iterator find (const key_type& k);
+			// const_iterator find (const key_type& k) const;
+			// size_t count (const key_type& k) const;
+			// iterator lower_bound (const key_type& k);
+			// const_iterator lower_bound (const key_type& k) const;
+			// iterator upper_bound (const key_type& k);
+			// const_iterator upper_bound (const key_type& k) const;
+			// pair<const_iterator,const_iterator> equal_range (const key_type& k) const;
+			// pair<iterator,iterator>             equal_range (const key_type& k);
+			
+			NodeMap	*new_root() {
+				racine = new NodeMap();
+				return racine;
+			}
+
+			NodeMap	*new_root(const T& val) {
+				racine = new NodeMap(val, BLACK);
+				if (val)
+					++m_lenght;
+				return racine;
+			}
+
+			void print() const {
+				print("", racine, false);
+				std::cout << std::endl;
+			}
+
+			void print(const std::string& display, const NodeMap* node, bool isLeft) const {
+				if (node) {
+					std::cout	<< display \
+								<< (isLeft ? "├L─" : "└R-" );
+					if (node->m_color == RED)
+						std::cout << _RED;
+					else if (node->m_color == BLACK)
+						std::cout << _IWHITE << _GREY;
+					std::cout << node->m_value << _END << std::endl ;
+					print(display + (isLeft ? "│   " : "    "), node->left, true);
+					print(display + (isLeft ? "│   " : "    "), node->right, false);
+				}
+			}
+
+	};
 }
 
 #endif
