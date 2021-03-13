@@ -23,18 +23,18 @@ namespace ft
 			typedef typename allocator_type::const_reference  	const_reference;
 			typedef NodeMap<T, Compare>					NodeMap;
 		private:
-			map				*m_root;
+			NodeMap			*racine;
 			Alloc			_allocator;
 			Compare			m_comp;
 			size_t			m_lenght;
 		public:
 			explicit MapBase(const Compare& m_comp = key_compare(), const Alloc& _allocator = Alloc())
 				: _allocator(alloc), m_comp(comp), m_lenght(0){
-				this->_first = new mapnode();
-				this->_last = new mapnode();
-				this->_first->parent = this->_last;
-				this->_last->parent = this->_first;
-				this->_size = 0;
+				racine = new NodeMap();
+				racine->left = NULL;
+				racine->right = NULL;
+				racine->parent = NULL;
+				racine->color = BLACK;
 			}
 			///////// ITERATORS /////////
 			
