@@ -7,6 +7,7 @@
 #include "iterators/BidirectionalIterator.hpp"
 #include <algorithm>
 #include "map/Map.hpp"
+# include "utils/Pairs.hpp"
 
 void next()
 {
@@ -25,6 +26,7 @@ void map()
 {
 	std::cout << std::endl << "////////// MAP //////////"  << std::endl;
 	ft::map<int, int> first;
+	first.insert(ft::make_pair(10, 353));
 	first.print();
 	std::cout << "////////// MAP //////////"  << std::endl << std::endl;
 }

@@ -7,6 +7,7 @@
 # include <functional>
 # include "../utils/nodeMap.hpp"
 # include "../utils/Pairs.hpp"
+# include "../iterators/Maplterator.hpp"
 
 # define _RED			"\x1b[31m"
 # define _GREY			"\x1b[30m"
@@ -15,20 +16,17 @@
 
 namespace ft
 {
-	template < class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<T> >
+	template < class Key, class T, class Node, class Compare = std::less<Key>, class Alloc = std::allocator<ft::pair<const Key,T> > >
 	class map
 	{
 		public:
 			typedef	T											value_type;
-			// typedef MapIterator<T>							iterator;
-			// typedef ConstMapIterator<T>						const_iterator;
-			// typedef ReverseMapIterator<T>					reverse_iterator;
-			// typedef ConstReverseMapIterator<T>				const_reverse_iterator;
+			typedef MapIterator<Key, T, Compare, Alloc>			iterator;
 			typedef Alloc										allocator_type;
 			typedef typename allocator_type::reference			reference;
 			typedef typename allocator_type::const_reference	const_reference;
 			typedef NodeMap<T, Compare>							NodeMap;
-			typedef ft::pair									pair;
+			//typedef ft::pair									pair;
 			
 		private:
 			NodeMap			*racine;
@@ -77,25 +75,28 @@ namespace ft
 			// const mapped_type& at (const key_type& k) const;
 
 			///////// MODIFIERS /////////
-			pair<iterator, bool>	insert(const T& val) {
-			if (m_lenght == 0)
-				return (ft::make_pair(iterator(insert_root(val)), true));
-			NodeMap	*it(racine);
-			while (it) {
-				if (key_compare()(val.first, it->data.first)) {
-					if (it->left && it->left != this->_first)
-						it = it->left;
-					else return ft::make_pair(iterator(insert_left(it, val)), true);
+			ft::pair<iterator, bool>	insert(const T& val) {
+				if (m_lenght == 0){
+					new_root(val);
+					iterator(new_root(val));
+					return (ft::make_pair(iterator(new_root(val)), true));
 				}
-				else if (key_compare()(it->data.first, val.first)) {
-					if (it->right && it->right != this->_last)
-						it = it->right;
-					else return ft::make_pair(iterator(insert_right(it, val)), true);
-				}
-				else break ;
+			// NodeMap	*it(racine);
+			// while (it) {
+			// 	if (Compare()(val.first, it->data.first)) {
+			// 		if (it->left && it->left != this->_first)
+			// 			it = it->left;
+			// 		else return ft::make_pair(iterator(insert_left(it, val)), true);
+			// 	}
+			// 	else if (Compare()(it->data.first, val.first)) {
+			// 		if (it->right && it->right != this->_last)
+			// 			it = it->right;
+			// 		else return ft::make_pair(iterator(insert_right(it, val)), true);
+			// 	}
+			// 	else break ;
+			// }
+			// return ft::make_pair(iterator(it), false);
 			}
-			return ft::make_pair(iterator(it), false);
-		}
 			// iterator insert (iterator position, const value_type& val);
 			// template <class InputIterator>
 			// void insert (InputIterator first, InputIterator last);
@@ -125,10 +126,9 @@ namespace ft
 				return racine;
 			}
 
-			NodeMap	*new_root(const T& val) {
+			NodeMap	*new_root(const Node& val) {
 				racine = new NodeMap(val, BLACK);
-				if (val)
-					++m_lenght;
+				++m_lenght;
 				return racine;
 			}
 
