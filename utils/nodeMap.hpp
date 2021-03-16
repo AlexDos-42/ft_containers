@@ -11,25 +11,30 @@ namespace ft
 	class NodeMap
 	{
 		public:
-			T			m_value;
+		typedef T			value_type;
+		typedef	T&			reference;
+		public:
+			value_type	m_value;
 			NodeMap		*parent;
 			NodeMap		*left;
 			NodeMap		*right;
 			color		m_color;
 		public:
-			explicit NodeMap(T const& val = T(), color color = RED) : m_value(val), parent(0), left(0), right(0), m_color(color) { }
-			NodeMap(const NodeMap& x) : m_value(x.m_value), parent(x.parent), left(x.left), right(x.right), m_color(BLACK) {}
+			explicit NodeMap(value_type const& val = value_type(), color color = RED):
+				m_value(val), parent(0), left(0), right(0), m_color(color) { }
+			NodeMap(const NodeMap& x):
+				m_value(x.m_value), parent(x.parent), left(x.left), right(x.right), m_color(BLACK) {}
 			~NodeMap() {}
 
-			NodeMap   getnext() {
-        		NodeMap next(this);
+			NodeMap*   getnext() {
+        		NodeMap* next(this);
 				if (next->right) {
 					next = next->right;
 					while (next->left)
 						next = next->left;
 				}
 				else {
-					NodeMap tmp = next;
+					NodeMap* tmp = next;
 					next = next->parent;
 					while (next->left != tmp) {
 						tmp = next;

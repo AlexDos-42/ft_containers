@@ -16,17 +16,20 @@
 
 namespace ft
 {
-	template < class Key, class T, class Node, class Compare = std::less<Key>, class Alloc = std::allocator<ft::pair<const Key,T> > >
+	template < class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<ft::pair<const Key,T> > >
 	class map
 	{
 		public:
-			typedef	T											value_type;
-			typedef MapIterator<Key, T, Compare, Alloc>			iterator;
+			typedef	Key											key_type;
+			typedef	T											mapped_type;
+			typedef pair<const key_type,mapped_type>			value_type;
+			typedef MapIterator<Key, mapped_type, Compare, Alloc>			iterator;
 			typedef Alloc										allocator_type;
-			typedef typename allocator_type::reference			reference;
-			typedef typename allocator_type::const_reference	const_reference;
-			typedef NodeMap<T, Compare>							NodeMap;
-			//typedef ft::pair									pair;
+			typedef value_type&									reference;
+			typedef const value_type&							const_reference;
+			typedef	value_type*									pointer;
+			typedef const value_type*							const_pointer;
+			typedef NodeMap<mapped_type, Compare>							NodeMap;
 			
 		private:
 			NodeMap			*racine;
@@ -75,11 +78,11 @@ namespace ft
 			// const mapped_type& at (const key_type& k) const;
 
 			///////// MODIFIERS /////////
-			ft::pair<iterator, bool>	insert(const T& val) {
-				if (m_lenght == 0){
-					new_root(val);
+			ft::pair<iterator, bool>	insert(const value_type& val) {
+			if (m_lenght == 0){
 					iterator(new_root(val));
-					return (ft::make_pair(iterator(new_root(val)), true));
+					return (NULL);
+					//return (ft::make_pair(iterator(new_root(val)), true));
 				}
 			// NodeMap	*it(racine);
 			// while (it) {
@@ -126,7 +129,7 @@ namespace ft
 				return racine;
 			}
 
-			NodeMap	*new_root(const Node& val) {
+			NodeMap	*new_root(const value_type& val) {
 				racine = new NodeMap(val, BLACK);
 				++m_lenght;
 				return racine;

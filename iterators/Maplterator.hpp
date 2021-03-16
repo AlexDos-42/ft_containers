@@ -10,16 +10,22 @@ namespace ft
 	class MapIterator
 	{
 		public:
-			typedef NodeMap<T, Compare>	*							NodeMap;
+			typedef MapIterator<T, Pointer, Reference, Compare >	this_type;
+			typedef NodeMap<T, Compare>*							NodeMap;
 			typedef MapIterator<T, T*, T&, Compare >				iterator;
-		//private:
+			typedef MapIterator<T, const T*, const T&, Compare >	const_iterator;
+			typedef Pointer		pointer;
+			typedef Reference	reference;
+			typedef T			value_type;
+
 			NodeMap		m_it;
-		public:
+			
 			MapIterator(): m_it(NULL) {}
 			MapIterator(const NodeMap it) : m_it(it) {}
-			//MapIterator(const iterator const &ref): m_it(ref) {}
+			MapIterator(const iterator& ref): 
+				m_it(const_cast<NodeMap>(ref.m_it)) {}
 			~MapIterator() {}
-			MapIterator<T, Pointer, Reference, Compare > &operator=(MapIterator<T, const T*, const T&, Compare > const &ref) {
+			this_type& operator=(const_iterator const &ref) {
 				m_it = ref.ptr;
 				return *this;
 			}
@@ -42,10 +48,10 @@ namespace ft
 				--(*this);
 				return tmp;
 			}
-			T* operator->() const {
+			pointer operator->() const {
 				return m_it->m_value;
 			}
-			T operator*() const {
+			reference operator*() const {
 				return m_it->m_value;
 			}
 			
