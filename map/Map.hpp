@@ -45,7 +45,8 @@ namespace ft
 			//map (iterator first, iterator last, const Compare& comp = Compare(), const Alloc& _allocator = Alloc());
 			map (const map& x);
 			~map() {
-				delete racine;
+				clear(racine);
+			//	delete racine;
 			}
 			map& operator= (const map& x);
 
@@ -83,12 +84,12 @@ namespace ft
 				NodeMap	*it(racine);
 				while (it) {
 					if (Compare()(val.first, it->m_value.first)) {
-						if (it->left && it->left->left != NULL && it->left->right != NULL)
+						if (it->left)
 							it = it->left;
 						else return ft::make_pair(iterator(insert_left(it, val)), true);
 					}
 					else if (Compare()(it->m_value.first, val.first)) {
-						if (it->right && it->left->left != NULL && it->left->right != NULL)
+						if (it->right)
 							it = it->right;
 						else return ft::make_pair(iterator(insert_right(it, val)), true);
 					}
@@ -103,7 +104,14 @@ namespace ft
 			// size_t erase (const key_type& k);
 			// void erase (iterator first, iterator last);
 			void swap (map& x);
-			void clear();
+			void	clear(NodeMap *pos) {
+				if (!pos)
+					return ;
+				clear(pos->left);
+				clear(pos->right);
+				delete pos;
+				--m_lenght;
+			}
 
 			///////// OBSERVERS /////////
 			// key_compare key_comp() const;

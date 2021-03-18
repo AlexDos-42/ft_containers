@@ -28,7 +28,16 @@ void map()
 	ft::map<int, int> first;
 	first.insert(ft::make_pair(15, 353));
 	first.insert(ft::make_pair(12, 353));
-	first.insert(ft::make_pair(17, 353));
+	first.insert(ft::make_pair(11, 353));
+	first.insert(ft::make_pair(100, 353));
+	first.insert(ft::make_pair(32, 353));
+	first.insert(ft::make_pair(101, 353));
+	first.insert(ft::make_pair(8, 353));
+	first.insert(ft::make_pair(1, 353));
+	first.insert(ft::make_pair(300, 353));
+	first.insert(ft::make_pair(16, 353));
+	first.insert(ft::make_pair(8, 353));
+	first.insert(ft::make_pair(4, 353));
 	first.print();
 	std::cout << "////////// MAP //////////"  << std::endl << std::endl;
 }
