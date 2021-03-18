@@ -9,11 +9,6 @@
 # include "../utils/Pairs.hpp"
 # include "../iterators/Maplterator.hpp"
 
-# define _RED			"\x1b[31m"
-# define _GREY			"\x1b[30m"
-# define _END			"\x1b[0m"
-# define _IWHITE		"\x1b[47m"
-
 namespace ft
 {
 	template < class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<ft::pair<const Key,T> > >
@@ -23,13 +18,14 @@ namespace ft
 			typedef	Key											key_type;
 			typedef	T											mapped_type;
 			typedef pair<const key_type,mapped_type>			value_type;
-			typedef MapIterator<Key, mapped_type, Compare, Alloc>			iterator;
 			typedef Alloc										allocator_type;
 			typedef value_type&									reference;
 			typedef const value_type&							const_reference;
 			typedef	value_type*									pointer;
 			typedef const value_type*							const_pointer;
-			typedef NodeMap<mapped_type, Compare>							NodeMap;
+			typedef NodeMap<value_type, Compare>				NodeMap;
+			typedef MapIterator<value_type, pointer, reference, Compare >			iterator;
+
 			
 		private:
 			NodeMap			*racine;
@@ -54,7 +50,9 @@ namespace ft
 			map& operator= (const map& x);
 
 			///////// ITERATORS /////////
-			// iterator begin();
+			iterator begin(){ 
+				return iterator(racine);
+			}
 			// const_iterator begin() const;
 			// iterator end();
 			// const_iterator end() const;
@@ -79,26 +77,24 @@ namespace ft
 
 			///////// MODIFIERS /////////
 			ft::pair<iterator, bool>	insert(const value_type& val) {
-			if (m_lenght == 0){
-					iterator(new_root(val));
-					return (NULL);
-					//return (ft::make_pair(iterator(new_root(val)), true));
+				if (m_lenght == 0){
+					return (ft::make_pair(iterator(new_root(val)), true));
 				}
-			// NodeMap	*it(racine);
-			// while (it) {
-			// 	if (Compare()(val.first, it->data.first)) {
-			// 		if (it->left && it->left != this->_first)
-			// 			it = it->left;
-			// 		else return ft::make_pair(iterator(insert_left(it, val)), true);
-			// 	}
-			// 	else if (Compare()(it->data.first, val.first)) {
-			// 		if (it->right && it->right != this->_last)
-			// 			it = it->right;
-			// 		else return ft::make_pair(iterator(insert_right(it, val)), true);
-			// 	}
-			// 	else break ;
-			// }
-			// return ft::make_pair(iterator(it), false);
+				NodeMap	*it(racine);
+				while (it) {
+					if (Compare()(val.first, it->m_value.first)) {
+						if (it->left && it->left->left != NULL && it->left->right != NULL)
+							it = it->left;
+						else return ft::make_pair(iterator(insert_left(it, val)), true);
+					}
+					else if (Compare()(it->m_value.first, val.first)) {
+						if (it->right && it->left->left != NULL && it->left->right != NULL)
+							it = it->right;
+						else return ft::make_pair(iterator(insert_right(it, val)), true);
+					}
+					else break ;
+				}	
+				return ft::make_pair(iterator(it), false);
 			}
 			// iterator insert (iterator position, const value_type& val);
 			// template <class InputIterator>
@@ -135,22 +131,45 @@ namespace ft
 				return racine;
 			}
 
+			NodeMap	*insert_left(NodeMap *it, const value_type& val = value_type()) {
+				NodeMap *insert = new NodeMap(val);
+				insert->parent = it;
+				insert->left = it->left;
+				if (it->left)
+					it->left->parent = insert;
+				it->left = insert;
+				++m_lenght;
+				// fixRedBlackViolations(insert);
+				return insert;
+			}
+			NodeMap	*insert_right(NodeMap *it, const value_type& val = value_type()) {
+				NodeMap *insert = new NodeMap(val);
+				insert->parent = it;
+				insert->right = it->right;
+				if (it->right)
+					it->right->parent = insert;
+				it->right = insert;
+				++m_lenght;
+				// fixRedBlackViolations(insert);
+				return insert;
+			}
+
 			void print() const {
 				print("", racine, false);
 				std::cout << std::endl;
 			}
 
-			void print(const std::string& display, const NodeMap* node, bool isLeft) const {
+			void print(const std::string& display, const NodeMap* node, bool Left) const {
 				if (node) {
 					std::cout	<< display \
-								<< (isLeft ? "├L─" : "└R-" );
+								<< (Left ? "├L─" : "└R-" );
 					if (node->m_color == RED)
-						std::cout << _RED;
+						std::cout << "\x1b[47m" << "\x1b[31m";
 					else if (node->m_color == BLACK)
-						std::cout << _IWHITE << _GREY;
-					std::cout << node->m_value << _END << std::endl ;
-					print(display + (isLeft ? "│   " : "    "), node->left, true);
-					print(display + (isLeft ? "│   " : "    "), node->right, false);
+						std::cout << "\x1b[47m" << "\x1b[30m";
+					std::cout << node->m_value.first << "\x1b[0m" << std::endl ;
+					print(display + (Left ? "│   " : "    "), node->left, true);
+					print(display + (Left ? "│   " : "    "), node->right, false);
 				}
 			}
 

@@ -26,7 +26,9 @@ void map()
 {
 	std::cout << std::endl << "////////// MAP //////////"  << std::endl;
 	ft::map<int, int> first;
-	first.insert(ft::make_pair(10, 353));
+	first.insert(ft::make_pair(15, 353));
+	first.insert(ft::make_pair(12, 353));
+	first.insert(ft::make_pair(17, 353));
 	first.print();
 	std::cout << "////////// MAP //////////"  << std::endl << std::endl;
 }

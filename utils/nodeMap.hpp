@@ -7,7 +7,7 @@ namespace ft
 		BLACK,
 		RED
 	};
-	template<class T, class Compare>
+	template<typename T, class Compare>
 	class NodeMap
 	{
 		public:
