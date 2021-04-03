@@ -143,7 +143,7 @@ namespace ft
 					it->left->parent = insert;
 				it->left = insert;
 				++m_lenght;
-				fixRedBlackViolations(insert);
+				insertrules(insert);
 				return insert;
 			}
 			NodeMap	*insert_right(NodeMap *it, const value_type& val = value_type()) {
@@ -154,7 +154,7 @@ namespace ft
 					it->right->parent = insert;
 				it->right = insert;
 				++m_lenght;
-				fixRedBlackViolations(insert);
+				insertrules(insert);
 				return insert;
 			}
 
@@ -183,11 +183,11 @@ namespace ft
 				if (x->right)
 					x->right->parent = x;
 				y->parent = x->parent;
-				if (y->parent == 0) // x was root, now y is root
+				if (y->parent == 0)
 					racine = y;
-				else if (x == y->parent->left) // x was left child
+				else if (x == y->parent->left)
 					y->parent->left = y;
-				else // x was right child
+				else
 					y->parent->right = y;
 				y->left = x;
 				x->parent = y;
@@ -198,62 +198,53 @@ namespace ft
 				if (x->left)
 					x->left->parent = x;
 				y->parent = x->parent;
-				if (y->parent == 0) // x was root, now y is root
+				if (y->parent == 0)
 					racine = y;
-				else if (x == y->parent->left) // x was left child
+				else if (x == y->parent->left)
 					y->parent->left = y;
-				else // x was right child
+				else 
 					y->parent->right = y;
 				y->right = x;
 				x->parent = y;
 			}
 
-			void	fixRedBlackViolations(NodeMap *z) {
-//				std::cerr << "printBT before fixviolations, z = " << z->data.first << "->>" << z->data.second << std::endl;
-//				printBT();
+			void	insertrules(NodeMap *z) {
+//				print();
 				while (z != racine && z->m_color == RED && z->parent->m_color == RED) {
 					NodeMap *parent = z->parent;
 					NodeMap *grandpa = parent->parent;
 					if (parent == grandpa->left) {
 						NodeMap *uncle = grandpa->right;
-						if (uncle && uncle->m_color == RED) { // Case 1: uncle is red, recolour
-//							std::cerr << _RED << _BOLD << "case A-1, checking z = " << z->data.first << "->" << z->data.second << std::endl;
+						if (uncle && uncle->m_color == RED) {
 							grandpa->m_color = RED;
 							parent->m_color = BLACK;
 							uncle->m_color = BLACK;
 							z = grandpa;
 						}
-						else if (z == parent->right) { // Case 2: node is right child of parent, left-rotation required
-//							std::cerr << _RED << _BOLD << "case A-2, doing left rotation around " << parent->data.first << "->" << parent->data.second << std::endl;
+						else if (z == parent->right) {
 							left_rotation(parent);
 							z = parent;
 							parent = z->parent;
 						}
-						else { // Case 3: node is left child of parent, right rotation required
-//							std::cerr << _RED << _BOLD << "case A-2, doing right rotation around " << grandpa->data.first << "->" << grandpa->data.second << std::endl;
+						else {
 							right_rotation(grandpa);
 							ft::m_swap(parent->m_color, grandpa->m_color);
 						}
 					}
-					// Case B
-					// Parent is right child of grandparent
 					else if (parent == grandpa->right) {
 						NodeMap *uncle = grandpa->left;
-						if (uncle && uncle->m_color == RED) { // Case 1: uncle is red, recolour
-//							std::cerr << _RED << _BOLD << "case B-1, checking z = " << z->data.first << "->" << z->data.second << std::endl;
+						if (uncle && uncle->m_color == RED) { 
 							grandpa->m_color = RED;
 							parent->m_color = BLACK;
 							uncle->m_color = BLACK;
 							z = grandpa;
 						}
-						else if (z == parent->left) { // Case 2: node is left child of parent, right-rotation required
-//							std::cerr << _RED << _BOLD << "case B-2, doing right rotation around " << parent->data.first << "->" << parent->data.second << std::endl;
+						else if (z == parent->left) { 
 							right_rotation(parent);
 							z = parent;
 							parent = z->parent;
 						}
 						else {
-//							std::cerr << _RED << _BOLD << "case B-2, doing left rotation around " << grandpa->data.first << "->" << grandpa->data.second << std::endl;
 							left_rotation(grandpa);
 							ft::m_swap(parent->m_color, grandpa->m_color);
 							z = parent;
