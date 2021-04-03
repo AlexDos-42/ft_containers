@@ -36,9 +36,6 @@ namespace ft
 			explicit map(const Compare& m_comp = Compare(), const Alloc& _allocator = Alloc())
 				: _allocator(_allocator), m_comp(m_comp), m_lenght(0){
 				new_root();
-				racine->left = NULL;
-				racine->right = NULL;
-				racine->parent = NULL;
 				racine->m_color = BLACK;
 			}
 			//template <class InputIterator>
@@ -46,7 +43,6 @@ namespace ft
 			map (const map& x);
 			~map() {
 				clear(racine);
-			//	delete racine;
 			}
 			map& operator= (const map& x);
 
@@ -129,7 +125,7 @@ namespace ft
 			// pair<iterator,iterator>             equal_range (const key_type& k);
 			
 			NodeMap	*new_root() {
-				racine = new NodeMap();
+				racine = new NodeMap(ft::make_pair(10, 353));
 				return racine;
 			}
 
@@ -147,7 +143,7 @@ namespace ft
 					it->left->parent = insert;
 				it->left = insert;
 				++m_lenght;
-				// fixRedBlackViolations(insert);
+				fixRedBlackViolations(insert);
 				return insert;
 			}
 			NodeMap	*insert_right(NodeMap *it, const value_type& val = value_type()) {
@@ -158,7 +154,7 @@ namespace ft
 					it->right->parent = insert;
 				it->right = insert;
 				++m_lenght;
-				// fixRedBlackViolations(insert);
+				fixRedBlackViolations(insert);
 				return insert;
 			}
 
@@ -181,6 +177,91 @@ namespace ft
 				}
 			}
 
+			void	left_rotation(NodeMap *x) {
+				NodeMap *y = x->right;
+				x->right = y->left;
+				if (x->right)
+					x->right->parent = x;
+				y->parent = x->parent;
+				if (y->parent == 0) // x was root, now y is root
+					racine = y;
+				else if (x == y->parent->left) // x was left child
+					y->parent->left = y;
+				else // x was right child
+					y->parent->right = y;
+				y->left = x;
+				x->parent = y;
+			}
+			void	right_rotation(NodeMap *x) {
+				NodeMap *y = x->left;
+				x->left = y->right;
+				if (x->left)
+					x->left->parent = x;
+				y->parent = x->parent;
+				if (y->parent == 0) // x was root, now y is root
+					racine = y;
+				else if (x == y->parent->left) // x was left child
+					y->parent->left = y;
+				else // x was right child
+					y->parent->right = y;
+				y->right = x;
+				x->parent = y;
+			}
+
+			void	fixRedBlackViolations(NodeMap *z) {
+//				std::cerr << "printBT before fixviolations, z = " << z->data.first << "->>" << z->data.second << std::endl;
+//				printBT();
+				while (z != racine && z->m_color == RED && z->parent->m_color == RED) {
+					NodeMap *parent = z->parent;
+					NodeMap *grandpa = parent->parent;
+					if (parent == grandpa->left) {
+						NodeMap *uncle = grandpa->right;
+						if (uncle && uncle->m_color == RED) { // Case 1: uncle is red, recolour
+//							std::cerr << _RED << _BOLD << "case A-1, checking z = " << z->data.first << "->" << z->data.second << std::endl;
+							grandpa->m_color = RED;
+							parent->m_color = BLACK;
+							uncle->m_color = BLACK;
+							z = grandpa;
+						}
+						else if (z == parent->right) { // Case 2: node is right child of parent, left-rotation required
+//							std::cerr << _RED << _BOLD << "case A-2, doing left rotation around " << parent->data.first << "->" << parent->data.second << std::endl;
+							left_rotation(parent);
+							z = parent;
+							parent = z->parent;
+						}
+						else { // Case 3: node is left child of parent, right rotation required
+//							std::cerr << _RED << _BOLD << "case A-2, doing right rotation around " << grandpa->data.first << "->" << grandpa->data.second << std::endl;
+							right_rotation(grandpa);
+							ft::m_swap(parent->m_color, grandpa->m_color);
+						}
+					}
+					// Case B
+					// Parent is right child of grandparent
+					else if (parent == grandpa->right) {
+						NodeMap *uncle = grandpa->left;
+						if (uncle && uncle->m_color == RED) { // Case 1: uncle is red, recolour
+//							std::cerr << _RED << _BOLD << "case B-1, checking z = " << z->data.first << "->" << z->data.second << std::endl;
+							grandpa->m_color = RED;
+							parent->m_color = BLACK;
+							uncle->m_color = BLACK;
+							z = grandpa;
+						}
+						else if (z == parent->left) { // Case 2: node is left child of parent, right-rotation required
+//							std::cerr << _RED << _BOLD << "case B-2, doing right rotation around " << parent->data.first << "->" << parent->data.second << std::endl;
+							right_rotation(parent);
+							z = parent;
+							parent = z->parent;
+						}
+						else {
+//							std::cerr << _RED << _BOLD << "case B-2, doing left rotation around " << grandpa->data.first << "->" << grandpa->data.second << std::endl;
+							left_rotation(grandpa);
+							ft::m_swap(parent->m_color, grandpa->m_color);
+							z = parent;
+						}
+					}
+				}
+				racine->m_color = BLACK;
+			}
 	};
 }
 
