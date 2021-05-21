@@ -9,13 +9,15 @@
 #include "../iterators/VectorIterator.hpp"
 #include "../utils/others.hpp"
 
+// To do:
+
 namespace ft
 {
 	template < class T, class Alloc = std::allocator<T> >
 	class vector
 	{
 		public:
-			typedef	T										value_type;
+			typedef	T											value_type;
 			typedef VectorIterator<T>							iterator;
 			typedef ConstVectorIterator<T>						const_iterator;
 			typedef ReverseVectorIterator<T>					reverse_iterator;
@@ -297,8 +299,8 @@ namespace ft
 	}
 	template <class T, class Alloc>
   	void swap (vector<T,Alloc>& x, vector<T,Alloc>& y){
-		  x.swap(y);
-	  }
+		x.swap(y);
+	}
 }
 
 #endif

@@ -3,6 +3,8 @@
 
 # include "../list/List.hpp"
 
+// To do: relational operators
+
 namespace ft
 {
 	template <class T, class Container = list<T> >
@@ -34,12 +36,22 @@ namespace ft
 		void push (const T& val) {
 			s.push_front(val);
 		}
-		// template <class... Args> void emplace (Args&&... args);
 		void pop() {
 			s.pop_back();
 		}
-		// void swap (queue& x) noexcept(/*see below*/);
 	};
+	template <class T, class Container>
+	bool operator== (const stack<T,Container>& lhs, const stack<T,Container>& rhs);
+	template <class T, class Container>
+	bool operator!= (const stack<T,Container>& lhs, const stack<T,Container>& rhs);
+	template <class T, class Container>
+	bool operator<  (const stack<T,Container>& lhs, const stack<T,Container>& rhs);
+	template <class T, class Container>
+	bool operator<= (const stack<T,Container>& lhs, const stack<T,Container>& rhs);
+	template <class T, class Container>
+	bool operator>  (const stack<T,Container>& lhs, const stack<T,Container>& rhs);
+	template <class T, class Container>
+	bool operator>= (const stack<T,Container>& lhs, const stack<T,Container>& rhs);
 };
 
 #endif
