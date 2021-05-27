@@ -1,204 +1,196 @@
-#ifndef VECTORITERATOR
-# define VECTORITERATOR
+#ifndef VECTORITERATOR_HPP
+# define VECTORITERATOR_HPP
 
 namespace ft
 {
 	template <typename T>
-	class VectorIterator
+	class RandomAccessIterator
 	{
-		private:
-			T*		ptr;
 		public:
-			VectorIterator() {}
-			VectorIterator(VectorIterator const &ref) {
-				*this = ref;
+			typedef RandomAccessIterator			iterator;
+			typedef T								value_type;
+			typedef value_type*						pointer;
+			typedef value_type&						reference;
+			typedef ptrdiff_t 						difference_type;
+			typedef size_t							size_type;
+		private:
+			pointer		ptr;
+		public:
+			RandomAccessIterator(): ptr(nullptr) {}
+			RandomAccessIterator(pointer newptr): ptr(newptr) {}
+			RandomAccessIterator(iterator const &ref) {
+				ptr = ref.ptr;
 			}
-			VectorIterator(T *_ptr): ptr(_ptr) {}
-			~VectorIterator() {}
-			VectorIterator	&operator=(VectorIterator const &ref) {
+			~RandomAccessIterator() {}
+			iterator	&operator=(iterator const &ref) {
 				ptr = ref.ptr;
 				return *this;
 			}
 		
-			VectorIterator	&operator++() {
+			iterator	&operator++() {
 				ptr = ptr + 1;
 				return *this;
 			}
-			VectorIterator	&operator--() {
+			iterator	&operator--() {
 				ptr = ptr - 1;
 				return *this;
 			}
-			VectorIterator	operator++(int) {
-				VectorIterator	tmp(*this);
-				operator++();
+			iterator	operator++(int) {
+				iterator	tmp(*this);
+				ptr++;
 				return tmp;
 			}
-			VectorIterator	operator--(int) {
-				VectorIterator	tmp(*this);
-				operator--();
+			iterator	operator--(int) {
+				iterator	tmp(*this);
+				ptr--;
 				return tmp;
 			}
-			T* operator->() const {
-				return ptr;
+			iterator		operator+(difference_type n) {
+				iterator tmp(*this);
+				tmp.ptr += n;
+				return (tmp);
+			};
+			difference_type	operator+(iterator x) {
+				return (ptr + x.ptr);
 			}
-			T operator*() const {
+			iterator		operator-(difference_type n) {
+				iterator tmp(*this);
+				tmp.ptr -= n;
+				return (tmp);
+			};
+			difference_type	operator-(iterator x) {
+				return (ptr - x._ptr);
+			}
+			iterator	&operator+=(difference_type n) {
+				ptr += n;
+				return (*this);
+			}
+			iterator	&operator-=(difference_type n) {
+				ptr -= n;
+				return (*this);
+			};
+			bool	operator<(const iterator &x) const {
+				return ptr < x.ptr;
+			};
+			bool	operator>(const iterator &x) const {
+				return ptr > x.ptr;
+			};
+			bool	operator<=(const iterator &x) const {
+				return ptr <= x.ptr;
+			};
+			bool	operator>=(const iterator &x) const {
+				return ptr >= x.ptr;
+			};
+			pointer operator->() const {
+				return &(operator*());
+			}
+			reference operator*() const {
 				return *ptr;
 			}
+			reference operator[](size_type n) const {
+				return *(ptr + n);
+			}
 			
-			bool	operator==(VectorIterator const &ref) const {
+			bool	operator==(iterator const &ref) const {
 				return ptr == ref.ptr;
 			}
-			bool	operator!=(VectorIterator const &ref) const {
+			bool	operator!=(iterator const &ref) const {
 				return !(*this == ref);
 			}
 	};
 
 	template <typename T>
-	class ConstVectorIterator
+	class ReverseRandomAccess
 	{
-		private:
-			T*		ptr;
 		public:
-			ConstVectorIterator() {}
-			ConstVectorIterator(ConstVectorIterator const &ref) {
-				*this = ref;
+			typedef ReverseRandomAccess 			iterator;
+			typedef T								value_type;
+			typedef value_type*						pointer;
+			typedef value_type&						reference;
+			typedef ptrdiff_t 						difference_type;
+			typedef size_t							size_type;
+		private:
+			pointer		ptr;
+		public:
+			ReverseRandomAccess(): ptr(nullptr) {}
+			ReverseRandomAccess(pointer newptr) : ptr(newptr) {}
+			ReverseRandomAccess(iterator const &ref) {
+				ptr = ref.ptr;
 			}
-			ConstVectorIterator(T* _ptr) : ptr(_ptr) {}
-			~ConstVectorIterator() {}
-			ConstVectorIterator		&operator=(ConstVectorIterator const &ref) {
+			~ReverseRandomAccess() {}
+			iterator		&operator=(iterator const &ref) {
 				ptr = ref.ptr;
 				return *this;
 			}
 		
-			ConstVectorIterator	&operator++() {
-				ptr = ptr + 1;
-				return *this;
-			}
-			ConstVectorIterator	&operator--() {
+			iterator	&operator++() {
 				ptr = ptr - 1;
 				return *this;
 			}
-			ConstVectorIterator	operator++(int) {
-				ConstVectorIterator	tmp(*this);
-				operator++();
-				return tmp;
-			}
-			ConstVectorIterator	operator--(int) {
-				ConstVectorIterator	tmp(*this);
-				operator--();
-				return tmp;
-			}
-			T* operator->() const {
-				return ptr->m_value;
-			}
-			T operator*() const {
-				return ptr->m_value;
-			}
-			
-			bool	operator==(ConstVectorIterator const &ref) const {
-				return ptr == ref.ptr;
-			}
-			bool	operator!=(ConstVectorIterator const &ref) const {
-				return !(*this == ref);
-			}
-	};
-
-	template <typename T>
-	class ReverseVectorIterator
-	{
-		private:
-			T*		ptr;
-		public:
-			ReverseVectorIterator() {}
-			ReverseVectorIterator(ReverseVectorIterator const &ref) {
-				*this = ref;
-			}
-			ReverseVectorIterator(T* _ptr) : ptr(_ptr) {}
-			~ReverseVectorIterator() {}
-			ReverseVectorIterator		&operator=(ReverseVectorIterator const &ref) {
-				ptr = ref.ptr;
-				return *this;
-			}
-		
-			ReverseVectorIterator	&operator++() {
-				ptr = ptr - 1;
-				return *this;
-			}
-			ReverseVectorIterator	&operator--() {
+			iterator	&operator--() {
 				ptr = ptr + 1;
 				return *this;
 			}
-			ReverseVectorIterator	operator++(int) {
-				ReverseVectorIterator	tmp(*this);
-				operator--();
+			iterator	operator++(int) {
+				iterator	tmp(*this);
+				ptr--;
 				return tmp;
 			}
-			ReverseVectorIterator	operator--(int) {
-				ReverseVectorIterator	tmp(*this);
-				operator++();
+			iterator	operator--(int) {
+				iterator	tmp(*this);
+				ptr++;
 				return tmp;
 			}
-			T* operator->() const {
-				return ptr->m_value;
+			iterator		operator+(difference_type x) {
+				iterator tmp(*this);
+				tmp.ptr -= x;
+				return (tmp);
+			};
+			difference_type	operator+(iterator x) {
+				return (ptr - x.ptr);
 			}
-			T operator*() const {
-				return ptr->m_value;
+			iterator		operator-(difference_type x) {
+				iterator tmp(*this);
+				tmp.ptr += x;
+				return tmp;
+			};
+			difference_type	operator-(iterator x) {
+				return ptr + x.ptr;
+			}
+			bool	operator<(const iterator &x) const {
+				return ptr < x.ptr;
+			};
+			bool	operator>(const iterator &x) const {
+				return ptr > x.ptr;
+			};
+			bool	operator<=(const iterator &x) const {
+				return ptr <= x.ptr;
+			};
+			bool	operator>=(const iterator &x) const {
+				return ptr >= x.ptr;
+			};
+			iterator	&operator+=(difference_type x) {
+				ptr -= x;
+				return *this;
+			}
+			iterator	&operator-=(difference_type x) {
+				ptr += x;
+				return *this;
+			};
+			pointer operator->() const {
+				return &(operator*());
+			}
+			reference operator*() const {
+				return *ptr;
+			}
+			reference operator[](size_type n) const {
+				return *(ptr + n);
 			}
 			
-			bool	operator==(ReverseVectorIterator const &ref) const {
+			bool	operator==(iterator const &ref) const {
 				return ptr == ref.ptr;
 			}
-			bool	operator!=(ReverseVectorIterator const &ref) const {
-				return !(*this == ref);
-			}
-	};
-
-	template <typename T>
-	class ConstReverseVectorIterator
-	{
-		private:
-			T*		ptr;
-		public:
-			ConstReverseVectorIterator() {}
-			ConstReverseVectorIterator(ConstReverseVectorIterator const &ref) {
-				*this = ref;
-			}
-			ConstReverseVectorIterator(T* _ptr) : ptr(_ptr) {}
-			~ConstReverseVectorIterator() {}
-			ConstReverseVectorIterator		&operator=(ConstReverseVectorIterator const &ref) {
-				ptr = ref.ptr;
-				return *this;
-			}
-		
-			ConstReverseVectorIterator	&operator++() {
-				ptr = ptr - 1;
-				return *this;
-			}
-			ConstReverseVectorIterator	&operator--() {
-				ptr = ptr + 1;
-				return *this;
-			}
-			ConstReverseVectorIterator	operator++(int) {
-				ConstReverseVectorIterator	tmp(*this);
-				operator--();
-				return tmp;
-			}
-			ConstReverseVectorIterator	operator--(int) {
-				ConstReverseVectorIterator	tmp(*this);
-				operator++();
-				return tmp;
-			}
-			T* operator->() const {
-				return ptr->m_value;
-			}
-			T operator*() const {
-				return ptr->m_value;
-			}
-			
-			bool	operator==(ConstReverseVectorIterator const &ref) const {
-				return ptr == ref.ptr;
-			}
-			bool	operator!=(ConstReverseVectorIterator const &ref) const {
+			bool	operator!=(iterator const &ref) const {
 				return !(*this == ref);
 			}
 	};

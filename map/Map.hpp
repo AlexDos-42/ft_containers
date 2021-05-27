@@ -209,7 +209,7 @@ namespace ft
 			}
 
 			void	insertrules(NodeMap *z) {
-//				print();
+				print();
 				while (z != racine && z->m_color == RED && z->parent->m_color == RED) {
 					NodeMap *parent = z->parent;
 					NodeMap *grandpa = parent->parent;
