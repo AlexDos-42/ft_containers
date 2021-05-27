@@ -3,43 +3,43 @@
 
 namespace ft
 {
-	template<class T>
+	template<class T, class Alloc = std::allocator<T> >
 	class Node
 	{
 		public:
-			Node<T>	*m_next;
-			Node<T>	*m_back;
-			T		m_value;
+			typedef T									value_type;
+			typedef Alloc								allocator_type;
+			typedef Node<T, Alloc>*						node;
+			typedef typename allocator_type::pointer 	pointer;
+			typedef typename allocator_type::reference	reference;
 		public:
-			Node(): m_value() {
+			node 	m_next;
+			node	m_back;
+			pointer	m_data;
+		public:
+			Node(const value_type &val, allocator_type& alloc = allocator_type()) {
+				m_data = alloc.allocate(1);
+				alloc.construct(m_data, val);
 				initLink(nullptr, nullptr);
 			}
-			Node(const T &val): m_value(val) {
-				initLink(nullptr, nullptr);
-			}
-			~Node() {}
-			Node(Node<T> &copy): m_back(copy.m_back), m_next(copy.m_next), m_value(copy.m_value) {}
-			Node<T> &operator=(Node<T> const &copy) {
-				m_back = copy.m_back;
-				m_next = copy.m_next;
-				m_value = copy.m_value;
-				return (*this);
+			~Node() {
+				allocator_type		alloc;
+				alloc.destroy(m_data);
+				alloc.deallocate(m_data, 1);
 			}
 			
-			void	initLink(Node<T> *back, Node<T> *next) {
+			void	initLink(node back, node next) {
 				m_back = back;
 				m_next = next;
 			}
-			Node<T>*	getNext() {
+
+			node	getNext() {
 				return this->m_next;
 			}
-			Node<T>*	getBack() {
+			node	getBack() {
 				return this->m_back;
 			}
-			T	getValue(){
-				return this->m_value;
-			}
-			Node<T>*	insert(Node<T> m_back, Node<T> m_next){
+			node	insert(node m_back, node m_next){
 				m_next = m_back->m_next;
 				m_back->m_next = this;
 				m_back = m_next->m_back;

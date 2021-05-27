@@ -1,34 +1,44 @@
-#ifndef LIST
-# define LIST
+#ifndef LIST_HPP
+# define LIST_HPP
 
 # include <cstddef>
 # include <limits>
 # include <iostream>
+# include <memory>
 # include "../utils/node.hpp"
 #include "../iterators/BidirectionalIterator.hpp"
 
 namespace ft
 {
-	template < class T, class Alloc = std::allocator<T> >
+	template <typename T, class Alloc = std::allocator<T> >
 	class list
 	{
 		public:
-			typedef	T										value_type;
+			typedef	T											value_type;
 			typedef	Alloc										allocator_type;
-			typedef BidirectIterator<T, Alloc>						iterator;
-			typedef BidirectIterator<const T, Alloc>				const_iterator;
-			typedef ReverseBidirectIterator<T, Alloc>				reverse_iterator;
+			typedef	size_t										size_type;
+			typedef Node<value_type, allocator_type>*			node;
+			typedef typename allocator_type::reference 			reference;
+			typedef typename allocator_type::const_reference	const_reference;
+			typedef typename allocator_type::pointer			pointer;
+			typedef typename allocator_type::const_pointer		const_pointer;
+			typedef BidirectIterator<T, Alloc>					iterator;
+			typedef BidirectIterator<const T, Alloc>			const_iterator;
+			typedef ReverseBidirectIterator<T, Alloc>			reverse_iterator;
 			typedef ReverseBidirectIterator<const T, Alloc>		const_reverse_iterator;
 		private:
-			size_t m_length;
-			allocator_type		_allocator;
-			Node<T, Alloc> *racine;
+			size_type 			m_length;
+			allocator_type		m_allocator;
+			node 				racine;
+			std::allocator<Node<value_type, allocator_type> >     m_allocNode;
 
-			Node<T, Alloc>	*creatNode(const T& val) {
-				return new Node<T, Alloc>(val, _allocator);
+			node creatNode(const value_type& val = value_type()) {
+				node tmpNode = m_allocNode.allocate(1);
+                m_allocNode.construct(&tmpNode->m_data, val);
+                return tmpNode;
 			}
-			Node<T, Alloc>	target(const T*addr){
-				Node<T, Alloc>		*target = racine->m_next;
+			node	target(const T*addr){
+				node target = racine->m_next;
 
 				while (target != racine)
 				{
@@ -40,7 +50,7 @@ namespace ft
 					return target;
 				return NULL;
 			}
-			void	add(const T& val, Node<T, Alloc> *target){
+			void	add(const T& val, node target){
 				if (target == racine->m_next)
 					push_front(val);
 				else if (target == racine)
@@ -50,7 +60,7 @@ namespace ft
 					if (!m_length)
 						push_front(val);
 					else {
-						Node<T, Alloc>		*add = creatNode(val);
+						node add = creatNode(val);
 						add->insert(target->prev, target);
 						++m_length;
 					}
@@ -58,27 +68,29 @@ namespace ft
 			}
 
 		public:
-			explicit list(): m_length(0) {
-				racine = new Node<T, Alloc>(T(), _allocator);
+			explicit list(const allocator_type& alloc = allocator_type()): m_length(0), m_allocator(alloc) {
+				racine = m_allocNode.allocate(1);
 				racine->m_next = racine;
 				racine->m_back = racine;
 			}
-			explicit list (size_t n, const Node<T, Alloc>*& val = Node<T, Alloc>()) {
-				racine = new Node<T, Alloc>(T(), _allocator);
+			explicit list (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) {
+				m_allocator = alloc;
+				racine = m_allocNode.allocate(1);
 				racine->m_next = racine;
 				racine->m_back = racine;
 				for ( m_length = 0; m_length < n; m_length++)
 					push_front(val->m_value);
 			}
-			template <class iterator >
-			list (iterator first, iterator last, const T& alloc = T());
+			template <class InputIterator >
+			list (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type());
 			list (const list& x): m_length(x.m_length) {
-				racine = new Node<T, Alloc>(T(), _allocator);
+				racine = m_allocNode.allocate(1);
 				racine->m_next = x.racine->m_next;
 				racine->m_back = x.racine->m_back;
 			}
 			~list() {
 				clear();
+				m_allocNode.deallocate(racine, 1);
 				delete racine;
 			}
 			list& operator= (const list& x){
@@ -116,16 +128,16 @@ namespace ft
 			}
 
 			///////// CAPACITY /////////
-			size_t size(void) const {
+			size_type size(void) const {
 				return (this->m_length);
 			}
-			size_t max_size() const {
-				return (std::numeric_limits<size_t>::max() / (sizeof(Node<T, Alloc>)));
+			size_type max_size() const {
+				return (std::numeric_limits<size_type>::max() / (sizeof(Node<T, Alloc>)));
 			}
 			bool empty(void) const {
 				return (this->m_length == 0);
 			}
-			void resize (size_t n, T val = T()){
+			void resize (size_type n, T val = T()){
 				while (this->m_length > n) {
 					pop_back();
 				}
@@ -155,33 +167,33 @@ namespace ft
 				while (first != last)
 					push_back(*first++);
 			}
-			void assign (size_t n, const T& val) {
+			void assign (size_t n, const value_type& val) {
 				clear();
 				while (n--)
 					push_front(val);
 			}
 
-			iterator insert (iterator position, const T& val){
+			iterator insert (iterator position, const value_type& val){
 				return iterator(add(val, target(position)));
 			}
-			void insert (iterator position, size_t n, const T& val);
+			void insert (iterator position, size_t n, const value_type& val);
 			template <class iterator>
 			void insert (iterator position, iterator first, iterator last);
 
 			iterator erase (iterator position);
 			iterator erase (iterator first, iterator last);
 			
-			void push_back (const T& val)
+			void push_back (const value_type& val)
 			{
 				if (!m_length) {
-					Node<T, Alloc> *first = creatNode(val);
+					node first = creatNode(val);
 					racine->m_next = first;
 					racine->m_back = first;
 					first->m_next = racine;
 					first->m_back = racine;
 				}
 				else {
-					Node<T, Alloc> *other = creatNode(val);
+					node other = creatNode(val);
 					racine->m_back->m_next = other;
 					other->m_back = racine->m_back;
 					other->m_next = racine;
@@ -192,24 +204,24 @@ namespace ft
 			void pop_back(){
 				if (this->m_length)
 				{
-					Node<T, Alloc> *tmp = racine->m_back->m_back;
+					node tmp = racine->m_back->m_back;
 					tmp->m_next = racine;
 					delete racine->m_back;
 					racine->m_back = tmp;
 					m_length--;
 				}
 			}
-			void 	push_front (const T& val)
+			void 	push_front (const value_type& val)
 			{
 				if (!m_length) {
-					Node<T, Alloc> *first = creatNode(val);
+					node first = creatNode(val);
 					racine->m_next = first;
 					racine->m_back = first;
 					first->m_next = racine;
 					first->m_back = racine;
 				}
 				else {
-					Node<T, Alloc> *other = creatNode(val);
+					node other = creatNode(val);
 					racine->m_next->m_back = other;
 					other->m_next = racine->m_next;
 					other->m_back = racine;
@@ -220,7 +232,7 @@ namespace ft
 			void pop_front(){
 				if (this->m_length)
 				{
-					Node<T, Alloc> *tmp = racine->m_next->m_next;
+					node tmp = racine->m_next->m_next;
 					tmp->m_back = racine;
 					delete racine->m_next;
 					racine->m_next = tmp;
@@ -270,6 +282,6 @@ namespace ft
 	bool operator>= (const list<T>& lhs, const list<T>& rhs);
 	template <class T>
 	void swap (list<T>& x, list<T>& y);
-}
+};
 
 #endif

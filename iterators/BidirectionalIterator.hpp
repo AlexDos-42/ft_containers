@@ -12,7 +12,7 @@ namespace ft
 			typedef ptrdiff_t					difference_type;
 			typedef T*							pointer;
 			typedef T&							reference;
-			typedef Node<value_type, Alloc>*		node;
+			typedef Node<value_type, Alloc>*	node;
 			typedef size_t						size_type;
 		private:
 			node	ptr;
@@ -47,14 +47,14 @@ namespace ft
 				return tmp;
 			}
 			pointer operator->() const {
-				return ptr->m_value;
+				return &(ptr->m_data);
 			}
 			reference operator*() const {
-				return ptr->m_value;
+				return ptr->m_data;
 			}
 			
 			bool	operator==(iterator const &ref) const {
-				return ptr->m_value == ref.ptr->m_value;
+				return ptr->m_data == ref.ptr->m_data;
 			}
 			bool	operator!=(iterator const &ref) const {
 				return !(*this == ref);
@@ -105,14 +105,14 @@ namespace ft
 				return tmp;
 			}
 			pointer operator->() const {
-				return ptr->m_value;
+				return &(ptr->m_data);
 			}
 			reference operator*() const {
-				return ptr->m_value;
+				return ptr->m_data;
 			}
 			
 			bool	operator==(iterator const &ref) const {
-				return ptr->m_value == ref.ptr->m_value;
+				return ptr->m_data == ref.ptr->m_data;
 			}
 			bool	operator!=(iterator const &ref) const {
 				return !(*this == ref);

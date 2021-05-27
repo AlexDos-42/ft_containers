@@ -1,12 +1,11 @@
 #include "list/List.hpp"
 #include "queue/Queue.hpp"
-#include "vector/Vector.hpp"
+//#include "vector/Vector.hpp"
 #include "stack/Stack.hpp"
-#include "map/Map.hpp"
+//#include "map/Map.hpp"
 #include <iostream>
 #include "iterators/BidirectionalIterator.hpp"
 #include <algorithm>
-#include "map/Map.hpp"
 # include "utils/Pairs.hpp"
 
 void next()
@@ -24,23 +23,23 @@ void next()
 
 void map()
 {
-	std::cout << std::endl << "////////// MAP //////////"  << std::endl;
-	ft::map<int, int> first;
-	first.insert(ft::make_pair(14, 353));
-	first.insert(ft::make_pair(5, 353));
-	first.insert(ft::make_pair(6, 353));
-	first.insert(ft::make_pair(4, 353));
-	first.insert(ft::make_pair(16, 353));
-	first.insert(ft::make_pair(17, 353));
-	first.insert(ft::make_pair(108, 353));
-	first.insert(ft::make_pair(12, 353));
-	first.insert(ft::make_pair(1300, 353));
-	first.insert(ft::make_pair(33, 353));
-	first.insert(ft::make_pair(16, 353));
-	first.insert(ft::make_pair(1, 353));
-	first.insert(ft::make_pair(1, 353));
-	first.print();
-	std::cout << "////////// MAP //////////"  << std::endl << std::endl;
+	// std::cout << std::endl << "////////// MAP //////////"  << std::endl;
+	// ft::map<int, int> first;
+	// first.insert(ft::make_pair(14, 353));
+	// first.insert(ft::make_pair(5, 353));
+	// first.insert(ft::make_pair(6, 353));
+	// first.insert(ft::make_pair(4, 353));
+	// first.insert(ft::make_pair(16, 353));
+	// first.insert(ft::make_pair(17, 353));
+	// first.insert(ft::make_pair(108, 353));
+	// first.insert(ft::make_pair(12, 353));
+	// first.insert(ft::make_pair(1300, 353));
+	// first.insert(ft::make_pair(33, 353));
+	// first.insert(ft::make_pair(16, 353));
+	// first.insert(ft::make_pair(1, 353));
+	// first.insert(ft::make_pair(1, 353));
+	// first.print();
+	// std::cout << "////////// MAP //////////"  << std::endl << std::endl;
 }
 
 void stack()
@@ -50,54 +49,54 @@ void stack()
 	std::cout << "////////// STACK //////////"  << std::endl << std::endl;
 }
 
-void vector()
-{
-	std::cout << std::endl << "////////// VECTOR //////////"  << std::endl;
-	ft::vector<int> first;
-	ft::vector<int> second;
-	first.push_back(1);
-	first.push_back(3);
-	first.push_back(5);
-	first.push_back(7);
-	second.push_back(2);
-	second.push_back(4);
-	second.push_back(6);
-	second.push_back(8);
-	for (ft::vector<int>::iterator it = first.begin(); it != first.end(); it++)
-		std::cout << *it << " ";
-	std::cout << std::endl;
-	for (ft::vector<int>::iterator it = second.begin(); it != second.end(); it++)
-		std::cout << *it << " ";
-	std::cout << std::endl;
-	swap(first, second);
-	for (ft::vector<int>::iterator it = first.begin(); it != first.end(); it++)
-		std::cout << *it << " ";
-	std::cout << std::endl;
-	for (ft::vector<int>::iterator it = second.begin(); it != second.end(); it++)
-		std::cout << *it << " ";
-	std::cout << std::endl;
-	first.swap(second);
-	for (ft::vector<int>::iterator it = first.begin(); it != first.end(); it++)
-		std::cout << *it << " ";
-	std::cout << std::endl;
-	for (ft::vector<int>::iterator it = second.begin(); it != second.end(); it++)
-		std::cout << *it << " ";
-	std::cout << std::endl;
-	second.assign((size_t)10, 10);
-	for (ft::vector<int>::iterator it = second.begin(); it != second.end(); it++)
-		std::cout << *it << " ";
-	std::cout << std::endl;
-	std::cout << "first size ? " << first.size() << std::endl;
-	std::cout << "front first ? " << first.front() << std::endl;
-	std::cout << "back first ? " << first.back() << std::endl;
-	first.pop_back();
-	first.clear();
-	std::cout << "first empty ? " << first.empty() << std::endl;
-	std::cout << "first max size ? " << first.max_size() << std::endl;
-	second.clear();
-	std::cout << "////////// VECTOR //////////"  << std::endl << std::endl;
-	next();
-}
+// void vector()
+// {
+// 	std::cout << std::endl << "////////// VECTOR //////////"  << std::endl;
+// 	ft::vector<int> first;
+// 	ft::vector<int> second;
+// 	first.push_back(1);
+// 	first.push_back(3);
+// 	first.push_back(5);
+// 	first.push_back(7);
+// 	second.push_back(2);
+// 	second.push_back(4);
+// 	second.push_back(6);
+// 	second.push_back(8);
+// 	for (ft::vector<int>::iterator it = first.begin(); it != first.end(); it++)
+// 		std::cout << *it << " ";
+// 	std::cout << std::endl;
+// 	for (ft::vector<int>::iterator it = second.begin(); it != second.end(); it++)
+// 		std::cout << *it << " ";
+// 	std::cout << std::endl;
+// 	swap(first, second);
+// 	for (ft::vector<int>::iterator it = first.begin(); it != first.end(); it++)
+// 		std::cout << *it << " ";
+// 	std::cout << std::endl;
+// 	for (ft::vector<int>::iterator it = second.begin(); it != second.end(); it++)
+// 		std::cout << *it << " ";
+// 	std::cout << std::endl;
+// 	first.swap(second);
+// 	for (ft::vector<int>::iterator it = first.begin(); it != first.end(); it++)
+// 		std::cout << *it << " ";
+// 	std::cout << std::endl;
+// 	for (ft::vector<int>::iterator it = second.begin(); it != second.end(); it++)
+// 		std::cout << *it << " ";
+// 	std::cout << std::endl;
+// 	second.assign((size_t)10, 10);
+// 	for (ft::vector<int>::iterator it = second.begin(); it != second.end(); it++)
+// 		std::cout << *it << " ";
+// 	std::cout << std::endl;
+// 	std::cout << "first size ? " << first.size() << std::endl;
+// 	std::cout << "front first ? " << first.front() << std::endl;
+// 	std::cout << "back first ? " << first.back() << std::endl;
+// 	first.pop_back();
+// 	first.clear();
+// 	std::cout << "first empty ? " << first.empty() << std::endl;
+// 	std::cout << "first max size ? " << first.max_size() << std::endl;
+// 	second.clear();
+// 	std::cout << "////////// VECTOR //////////"  << std::endl << std::endl;
+// 	next();
+// }
 
 void queue()
 {
@@ -163,7 +162,8 @@ int main (void)
 		if (str == "1" || str == "list" || str == "List")
 			list();
 		else if (str == "2" || str == "vector" || str == "Vector")
-			vector();
+			;
+//			vector();
 		else if (str == "3" || str == "map" || str == "Map")
 			map();
 		else if (str == "4" || str == "stack" || str == "Stack")
