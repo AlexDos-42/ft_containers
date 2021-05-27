@@ -1,5 +1,5 @@
-#ifndef OTHERS
-# define OTHERS
+#ifndef OTHERS_HPP
+# define OTHERS_HPP
 
 namespace ft
 {
@@ -11,8 +11,8 @@ namespace ft
 			y = _tmp;
 	};
 	
-	template<typename Iterator>
-	ptrdiff_t distance(Iterator first, Iterator last) {
+	template<typename InputIterator>
+	ptrdiff_t distance(InputIterator first, InputIterator last) {
 		ptrdiff_t diff = 0;
 		while (first != last) {
 			++diff;
