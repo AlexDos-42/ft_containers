@@ -34,7 +34,7 @@ namespace ft
 
 			node creatNode(const value_type& val = value_type()) {
 				node tmpNode = m_allocNode.allocate(1);
-                m_allocNode.construct(&tmpNode->m_data, val);
+                m_allocator.construct(&tmpNode->m_value, val);
                 return tmpNode;
 			}
 			node	target(const T*addr){
