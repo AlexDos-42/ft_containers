@@ -10,6 +10,7 @@
 
 #include "../iterators/VectorIterator.hpp"
 #include "../utils/others.hpp"
+#include "../utils/Pairs.hpp"
 
 namespace ft
 {
@@ -38,32 +39,38 @@ namespace ft
 					_allocator(alloc), m_ptr(0), m_length(0), m_capacity(0) {}
 			explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()):
 					_allocator(alloc), m_length(n), m_capacity(n) {
+				std::cout << "Ici 0 " << std::endl;
 				m_ptr = _allocator.allocate(n);
 				for (size_type i = 0; i < n; i++)
 					_allocator.construct(&m_ptr[i], val);
 			}
 			template <class InputIterator>
 			vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()):
-					_allocator(alloc), m_ptr(0), m_length(0), m_capacity(0) {
-				assign(first, last);
+					_allocator(alloc), m_length(0) {
+				std::cout << "Ici 1 " << std::endl;
+				InputIterator tmp(first);
+                while (tmp++ != last)
+                    m_length++;
+                m_capacity = m_length;
+                m_ptr = _allocator.allocate(m_capacity);
+                for (int i = 0; first != last; ++first, ++i)
+                    _allocator.construct(&m_ptr[i], *first);
 			}	
-			vector (const vector& x): m_ptr(0), m_length(0), m_capacity(0) {
-				*this = x;
+			vector (const vector& x): m_ptr(x.m_ptr), m_length(x.m_length), m_capacity(x.m_capacity) {
+				m_ptr = _allocator.allocate(m_capacity);
+                for (ft::pair<int, const_iterator> i(0, x.begin());
+                        i.second != x.end(); ++i.first, ++i.second)
+                _allocator.construct(&m_ptr[i.first], *i.second);
 			}
 			~vector(){
 				for (size_type i = 0; i < m_length; ++i)
 					_allocator.destroy(&m_ptr[i]);
-				_allocator.deallocate(m_ptr, m_capacity);
+				//_allocator.deallocate(m_ptr, m_capacity);
 			}
 			vector& operator= (const vector& x){
-				for (size_type i = 0; i < m_length; ++i)
-					_allocator.destroy(&m_ptr[i]);
-				_allocator.deallocate(m_ptr, m_capacity);
-				m_ptr = _allocator.allocate(x.m_capacity);
-				m_length = x.m_length;
-				for (size_type i = 0; i < m_length; ++i)
-					m_ptr[i] = x.m_ptr[i];
-				return *this;
+				vector tmp(x);
+                swap(tmp);
+                return *this;
 			}
 
 			///////// ITERATORS /////////
@@ -169,28 +176,51 @@ namespace ft
 			///////// MODIFIERS /////////
 			template <class InputIterator>
 			void assign (InputIterator first, InputIterator last){
-				size_type	size = ft::distance(first, last);
-				if (size > m_capacity)
-					m_realloc();
 				clear();
-				size_type i = 0;
-				for (; first != last; ++i, ++first)
-					_allocator.construct(&m_ptr[i], *first);
-				m_length = i;
+				size_type n = static_cast<size_type>(last - first);
+                if (n > m_capacity){
+                    _allocator.deallocate(m_ptr, m_capacity);
+                    m_ptr = _allocator.allocate(n);
+                }
+                size_type i = 0;
+                for (; first != last; ++i, ++first)
+                    _allocator.construct(&m_ptr[i], *first);
+                m_length = i;
 			}	
 			void assign (size_type n, const value_type &val){
-				if (n > m_capacity)
-					m_realloc();
 				clear();
-				for (size_type i = 0; i < n; ++i)
-					push_back(val);
+				if (n > m_capacity){
+                    _allocator.deallocate(m_ptr, m_capacity);
+                    m_ptr = _allocator.allocate(n);
+                }
+                for (size_type i = 0; i < n; ++i)
+                    _allocator.construct(&m_ptr[i], val);
+                m_length = n;
+			}
+			void push_back (const value_type& val)
+            {
+				std::cout << "push_back 1 " << m_length << " : "  << m_capacity<< std::endl;
+                if (m_length + 1 > m_capacity)
+                    m_realloc(!m_capacity ? 1 : m_capacity * 2);
+				//std::cout << "push_back 2 " << std::endl;
+                _allocator.construct(&m_ptr[m_length++], val);
+				//std::cout << "push_back 3 " << std::endl;
+				++m_length;
+            }
+			void pop_back(){
+				if (m_length){
+					_allocator.destroy(&m_ptr[m_length - 1]);
+					m_length--;
+				}
 			}
 			iterator insert (iterator position, const value_type& val){
+				std::cout << "test 1 " << std::endl;
 				size_type n = ft::distance(begin(), position);
 				insert(position, 1, val);
 				return (iterator(&m_ptr[n]));
 			}
 			void insert (iterator position, size_type n, const value_type& val){
+				std::cout << "test 2 " << std::endl;
 				vector tmp(position, end());
 				m_length -= ft::distance(position, end());
 				while (n) {
@@ -205,6 +235,7 @@ namespace ft
 			}
 			template <class InputIterator>
 			void insert (iterator position, InputIterator first, InputIterator last){
+				std::cout << "test 3 " << std::endl;
 				vector tmp(position, end());
 				m_length -= ft::distance(position, end());
 				while (first != last) {
@@ -217,20 +248,29 @@ namespace ft
 					++it;
 				}
 			}
-			iterator erase (iterator position);
-			iterator erase (iterator first, iterator last);
-			void push_back (const value_type& val){
-				if (m_length == m_capacity)
-					m_realloc();
-				_allocator.construct(&m_ptr[m_length], val);
-				++m_length;
+			iterator erase (iterator position){
+				return erase(position, position + 1);
 			}
-			void pop_back(){
-				if (m_length){
-					_allocator.destroy(&m_ptr[m_length - 1]);
-					m_length--;
-				}
-			}
+			iterator erase (iterator first, iterator last){
+                if (first == end() || first == last)
+                    return first;
+                long int index = first - begin();
+                if (last < end()) {
+					for (; first != end(); ++first, ++last){
+						_allocator.destroy(&(*first));
+						if (last < end())
+							_allocator.construct(&(*(first)), *last);
+					}
+                    m_length -= static_cast<size_type>(last - first);
+                }
+                else
+                {
+                    size_type newSize = m_length - static_cast<size_type>(last - first);
+                    while (m_length != newSize)
+                        pop_back();
+                }
+                return iterator(&m_ptr[index]);
+            }
 			void clear(){
 				size_type i = 0;
 				for ( ; i < m_length; i++)
@@ -243,23 +283,16 @@ namespace ft
 				m_swap(m_ptr, x.m_ptr);
 			}
 			
-			private:
-				void	m_realloc(size_type n = 0){
-					value_type*		tmp;
-
-					if (!n)
-						n = !m_capacity ? 1 : m_capacity * 2;
-					tmp = _allocator.allocate(n);
-					for (size_type i = 0; i < m_length; ++i)
-						_allocator.construct(&tmp[i], m_ptr[i]);
-					for (size_type i = m_length; i < n; ++i)
-						_allocator.construct(&tmp[i], T());
-					for (size_type i = 0; i < m_length; ++i)
-						_allocator.destroy(&m_ptr[i]);
-					_allocator.deallocate(m_ptr, m_capacity);
-					m_capacity = n;
-					m_ptr = tmp;
+		private:
+			void	m_realloc(size_type newCapacity){
+				value_type* tmp = _allocator.allocate(newCapacity);
+				for (size_type i = 0; i < m_length; i++){
+					_allocator.construct(&tmp[i], m_ptr[i]);
 				}
+				this->~vector();
+				m_capacity = newCapacity;
+				m_ptr = tmp;
+			}
 
 
 	};
