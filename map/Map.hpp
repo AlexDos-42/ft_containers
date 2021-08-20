@@ -1,259 +1,268 @@
-#ifndef MAP
-# define MAP
+#ifndef MAP_HPP
+# define MAP_HPP
 
+# include <memory>
 # include <cstddef>
 # include <limits>
 # include <iostream>
 # include <functional>
-# include "../utils/nodeMap.hpp"
-# include "../utils/Pairs.hpp"
-# include "../iterators/Maplterator.hpp"
+# include "../iterators/MapIterator.hpp"
+# include "RBTree.hpp"
 
 namespace ft
 {
-	template < class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<ft::pair<const Key,T> > >
-	class map
-	{
+	template < class Key, class T, class Compare = std::less<Key>, class Allocator = std::allocator<std::pair<const Key, T> > >
+	class map {
 		public:
 			typedef	Key											key_type;
 			typedef	T											mapped_type;
-			typedef pair<const key_type,mapped_type>			value_type;
-			typedef Alloc										allocator_type;
-			typedef value_type&									reference;
-			typedef const value_type&							const_reference;
-			typedef	value_type*									pointer;
-			typedef const value_type*							const_pointer;
-			typedef NodeMap<value_type, Compare>				NodeMap;
-			typedef MapIterator<value_type, pointer, reference, Compare >			iterator;
+			typedef std::pair<const key_type,mapped_type>		value_type;
+			typedef Allocator									allocator_type;
+			typedef Compare										key_compare;
+			typedef	typename Allocator::reference				reference;
+			typedef	typename Allocator::const_reference			const_reference;
+			typedef	typename Allocator::pointer					pointer;
+			typedef	typename Allocator::const_pointer			const_pointer;
+			typedef	RBTree<Key, T, Compare, Allocator>	space;
+			typedef	typename space::iterator					iterator;
+			typedef	typename space::const_iterator				const_iterator;
+			typedef	typename space::size_type					size_type;
+			typedef	typename space::difference_type				difference_type;
+			typedef	typename space::reverse_iterator			reverse_iterator;
+			typedef	typename space::const_reverse_iterator		const_reverse_iterator;
 
+			class value_compare {
+				friend class map<Key, T, Compare, Allocator>;
+				typedef bool		result_type;
+				typedef value_type	first_argument_type;
+				typedef value_type	second_argument_type;
+				protected:
+					Compare		comp;
+					value_compare(Compare c) : comp(c) {}
+				public:
+					bool	operator()(const value_type& lhs, const value_type& rhs) const {
+						return comp(lhs.first, rhs.first);
+					}
+			};
 			
 		private:
-			NodeMap			*racine;
-			Alloc			_allocator;
-			Compare			m_comp;
-			size_t			m_lenght;
+			allocator_type								m_alloc;
+			key_compare									m_comp;
+			RBTree<Key, T, Compare, Allocator>	m_tree;
+
 		public:
-			explicit map(const Compare& m_comp = Compare(), const Alloc& _allocator = Alloc())
-				: _allocator(_allocator), m_comp(m_comp), m_lenght(0){
-				new_root();
-				racine->m_color = BLACK;
+			explicit map(const Compare& comp = Compare(), const Allocator& alloc = Allocator()) : m_alloc(alloc), m_comp(comp), m_tree(comp, alloc) {}
+
+			template <class InputIterator>
+			map(InputIterator first, InputIterator last, const Compare &comp = Compare(), const Allocator& alloc = Allocator()): m_alloc(alloc), m_comp(comp), m_tree(comp, alloc) {
+				insert(first, last);
 			}
-			//template <class InputIterator>
-			//map (iterator first, iterator last, const Compare& comp = Compare(), const Alloc& _allocator = Alloc());
-			map (const map& x);
-			~map() {
-				clear(racine);
+			map(const map &other): m_alloc(other._alloc), m_comp(other._comp), m_tree(m_comp, m_alloc) {
+				if (!(other.empty()))
+					insert(other.begin(), other.end());
 			}
-			map& operator= (const map& x);
+			~map() {};
+			map&	operator=(const map &other) {
+				if (&other == this)
+					return *this;
+				clear();
+				if (!(other.empty()))
+					insert(other.begin(), other.end());
+				return *this;
+			}
+
+			/* Element access: */
+
+			T&		operator[](const Key& key) {
+				return insert(std::make_pair(key, T())).first->second;
+			}
 
 			///////// ITERATORS /////////
-			iterator begin(){ 
-				return iterator(racine);
-			}
-			// const_iterator begin() const;
-			// iterator end();
-			// const_iterator end() const;
-			// reverse_iterator rbegin();
-			// const_reverse_iterator rbegin() const;
-			// reverse_iterator rend();
-			// const_reverse_iterator rend() const;	
 
-			///////// CAPACITY /////////
-			bool empty() const {
-				return(!m_lenght);
+			iterator		begin() {
+				return m_tree.begin();
 			}
-			size_t size() const{
-				return (m_lenght);
+			const_iterator		begin() const {
+				return m_tree.begin();
 			}
-			size_t max_size() const;
+			iterator		end() {
+				return m_tree.end();
+			}
+			const_iterator		end() const {
+				return m_tree.end();
+			}
+			reverse_iterator	rbegin() {
+				return reverse_iterator(end());
+			}
+			const_reverse_iterator	rbegin() const {
+				return const_reverse_iterator(end());
+			}
+			reverse_iterator	rend() {
+				return reverse_iterator(begin());
+			}
+			reverse_iterator	rend() const {
+				return cont_reverse_iterator(begin());
+			}
 
-			///////// ELEMENTS ACCESS /////////
-			// mapped_type& operator[] (const key_type& k);
-			// mapped_type& at (const key_type& k);
-			// const mapped_type& at (const key_type& k) const;
+			/* Capacity: */
 
-			///////// MODIFIERS /////////
-			ft::pair<iterator, bool>	insert(const value_type& val) {
-				if (m_lenght == 0){
-					return (ft::make_pair(iterator(new_root(val)), true));
+			bool			empty() const {
+				return (m_tree.get_size() == 0);
+			}
+			size_type		size() const {
+				return m_tree.get_size();
+			}
+			size_type		max_size() const {
+				std::allocator<ft::NodeMap<value_type> >	node_alloc;
+				return node_alloc.max_size();
+			}
+
+			/* Modifiers: */
+
+			void 	clear() {
+				m_tree.clear();
+			}
+			std::pair<iterator, bool>	insert(const value_type& value) {
+				return m_tree.insert(value);
+			}
+			iterator	insert(iterator hint, const value_type& value) {
+				(void)hint;
+
+				return insert(value).first;
+			}
+			template <class InputIterator>
+			void 		insert(InputIterator first, InputIterator last) {
+				while (first != last) {
+					insert(*first);
+					first++;
 				}
-				NodeMap	*it(racine);
-				while (it) {
-					if (Compare()(val.first, it->m_value.first)) {
-						if (it->left)
-							it = it->left;
-						else return ft::make_pair(iterator(insert_left(it, val)), true);
-					}
-					else if (Compare()(it->m_value.first, val.first)) {
-						if (it->right)
-							it = it->right;
-						else return ft::make_pair(iterator(insert_right(it, val)), true);
-					}
-					else break ;
-				}	
-				return ft::make_pair(iterator(it), false);
 			}
-			// iterator insert (iterator position, const value_type& val);
-			// template <class InputIterator>
-			// void insert (InputIterator first, InputIterator last);
-			// void erase (iterator position);
-			// size_t erase (const key_type& k);
-			// void erase (iterator first, iterator last);
-			void swap (map& x);
-			void	clear(NodeMap *pos) {
-				if (!pos)
-					return ;
-				clear(pos->left);
-				clear(pos->right);
-				delete pos;
-				--m_lenght;
+			void 		erase(iterator pos) {
+				m_tree.delete_node(pos._node);
 			}
-
-			///////// OBSERVERS /////////
-			// key_compare key_comp() const;
-			// value_compare value_comp() const;
-
-			///////// OPERATIONS /////////
-			// iterator find (const key_type& k);
-			// const_iterator find (const key_type& k) const;
-			// size_t count (const key_type& k) const;
-			// iterator lower_bound (const key_type& k);
-			// const_iterator lower_bound (const key_type& k) const;
-			// iterator upper_bound (const key_type& k);
-			// const_iterator upper_bound (const key_type& k) const;
-			// pair<const_iterator,const_iterator> equal_range (const key_type& k) const;
-			// pair<iterator,iterator>             equal_range (const key_type& k);
-			
-			NodeMap	*new_root() {
-				racine = new NodeMap(ft::make_pair(10, 353));
-				return racine;
-			}
-
-			NodeMap	*new_root(const value_type& val) {
-				racine = new NodeMap(val, BLACK);
-				++m_lenght;
-				return racine;
-			}
-
-			NodeMap	*insert_left(NodeMap *it, const value_type& val = value_type()) {
-				NodeMap *insert = new NodeMap(val);
-				insert->parent = it;
-				insert->left = it->left;
-				if (it->left)
-					it->left->parent = insert;
-				it->left = insert;
-				++m_lenght;
-				insertrules(insert);
-				return insert;
-			}
-			NodeMap	*insert_right(NodeMap *it, const value_type& val = value_type()) {
-				NodeMap *insert = new NodeMap(val);
-				insert->parent = it;
-				insert->right = it->right;
-				if (it->right)
-					it->right->parent = insert;
-				it->right = insert;
-				++m_lenght;
-				insertrules(insert);
-				return insert;
-			}
-
-			void print() const {
-				print("", racine, false);
-				std::cout << std::endl;
-			}
-
-			void print(const std::string& display, const NodeMap* node, bool Left) const {
-				if (node) {
-					std::cout	<< display \
-								<< (Left ? "├L─" : "└R-" );
-					if (node->m_color == RED)
-						std::cout << "\x1b[47m" << "\x1b[31m";
-					else if (node->m_color == BLACK)
-						std::cout << "\x1b[47m" << "\x1b[30m";
-					std::cout << node->m_value.first << "\x1b[0m" << std::endl ;
-					print(display + (Left ? "│   " : "    "), node->left, true);
-					print(display + (Left ? "│   " : "    "), node->right, false);
+			void 		erase(iterator first, iterator last) {
+				NodeMap<value_type>	*to_delete;
+				while (first != last) {
+					to_delete = first._node;
+					first++;
+					m_tree.delete_node(to_delete);
 				}
 			}
 
-			void	left_rotation(NodeMap *x) {
-				NodeMap *y = x->right;
-				x->right = y->left;
-				if (x->right)
-					x->right->parent = x;
-				y->parent = x->parent;
-				if (y->parent == 0)
-					racine = y;
-				else if (x == y->parent->left)
-					y->parent->left = y;
+			size_type	erase(const key_type& key) {
+				NodeMap<value_type>	*to_delete = m_tree.search_node(key);
+				if (to_delete == nullptr)
+					return 0;
+				else {
+					m_tree.delete_node(to_delete);
+					return 1;
+				}
+			}
+
+			void 		swap(map& other) {
+				m_tree.swap(other._rbt);
+			}
+
+			/* Lookup: */
+
+			size_type	count(const Key& key) const {
+				if (m_tree.search_node(key) == nullptr)
+					return 0;
 				else
-					y->parent->right = y;
-				y->left = x;
-				x->parent = y;
+					return 1;
 			}
-			void	right_rotation(NodeMap *x) {
-				NodeMap *y = x->left;
-				x->left = y->right;
-				if (x->left)
-					x->left->parent = x;
-				y->parent = x->parent;
-				if (y->parent == 0)
-					racine = y;
-				else if (x == y->parent->left)
-					y->parent->left = y;
-				else 
-					y->parent->right = y;
-				y->right = x;
-				x->parent = y;
+			iterator		find(const Key& key) {
+				return m_tree.find(key);
+			}
+			const_iterator	find(const Key& key) const {
+				return m_tree.find(key);
+			}
+			std::pair<iterator,iterator>	equal_range( const Key& key ) {
+				return make_pair(m_tree.lower_bound(key), m_tree.upper_bound(key));
+			}
+			std::pair<const_iterator,const_iterator> equal_range( const Key& key ) const {
+				return make_pair(m_tree.lower_bound(key), m_tree.upper_bound(key));
+			}
+			iterator		lower_bound(const Key &key) {
+				return m_tree.lower_bound(key);
+			}
+			const_iterator	lower_bound(const Key &key) const {
+				return m_tree.lower_bound(key);
+			}
+			iterator		upper_bound(const Key &key) {
+				return m_tree.upper_bound(key);
+			}
+			const_iterator	upper_bound(const Key &key) const {
+				return m_tree.upper_bound(key);
 			}
 
-			void	insertrules(NodeMap *z) {
-				print();
-				while (z != racine && z->m_color == RED && z->parent->m_color == RED) {
-					NodeMap *parent = z->parent;
-					NodeMap *grandpa = parent->parent;
-					if (parent == grandpa->left) {
-						NodeMap *uncle = grandpa->right;
-						if (uncle && uncle->m_color == RED) {
-							grandpa->m_color = RED;
-							parent->m_color = BLACK;
-							uncle->m_color = BLACK;
-							z = grandpa;
-						}
-						else if (z == parent->right) {
-							left_rotation(parent);
-							z = parent;
-							parent = z->parent;
-						}
-						else {
-							right_rotation(grandpa);
-							ft::m_swap(parent->m_color, grandpa->m_color);
-						}
-					}
-					else if (parent == grandpa->right) {
-						NodeMap *uncle = grandpa->left;
-						if (uncle && uncle->m_color == RED) { 
-							grandpa->m_color = RED;
-							parent->m_color = BLACK;
-							uncle->m_color = BLACK;
-							z = grandpa;
-						}
-						else if (z == parent->left) { 
-							right_rotation(parent);
-							z = parent;
-							parent = z->parent;
-						}
-						else {
-							left_rotation(grandpa);
-							ft::m_swap(parent->m_color, grandpa->m_color);
-							z = parent;
-						}
-					}
-				}
-				racine->m_color = BLACK;
+			/* Observers: */
+
+			key_compare		key_comp() const {
+				return key_compare();
+			}
+
+			value_compare	value_comp() const {
+				return value_compare(key_compare());
+			}
+			void 		print(void) {
+				m_tree.print_tree();
+				std::cout << "_____________________________________________________"  << std::endl << std::endl;
 			}
 	};
-}
+
+	/* Non-member function overloads: */
+	template< class Key, class T, class Compare, class Alloc >
+	bool operator==(const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs) {
+		if (lhs.size() != rhs.size())
+			return false;
+		typename map<Key, T>::const_iterator itl = lhs.begin();
+		typename map<Key, T>::const_iterator itr = rhs.begin();
+		while (itl != lhs.end()) {
+			if (*itl != *itr)
+				return false;
+			itl++;
+			itr++;
+		}
+		return true;
+	}
+	template< class Key, class T, class Compare, class Alloc >
+	bool operator!=(const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs) {
+		return !(lhs == rhs);
+	}
+
+	template< class Key, class T, class Compare, class Alloc >
+	bool operator<(const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs) {
+		typename map<Key, T>::const_iterator itl = lhs.begin();
+		typename map<Key, T>::const_iterator itr = rhs.begin();
+		while (itl != lhs.end() && itr != rhs.end()) {
+			if (*itl < *itr)
+				return true;
+			else if (*itl > *itr)
+				return false;
+			itl++;
+			itr++;
+		}
+		if (lhs.size() >= rhs.size())
+			return false;
+		return true;
+	}
+	template< class Key, class T, class Compare, class Alloc >
+	bool operator<=(const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs) {
+		return !(rhs < lhs);
+	}
+	template< class Key, class T, class Compare, class Alloc >
+	bool operator>=(const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs) {
+		return !(lhs < rhs);
+	}
+	template< class Key, class T, class Compare, class Alloc >
+	bool operator>(const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs) {
+		return rhs < lhs;
+	}
+	template <class Key, class T, class Compare, class Alloc>
+	void	swap(map<Key, T, Compare, Alloc> &x, map<Key, T, Compare, Alloc> &y) {
+		x.swap(y);
+	};
+};
 
 #endif

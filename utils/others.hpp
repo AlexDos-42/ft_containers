@@ -1,6 +1,8 @@
 #ifndef OTHERS_HPP
 # define OTHERS_HPP
 
+#include <cstddef>
+
 namespace ft
 {
 	template<class X>
@@ -12,8 +14,8 @@ namespace ft
 	};
 	
 	template<typename InputIterator>
-	ptrdiff_t distance(InputIterator first, InputIterator last) {
-		ptrdiff_t diff = 0;
+	size_t distance(InputIterator first, InputIterator last) {
+		size_t diff = 0;
 		while (first != last) {
 			++diff;
 			++first;
