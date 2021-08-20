@@ -45,7 +45,8 @@ namespace ft
 					_allocator.construct(&m_ptr[i], val);
 			}
 			template <class InputIterator>
-			vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()):
+			vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(),
+				typename enable_if<!std::numeric_limits<InputIterator>::is_specialized>::type * = 0):
 					_allocator(alloc), m_length(0) {
 				std::cout << "Ici 1 " << std::endl;
 				InputIterator tmp(first);
@@ -175,7 +176,8 @@ namespace ft
 
 			///////// MODIFIERS /////////
 			template <class InputIterator>
-			void assign (InputIterator first, InputIterator last){
+			void assign (InputIterator first, InputIterator last,
+				typename enable_if<!is_integral<InputIterator>::value>::type * = 0){
 				clear();
 				size_type n = static_cast<size_type>(last - first);
                 if (n > m_capacity){
@@ -234,7 +236,8 @@ namespace ft
 				}
 			}
 			template <class InputIterator>
-			void insert (iterator position, InputIterator first, InputIterator last){
+			void insert (iterator position, InputIterator first, InputIterator last,
+				typename enable_if<!std::numeric_limits<InputIterator>::is_specialized>::type * = 0){
 				std::cout << "test 3 " << std::endl;
 				vector tmp(position, end());
 				m_length -= ft::distance(position, end());
@@ -313,21 +316,7 @@ namespace ft
 	}
 	template <class T, class Alloc>
 	bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs){
-		typename ft::vector<T>::const_iterator	lhs_begin = lhs.begin();
-		typename ft::vector<T>::const_iterator	lhs_end = lhs.end();
-		typename ft::vector<T>::const_iterator	rhs_begin = rhs.begin();
-		typename ft::vector<T>::const_iterator	rhs_end = rhs.end();
-
-		while (lhs_begin != lhs_end)
-		{
-			if (rhs_begin == rhs_end || *rhs_begin < *lhs_begin)
-				return false;
-			else if (*lhs_begin < *rhs_begin)
-				return true;
-			++lhs_begin;
-			++rhs_begin;
-		}
-		return (rhs_begin != rhs_end);
+		lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
 	}
 	template <class T, class Alloc>
 	bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs){

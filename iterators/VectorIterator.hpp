@@ -1,6 +1,8 @@
 #ifndef VECTORITERATOR_HPP
 # define VECTORITERATOR_HPP
 
+#include "../utils/others.hpp"
+
 namespace ft
 {
 	template <typename T>
