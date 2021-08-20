@@ -50,9 +50,9 @@ namespace ft
 			MapIterator	&operator--() {
 				if (m_node == m_parentNode)
 					m_node = m_parentNode->right;
-				else if (!(m_node->left->is_leaf())) {
+				else if (!(m_node->left->leaf())) {
 					m_node = m_node->left;
-					while (!(m_node->right->is_leaf()))
+					while (!(m_node->right->leaf()))
 						m_node = m_node ->right;
 				}
 				else {
@@ -80,10 +80,10 @@ namespace ft
 				return(*(m_node->pair));
 			}
 			
-			bool	operator==(MapIterator &it) const {
+			bool	operator==(const MapIterator &it) {
 				return (m_node == it.m_node);
 			}
-			bool	operator!=(MapIterator &it) const {
+			bool	operator!=(const MapIterator &it) {
 				return (m_node != it.m_node);
 			}
 	};
@@ -130,9 +130,9 @@ namespace ft
 			ConstMapIterator	&operator--() {
 				if (m_node == m_parentNode)
 					m_node = m_parentNode->right;
-				else if (!(m_node->left->is_leaf())) {
+				else if (!(m_node->left->leaf())) {
 					m_node = m_node->left;
-					while (!(m_node->right->is_leaf()))
+					while (!(m_node->right->leaf()))
 						m_node = m_node ->right;
 				}
 				else {
@@ -160,10 +160,10 @@ namespace ft
 				return(*(m_node->pair));
 			}
 			
-			bool	operator==(ConstMapIterator &it) const {
+			bool	operator==(const ConstMapIterator &it) {
 				return (m_node == it.m_node);
 			}
-			bool	operator!=(ConstMapIterator &it) const {
+			bool	operator!=(const ConstMapIterator &it) {
 				return (m_node != it.m_node);
 			}
 	};
@@ -286,6 +286,7 @@ namespace ft
     typename reverse_iterator<Iterator>::difference_type operator-(const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs) {
 		return lhs.base() - rhs.base();
 	};
+	
 };
 
 #endif

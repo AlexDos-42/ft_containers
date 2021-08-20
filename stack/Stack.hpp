@@ -1,18 +1,18 @@
 #ifndef STACK
 # define STACK
 
-# include "../list/List.hpp"
+# include "../vector/Vector.hpp"
 
 namespace ft
 {
-	template <class T, class Container = list<T> >
+	template <class T, class Container = vector<T> >
 	class stack
 	{
 		public:
 			typedef	T									value_type;
 			typedef	Container							container_type;
 			typedef size_t  							size_type;
-		public:
+		private:
 			Container s;
 
 		public:

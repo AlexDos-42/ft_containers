@@ -7,23 +7,24 @@
 # include <iostream>
 # include <functional>
 # include "../iterators/MapIterator.hpp"
+# include "../utils/Pairs.hpp"
 # include "RBTree.hpp"
 
 namespace ft
 {
-	template < class Key, class T, class Compare = std::less<Key>, class Allocator = std::allocator<std::pair<const Key, T> > >
+	template < class Key, class T, class Compare = std::less<Key>, class Allocator = std::allocator<pair<const Key, T> > >
 	class map {
 		public:
 			typedef	Key											key_type;
 			typedef	T											mapped_type;
-			typedef std::pair<const key_type,mapped_type>		value_type;
+			typedef ft::pair<const key_type,mapped_type>		value_type;
 			typedef Allocator									allocator_type;
 			typedef Compare										key_compare;
 			typedef	typename Allocator::reference				reference;
 			typedef	typename Allocator::const_reference			const_reference;
 			typedef	typename Allocator::pointer					pointer;
 			typedef	typename Allocator::const_pointer			const_pointer;
-			typedef	RBTree<Key, T, Compare, Allocator>	space;
+			typedef	RBTree<Key, T, Compare, Allocator>			space;
 			typedef	typename space::iterator					iterator;
 			typedef	typename space::const_iterator				const_iterator;
 			typedef	typename space::size_type					size_type;
@@ -57,7 +58,7 @@ namespace ft
 			map(InputIterator first, InputIterator last, const Compare &comp = Compare(), const Allocator& alloc = Allocator()): m_alloc(alloc), m_comp(comp), m_tree(comp, alloc) {
 				insert(first, last);
 			}
-			map(const map &other): m_alloc(other._alloc), m_comp(other._comp), m_tree(m_comp, m_alloc) {
+			map(const map &other): m_alloc(other.m_alloc), m_comp(other.m_comp), m_tree(m_comp, m_alloc) {
 				if (!(other.empty()))
 					insert(other.begin(), other.end());
 			}
@@ -69,12 +70,6 @@ namespace ft
 				if (!(other.empty()))
 					insert(other.begin(), other.end());
 				return *this;
-			}
-
-			/* Element access: */
-
-			T&		operator[](const Key& key) {
-				return insert(std::make_pair(key, T())).first->second;
 			}
 
 			///////// ITERATORS /////////
@@ -104,7 +99,7 @@ namespace ft
 				return cont_reverse_iterator(begin());
 			}
 
-			/* Capacity: */
+			///////// CAPACITY /////////
 
 			bool			empty() const {
 				return (m_tree.get_size() == 0);
@@ -113,16 +108,22 @@ namespace ft
 				return m_tree.get_size();
 			}
 			size_type		max_size() const {
+				//typename Allocator::template rebind<space >::other		node_alloc;
 				std::allocator<ft::NodeMap<value_type> >	node_alloc;
+				//return std::numeric_limits<difference_type>::max() / (sizeof(ft::NodeMap<value_type>) / 2 < 1 ? 1 : sizeof(ft::NodeMap<value_type>) / 2);
 				return node_alloc.max_size();
+				//return std::numeric_limits<difference_type>::max() / (sizeof(ft::NodeMap<value_type>) / 2);
 			}
 
-			/* Modifiers: */
+			///////// ELEMENTS ACCESS /////////
 
-			void 	clear() {
-				m_tree.clear();
+			mapped_type&		operator[](const key_type& key) {
+				return insert(ft::make_pair(key, mapped_type())).first->second;
 			}
-			std::pair<iterator, bool>	insert(const value_type& value) {
+
+			///////// MODIFIERS /////////
+
+			pair<iterator, bool>	insert(const value_type& value) {
 				return m_tree.insert(value);
 			}
 			iterator	insert(iterator hint, const value_type& value) {
@@ -138,17 +139,16 @@ namespace ft
 				}
 			}
 			void 		erase(iterator pos) {
-				m_tree.delete_node(pos._node);
+				m_tree.delete_node(pos.m_node);
 			}
 			void 		erase(iterator first, iterator last) {
 				NodeMap<value_type>	*to_delete;
 				while (first != last) {
-					to_delete = first._node;
+					to_delete = first.m_node;
 					first++;
 					m_tree.delete_node(to_delete);
 				}
 			}
-
 			size_type	erase(const key_type& key) {
 				NodeMap<value_type>	*to_delete = m_tree.search_node(key);
 				if (to_delete == nullptr)
@@ -158,60 +158,65 @@ namespace ft
 					return 1;
 				}
 			}
-
 			void 		swap(map& other) {
-				m_tree.swap(other._rbt);
+				m_tree.swap(other.m_tree);
+			}
+			void 	clear() {
+				m_tree.clear();
 			}
 
-			/* Lookup: */
-
-			size_type	count(const Key& key) const {
-				if (m_tree.search_node(key) == nullptr)
-					return 0;
-				else
-					return 1;
-			}
-			iterator		find(const Key& key) {
-				return m_tree.find(key);
-			}
-			const_iterator	find(const Key& key) const {
-				return m_tree.find(key);
-			}
-			std::pair<iterator,iterator>	equal_range( const Key& key ) {
-				return make_pair(m_tree.lower_bound(key), m_tree.upper_bound(key));
-			}
-			std::pair<const_iterator,const_iterator> equal_range( const Key& key ) const {
-				return make_pair(m_tree.lower_bound(key), m_tree.upper_bound(key));
-			}
-			iterator		lower_bound(const Key &key) {
-				return m_tree.lower_bound(key);
-			}
-			const_iterator	lower_bound(const Key &key) const {
-				return m_tree.lower_bound(key);
-			}
-			iterator		upper_bound(const Key &key) {
-				return m_tree.upper_bound(key);
-			}
-			const_iterator	upper_bound(const Key &key) const {
-				return m_tree.upper_bound(key);
-			}
-
-			/* Observers: */
+			///////// OBSERVERS /////////
 
 			key_compare		key_comp() const {
 				return key_compare();
 			}
-
 			value_compare	value_comp() const {
 				return value_compare(key_compare());
 			}
+
+			///////// OPERATIONS /////////
+
+			iterator		find(const key_type& k) {
+				return m_tree.find(k);
+			}
+			const_iterator	find(const key_type& k) const {
+				return m_tree.find(k);
+			}
+			size_type	count(const key_type& k) const {
+				if (m_tree.search_node(k) == nullptr)
+					return 0;
+				else
+					return 1;
+			}
+			pair<iterator,iterator>	equal_range(const key_type& k) {
+				return make_pair(m_tree.lower_bound(k), m_tree.upper_bound(k));
+			}
+			pair<const_iterator,const_iterator> equal_range(const key_type& k) const {
+				return make_pair(m_tree.lower_bound(k), m_tree.upper_bound(k));
+			}
+			iterator	lower_bound(const key_type &k) {
+				return m_tree.lower_bound(k);
+			}
+			const_iterator	lower_bound(const key_type &k) const {
+				return m_tree.lower_bound(k);
+			}
+			iterator	upper_bound(const key_type &k) {
+				return m_tree.upper_bound(k);
+			}
+			const_iterator	upper_bound(const key_type &k) const {
+				return m_tree.upper_bound(k);
+			}
+
+			///////// PRINT /////////
+
 			void 		print(void) {
 				m_tree.print_tree();
 				std::cout << "_____________________________________________________"  << std::endl << std::endl;
 			}
 	};
 
-	/* Non-member function overloads: */
+	///////// NON-MEMBER FONCTION OVERLOADS /////////
+
 	template< class Key, class T, class Compare, class Alloc >
 	bool operator==(const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs) {
 		if (lhs.size() != rhs.size())
@@ -230,7 +235,6 @@ namespace ft
 	bool operator!=(const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs) {
 		return !(lhs == rhs);
 	}
-
 	template< class Key, class T, class Compare, class Alloc >
 	bool operator<(const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs) {
 		typename map<Key, T>::const_iterator itl = lhs.begin();

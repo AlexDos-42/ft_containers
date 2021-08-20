@@ -7,18 +7,19 @@
 #include <iostream>
 #include <cstdio>
 #include "../utils/nodeMap.hpp"
+#include "../utils/Pairs.hpp"
 #include "../iterators/MapIterator.hpp"
 
 namespace	ft
 {
-	template< class Key, class T, class Compare = std::less<Key>, class Allocator = std::allocator<std::pair<const Key, T> > >
+	template< class Key, class T, class Compare = std::less<Key>, class Allocator = std::allocator<pair<const Key, T> > >
 	class	RBTree
 	{
 		public:
 
 			typedef	Key									key_type;
 			typedef	T									mapped_type;
-			typedef std::pair<const Key, T>				value_type;
+			typedef pair<const Key, T>					value_type;
 			typedef	size_t								size_type;
 			typedef	ptrdiff_t							difference_type;
 			typedef Compare								key_compare;
@@ -142,7 +143,7 @@ namespace	ft
 
 		/*Insertion: https://iq.opengenus.org/red-black-tree-insertion/ */
 
-			std::pair<iterator, bool> 	insert(const value_type &p) {
+			pair<iterator, bool> 	insert(const value_type &p) {
 				node	*inserted_node = newNode(p, RED);
 				if (m_root() == nullptr) {
 					m_parentNode->parent = inserted_node;
@@ -155,7 +156,7 @@ namespace	ft
 						int		result = m_comp(p.first, n->pair->first);
 						if (result == false && !m_comp(n->pair->first, p.first)) {
 							destructor_helper(inserted_node);
-							return (std::make_pair(iterator(n, m_parentNode), false));
+							return (ft::make_pair(iterator(n, m_parentNode), false));
 						}
 						else if (result == true) {
 							if (n->left->leaf()) {
@@ -184,7 +185,7 @@ namespace	ft
 				}
 				insert_case1(inserted_node);
 				m_count++;
-				return (std::make_pair(iterator(inserted_node, m_parentNode), true));
+				return (ft::make_pair(iterator(inserted_node, m_parentNode), true));
 			}
 
 			void 	insert_case1(node *n) {
@@ -446,8 +447,8 @@ namespace	ft
 				size_type		tmp_m_count;
 				node			*tmp_m_parentNode;
 
-				tmp_m_count = other._node_count;
-				other._node_count = m_count;
+				tmp_m_count = other.m_count;
+				other.m_count = m_count;
 				m_count = tmp_m_count;
 
 				tmp_m_parentNode = other.m_parentNode;

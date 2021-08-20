@@ -61,7 +61,7 @@ namespace ft
 				return (tmp);
 			};
 			difference_type	operator-(iterator x) {
-				return (ptr - x._ptr);
+				return (ptr - x.ptr);
 			}
 			iterator	&operator+=(difference_type n) {
 				ptr += n;
