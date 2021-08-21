@@ -8,6 +8,7 @@
 # include <functional>
 # include "../iterators/MapIterator.hpp"
 # include "../utils/Pairs.hpp"
+# include "../utils/others.hpp"
 # include "RBTree.hpp"
 
 namespace ft
@@ -17,7 +18,7 @@ namespace ft
 		public:
 			typedef	Key											key_type;
 			typedef	T											mapped_type;
-			typedef ft::pair<const key_type,mapped_type>		value_type;
+			typedef ft::pair<const key_type, mapped_type>		value_type;
 			typedef Allocator									allocator_type;
 			typedef Compare										key_compare;
 			typedef	typename Allocator::reference				reference;
@@ -219,16 +220,8 @@ namespace ft
 
 	template< class Key, class T, class Compare, class Alloc >
 	bool operator==(const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs) {
-		if (lhs.size() != rhs.size())
+		if (rhs < lhs || rhs > lhs)
 			return false;
-		typename map<Key, T>::const_iterator itl = lhs.begin();
-		typename map<Key, T>::const_iterator itr = rhs.begin();
-		while (itl != lhs.end()) {
-			if (*itl != *itr)
-				return false;
-			itl++;
-			itr++;
-		}
 		return true;
 	}
 	template< class Key, class T, class Compare, class Alloc >
@@ -237,19 +230,7 @@ namespace ft
 	}
 	template< class Key, class T, class Compare, class Alloc >
 	bool operator<(const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs) {
-		typename map<Key, T>::const_iterator itl = lhs.begin();
-		typename map<Key, T>::const_iterator itr = rhs.begin();
-		while (itl != lhs.end() && itr != rhs.end()) {
-			if (*itl < *itr)
-				return true;
-			else if (*itl > *itr)
-				return false;
-			itl++;
-			itr++;
-		}
-		if (lhs.size() >= rhs.size())
-			return false;
-		return true;
+		return lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
 	}
 	template< class Key, class T, class Compare, class Alloc >
 	bool operator<=(const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs) {
