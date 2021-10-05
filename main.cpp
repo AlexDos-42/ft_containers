@@ -18,21 +18,20 @@ int		main(void)
 	std::cout << "vct_two capacity: " << vct_two.capacity() << std::endl;
 	//printSize(vct_two);
 
-	vct_three.assign(vct.begin(), vct.end());
-	vct.assign(vct_two.begin(), vct_two.end());
-	vct_two.assign(2, 42);
-	vct_four.assign(4, 21);
-
 	std::cout << "\t### After assign(): ###" << std::endl;
+	vct_three.assign(vct.begin(), vct.end());
+	std::cout << "vct_three capacity: " << vct_three.capacity() << std::endl;
+	vct.assign(vct_two.begin(), vct_two.end());
+	std::cout << "VCT capacity: " << vct.capacity() << std::endl;
+	vct_two.assign(2, 42);
+	std::cout << "vct_two capacity: " << vct_two.capacity() << std::endl;
+	vct_four.assign(4, 21);
+	std::cout << "vct_four capacity: " << vct_four.capacity() << std::endl;
 
 	//printSize(vct);
-	std::cout << "VCT capacity: " << vct.capacity() << std::endl;
 	//printSize(vct_two);
-	std::cout << "vct_two capacity: " << vct_two.capacity() << std::endl;
 	//printSize(vct_three);
-	std::cout << "vct_three capacity: " << vct_three.capacity() << std::endl;
 	//printSize(vct_four);
-	std::cout << "vct_four capacity: " << vct_four.capacity() << std::endl;
 
 	vct_four.assign(6, 84);
 	//printSize(vct_four);

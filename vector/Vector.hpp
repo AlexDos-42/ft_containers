@@ -38,19 +38,19 @@ namespace ft
 			size_type		m_capacity;
 
 		public:
-			/* Constructor */
+			/* Constructor default */
 			explicit vector(const allocator_type& alloc = allocator_type()):
 					_allocator(alloc), m_length(0), m_capacity(0) {
 				m_ptr = _allocator.allocate(0);
 			}
-			/* Constructor: Need a size and a value */
+			/* Constructor fill */
 			explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()):
 					_allocator(alloc), m_length(n), m_capacity(n) {
 				m_ptr = _allocator.allocate(n);
 				for (size_type i = 0; i < n; i++)
 					_allocator.construct(&m_ptr[i], val);
 			}
-			/* Constructor: Need two iterators */
+			/* Constructor range */
 			template <class InputIterator>
 			vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(),
 				typename enable_if<!std::numeric_limits<InputIterator>::is_specialized>::type * = 0):
@@ -63,19 +63,19 @@ namespace ft
 				for (int i = 0; first != last; ++first, ++i)
 					_allocator.construct(&m_ptr[i], *first);
 			}
-			/* Constructor par copy: Need a vector */
+			/* Constructor copy */
 			vector(const vector& copy): m_ptr(copy.m_ptr), m_length(copy.m_length), m_capacity(copy.m_capacity) {
 				m_ptr = _allocator.allocate(m_capacity);
 				for (ft::pair<int, const_iterator> i(0, copy.begin());
 					i.second != copy.end(); ++i.first, ++i.second)
 				_allocator.construct(&m_ptr[i.first], *i.second);
 			}
-			/* Destructor */
+			/* Vector destructor */
 			~vector(){
 				for (size_type i = 0; i < m_length; ++i)
 					_allocator.destroy(&m_ptr[i]);
 			}
-			/* Operator= : Need a vector */
+			/* Assign content */
 			vector &operator=(const vector& x){
 				vector tmp(x);
 				swap(tmp);
@@ -84,49 +84,50 @@ namespace ft
 
 			///////// ITERATORS /////////
 			
-			/* begin() : Return iterator to the first element of the vector */
+			/* Returns an iterator pointing to the first element in the vector. */
 			iterator begin() {
 				return iterator(m_ptr);
 			}
-			/* begin() : Return const_iterator to the first element of the vector */
+			/* Returns an iterator pointing to the first element in the vector. */
 			const_iterator begin() const {
 				return const_iterator(m_ptr);
 			}
-			/* end() : Return iterator to the last element of the vector */
+			/* Return iterator to end */
 			iterator end(){
 				return iterator(m_ptr + m_length);
 			}
-			/* end() : Return const_iterator to the last element of the vector */
+			/* Return iterator to end */
 			const_iterator end() const{
 				return const_iterator(m_ptr + m_length);
 			}
-			/* rbegin() : Return reverse_iterator to the last element of the vector */
+			/* Return reverse iterator to reverse beginning */
 			reverse_iterator rbegin(){
 				return reverse_iterator(end());
 			}
-			/* rbegin() : Return const_reverse_iterator to the last element of the vector */
+			/* Return reverse iterator to reverse beginning */
 			const_reverse_iterator rbegin() const{
 				return const_reverse_iterator(end());
 			}
-			/* rend() : Return reverse_iterator to the fisrt element of the vector */
+			/* Return reverse iterator to reverse end */
 			reverse_iterator rend(){
 				return reverse_iterator(begin());
 			}
-			/* rend() : Return const_reverse_iterator to the fisrt element of the vector */
+			/* Return reverse iterator to reverse end */
 			const_reverse_iterator rend() const{
 				return const_reverse_iterator(begin());
 			}
 
 			///////// CAPACITY /////////
 
-			/* size() : Return the number of elements */
+			/* Return size */
 			size_type size() const {
 				return m_length;
 			}
-			/* max_size() : Return the maxmimum of elements */
+			/* Return maximum size */
 			size_type max_size() const {
 				return _allocator.max_size();
 			}
+			/* Change size */
 			void resize(size_type n, value_type val = value_type()) {
 				if (n < m_length)
 					m_length = n;
@@ -137,12 +138,15 @@ namespace ft
 						push_back(val);
 				}
 			}
+			/* Return size of allocated storage capacity */
 			size_type capacity() const {
 				return m_capacity;
 			}
+			/* Test whether vector is empty */
 			bool empty() const{
 				return (!(m_length));
 			}
+			/* Request a change in capacity */
 			void reserve(size_type n){
 				value_type	*tmp;
 				if (n == 0)
@@ -164,29 +168,37 @@ namespace ft
 
 			///////// ELEMENTS ACCESS /////////
 
+			/* Access first element */
 			reference front(){
 				return operator[](0);
 			}
+			/* Access first element */
 			const_reference front() const{
 				return operator[](0);
 			}
+			/* Access last element */
 			reference back(){
 				return operator[](m_length - 1);
 			}
+			/* Access last element */
 			const_reference back() const{
 				return operator[](m_length - 1);
 			}
+			/* Access element */
 			reference operator[](size_type n){
 				return *(&m_ptr[n]);
 			}
+			/* Access element */
 			const_reference operator[](size_type n) const{
 				return *(&m_ptr[n]);
 			}
+			/* Access element */
 			reference at(size_type n){
 				if (n >= m_length)
 					throw std::out_of_range("vector");
 				return *(&m_ptr[n]);
 			}
+			/* Access element */
 			const_reference at(size_type n) const{
 				if (n >= m_length)
 					throw std::out_of_range("vector");
@@ -195,17 +207,17 @@ namespace ft
 
 			///////// MODIFIERS /////////
 
+			/* Assign vector content range */
 			template <class InputIterator>
 			void assign(InputIterator first, InputIterator last,
 				typename enable_if<!is_integral<InputIterator>::value>::type * = 0){
-				std::cout << "\t capacity av clear: " << m_capacity << std::endl;
 				clear();
-				std::cout << "\t capacity ap clear: " << m_capacity << std::endl;
 				while (first != last) {
 					push_back(*first);
 					first++;
 				}
-			}	
+			}
+			/* Assign vector content fill */
 			void assign(size_type n, const value_type &val){
 				clear();
 				size_type i = -1;
@@ -213,6 +225,7 @@ namespace ft
 					push_back(val);
 				}
 			}
+			/* Add element at the end */
 			void push_back(const value_type& val) {
 				if (!m_capacity)
 					reserve(1);
@@ -221,17 +234,20 @@ namespace ft
 				}
 				_allocator.construct(&m_ptr[m_length++], val);
 			}
+			/* Delete last element */
 			void pop_back(){
 				if (m_length){
 					_allocator.destroy(&m_ptr[m_length - 1]);
 					m_length--;
 				}
 			}
+			/* Insert elements single element */
 			iterator insert(iterator position, const value_type& val){
 				size_type n = ft::distance(begin(), position);
 				insert(position, 1, val);
 				return (iterator(&m_ptr[n]));
 			}
+			/* Insert elements fill */
 			void insert(iterator position, size_type n, const value_type& val){
 				vector tmp(position, end());
 				m_length -= ft::distance(position, end());
@@ -245,6 +261,7 @@ namespace ft
 					++it;
 				}
 			}
+			/* Insert elements range */
 			template <class InputIterator>
 			void insert(iterator position, InputIterator first, InputIterator last,
 				typename enable_if<!std::numeric_limits<InputIterator>::is_specialized>::type * = 0){
@@ -260,9 +277,11 @@ namespace ft
 					++it;
 				}
 			}
+			/* Erase elements */
 			iterator erase(iterator position){
 				return erase(position, position + 1);
 			}
+			/* Erase elements */
 			iterator erase(iterator first, iterator last){
 				if (first == end() || first == last)
 					return first;
@@ -282,12 +301,14 @@ namespace ft
 				}
 				return iterator(&m_ptr[index]);
 			}
+			/* Clear content */
 			void clear(){
 				size_type i = 0;
 				for ( ; i < m_length; i++)
 					_allocator.destroy(&m_ptr[m_length - i]);
 				m_length -= i;
 			}
+			/* Swap content */
 			void swap(vector& x) {
 				m_swap(m_length, x.m_length);
 				m_swap(m_capacity, x.m_capacity);
@@ -305,6 +326,9 @@ namespace ft
 				m_ptr = tmp;
 			}
 	};
+
+	///////// Relational operators for vector /////////
+	
 	template <class T, class Alloc>
 	bool operator==(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs){
 		if (rhs < lhs || rhs > lhs)
