@@ -32,6 +32,7 @@ There are a three executables! How do we use them?
 ```
 
 Examples:
+
 ```bash
 ./do.sh # tests every containers
 ./do.sh vector list # tests only vector && list
@@ -43,6 +44,7 @@ Examples:
 ```
 
 How to read the output ?
+
 ```
 The [ ✅ / ❌ ] emojis shows if they behave the same, i.e if the STL and your implementation:
 - compile the same way,
@@ -56,6 +58,7 @@ The [Y/N] shows if the STL compile (Y) or not (N), there are some test where you
 ```
 
 ## Tested features
+
 - [x] vector
 - [x] list
 - [x] map

@@ -5,13 +5,15 @@
 
 namespace ft
 {
-	template <class T, class Container = vector<T> >
+	template <class T, class Container = ft::vector<T> >
 	class stack
 	{
 		public:
-			typedef	T									value_type;
-			typedef	Container							container_type;
-			typedef size_t  							size_type;
+			typedef Container                                container_type;
+			typedef typename container_type::value_type      value_type;
+			typedef typename container_type::reference       reference;
+			typedef typename container_type::const_reference const_reference;
+			typedef typename container_type::size_type       size_type;
 		private:
 			Container s;
 
@@ -30,35 +32,38 @@ namespace ft
 				return s.back();
 			}
 			void push (const value_type& val) {
-				s.push_front(val);
+				s.push_back(val);
 			}
 			void pop() {
 				s.pop_back();
 			}
+			Container getS() const{
+				return s;
+			}
 	};
 	template <class T, class Container>
 	bool operator==(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
-		return (lhs.s == rhs.s);
+		return (lhs.getS() == rhs.getS());
 	}
 	template <class T, class Container>
 	bool operator!=(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
-		return (lhs.s != rhs.s);
+		return (lhs.getS() != rhs.getS());
 	}
 	template <class T, class Container>
 	bool	operator<(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
-		return (lhs.s < rhs.s);
+		return (lhs.getS() < rhs.getS());
 	}
 	template <class T, class Container>
 	bool	operator<=(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
-		return (lhs.s <= rhs.s);
+		return (lhs.getS() <= rhs.getS());
 	}
 	template <class T, class Container>
 	bool operator>(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
-		return (lhs.s > rhs.s);
+		return (lhs.getS() > rhs.getS());
 	}
 	template <class T, class Container>
 	bool operator>=(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
-		return (lhs.s >= rhs.s);
+		return (lhs.getS() >= rhs.getS());
 	}
 };
 

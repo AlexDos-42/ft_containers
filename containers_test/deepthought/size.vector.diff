@@ -1,0 +1,32 @@
+15c15
+< capacity: 14
+---
+> capacity: 10
+31c31
+< capacity: 28
+---
+> capacity: 18
+55c55
+< capacity: 28
+---
+> capacity: 18
+71c71
+< capacity: 28
+---
+> capacity: 23
+100c100
+< capacity: 28
+---
+> capacity: 23
+111c111
+< capacity: 28
+---
+> capacity: 23
+146c146
+< capacity: 5
+---
+> capacity: 87
+158c158
+< capacity: 5
+---
+> capacity: 87

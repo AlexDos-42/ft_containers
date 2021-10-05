@@ -34,13 +34,13 @@ namespace ft
 			typedef	typename space::const_reverse_iterator		const_reverse_iterator;
 
 			class value_compare {
-				friend class map<Key, T, Compare, Allocator>;
-				typedef bool		result_type;
-				typedef value_type	first_argument_type;
-				typedef value_type	second_argument_type;
+				friend class 									map<Key, T, Compare, Allocator>;
+				typedef bool									result_type;
+				typedef value_type								first_argument_type;
+				typedef value_type								second_argument_type;
 				protected:
-					Compare		comp;
-					value_compare(Compare c) : comp(c) {}
+					Compare										comp;
+					value_compare(Compare c) : 					comp(c) {}
 				public:
 					bool	operator()(const value_type& lhs, const value_type& rhs) const {
 						return comp(lhs.first, rhs.first);
@@ -48,9 +48,9 @@ namespace ft
 			};
 			
 		private:
-			allocator_type								m_alloc;
-			key_compare									m_comp;
-			RBTree<Key, T, Compare, Allocator>	m_tree;
+			allocator_type										m_alloc;
+			key_compare											m_comp;
+			RBTree<Key, T, Compare, Allocator>					m_tree;
 
 		public:
 			explicit map(const Compare& comp = Compare(), const Allocator& alloc = Allocator()) : m_alloc(alloc), m_comp(comp), m_tree(comp, alloc) {}
@@ -109,11 +109,8 @@ namespace ft
 				return m_tree.get_size();
 			}
 			size_type		max_size() const {
-				//typename Allocator::template rebind<space >::other		node_alloc;
 				std::allocator<ft::NodeMap<value_type> >	node_alloc;
-				//return std::numeric_limits<difference_type>::max() / (sizeof(ft::NodeMap<value_type>) / 2 < 1 ? 1 : sizeof(ft::NodeMap<value_type>) / 2);
 				return node_alloc.max_size();
-				//return std::numeric_limits<difference_type>::max() / (sizeof(ft::NodeMap<value_type>) / 2);
 			}
 
 			///////// ELEMENTS ACCESS /////////
