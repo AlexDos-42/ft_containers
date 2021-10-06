@@ -211,7 +211,11 @@ namespace ft
 			template <class InputIterator>
 			void assign(InputIterator first, InputIterator last,
 				typename enable_if<!is_integral<InputIterator>::value>::type * = 0){
+				size_t i = 0;
 				clear();
+				for (InputIterator it = first; it != last; ++it)
+					i++;
+				reserve(i);
 				while (first != last) {
 					push_back(*first);
 					first++;
@@ -220,6 +224,7 @@ namespace ft
 			/* Assign vector content fill */
 			void assign(size_type n, const value_type &val){
 				clear();
+				reserve(n);
 				size_type i = -1;
 				while (++i < n) {
 					push_back(val);
