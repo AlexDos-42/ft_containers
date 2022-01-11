@@ -21,17 +21,20 @@ namespace ft
 			typedef ft::pair<const key_type, mapped_type>		value_type;
 			typedef Allocator									allocator_type;
 			typedef Compare										key_compare;
+
 			typedef	typename Allocator::reference				reference;
 			typedef	typename Allocator::const_reference			const_reference;
 			typedef	typename Allocator::pointer					pointer;
 			typedef	typename Allocator::const_pointer			const_pointer;
-			typedef	RBTree<Key, T, Compare, Allocator>			space;
-			typedef	typename space::iterator					iterator;
-			typedef	typename space::const_iterator				const_iterator;
-			typedef	typename space::size_type					size_type;
-			typedef	typename space::difference_type				difference_type;
-			typedef	typename space::reverse_iterator			reverse_iterator;
-			typedef	typename space::const_reverse_iterator		const_reverse_iterator;
+ 
+			typedef	RBTree<Key, T, Compare, Allocator>			tree;
+			
+			typedef	typename tree::iterator						iterator;
+			typedef	typename tree::const_iterator				const_iterator;
+			typedef	typename tree::size_type					size_type;
+			typedef	typename tree::difference_type				difference_type;
+			typedef	typename tree::reverse_iterator				reverse_iterator;
+			typedef	typename tree::const_reverse_iterator		const_reverse_iterator;
 
 			class value_compare {
 				friend class 									map<Key, T, Compare, Allocator>;
@@ -227,7 +230,22 @@ namespace ft
 	}
 	template< class Key, class T, class Compare, class Alloc >
 	bool operator<(const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs) {
-		return lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+		ConstMapIterator<pair<const char, int> > lhs_begin = lhs.begin();
+		ConstMapIterator<pair<const char, int> > lhs_end = lhs.end();
+		ConstMapIterator<pair<const char, int> > rhs_begin = rhs.begin();
+		ConstMapIterator<pair<const char, int> > rhs_end = rhs.end();
+		//int n = 0;
+		while (lhs_begin != lhs_end) {
+			if (rhs_begin == lhs_end || *rhs_begin < *lhs_begin)
+				return false;
+			if (*lhs_begin < *rhs_begin)
+				return true;
+			++lhs_begin;
+			++rhs_begin;
+		}
+		std::cout << "la" << std::endl;
+		return (rhs_begin != rhs_end);
+		//return lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
 	}
 	template< class Key, class T, class Compare, class Alloc >
 	bool operator<=(const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs) {

@@ -77,7 +77,12 @@ namespace ft
 			}
 			/* Assign content */
 			vector &operator=(const vector& x){
+
 				vector tmp(x);
+				if (this->capacity() > tmp.capacity())
+					tmp.reserve(this->capacity());
+				else
+					tmp.justReserve(tmp.size());
 				swap(tmp);
 				return *this;
 			}
@@ -133,7 +138,8 @@ namespace ft
 					m_length = n;
 				else if (n > m_length)
 				{
-					reserve(n);
+					if(n > 2 * this->capacity())
+						reserve(n);
 					for (size_t i = m_length; i < n; i++)
 						push_back(val);
 				}
@@ -249,13 +255,25 @@ namespace ft
 			/* Insert elements single element */
 			iterator insert(iterator position, const value_type& val){
 				size_type n = ft::distance(begin(), position);
-				insert(position, 1, val);
+				vector tmp(position, end());
+				size_t a = size() + 1;
+				m_length -= ft::distance(position, end());
+				if (capacity() == a)
+					reserve(a * 2);
+				push_back(val);
+				iterator it = tmp.begin();
+				while (it != tmp.end()) {
+					push_back(*it);
+					++it;
+				}
 				return (iterator(&m_ptr[n]));
 			}
 			/* Insert elements fill */
 			void insert(iterator position, size_type n, const value_type& val){
 				vector tmp(position, end());
+				int a = size() + n;
 				m_length -= ft::distance(position, end());
+				reserve(a);
 				while (n) {
 					push_back(val);
 					--n;
@@ -271,7 +289,17 @@ namespace ft
 			void insert(iterator position, InputIterator first, InputIterator last,
 				typename enable_if<!std::numeric_limits<InputIterator>::is_specialized>::type * = 0){
 				vector tmp(position, end());
+				InputIterator tmpIterator = first;
+				size_t n = n = size();
+				while (tmpIterator != last) {
+					n++;
+					++tmpIterator;
+				}
+				if (!(n > 2 * capacity() || !size()))
+					n = 0;
 				m_length -= ft::distance(position, end());
+				if (n)
+					reserve(n);
 				while (first != last) {
 					push_back(*first);
 					++first;
@@ -329,6 +357,34 @@ namespace ft
 				this->~vector();
 				m_capacity = newCapacity;
 				m_ptr = tmp;
+			}
+			void justReserve(size_type n){
+				value_type	*tmp;
+				if (n == 0)
+					return ;
+				if (n > max_size())
+					throw (std::length_error("new capacity (which is " + std::to_string(n) \
+					+ ") > max_size() (which is " + std::to_string(max_size()) + ")"));
+				else if (n > m_capacity) {
+					tmp = _allocator.allocate(n);
+					if (m_capacity > 0) {
+						for (size_t i = 0; i < m_length; i++)
+							_allocator.construct(&tmp[i], m_ptr[i]);
+						_allocator.deallocate(m_ptr, m_capacity);
+					}
+					m_capacity = n;
+					m_ptr = tmp;
+				}
+				else if (n < m_capacity) {
+					tmp = _allocator.allocate(n);
+					if (m_capacity > 0) {
+						for (size_t i = 0; i < m_length; i++)
+							_allocator.construct(&tmp[i], m_ptr[i]);
+						_allocator.deallocate(m_ptr, m_capacity);
+					}
+					m_capacity = n;
+					m_ptr = tmp;
+				}
 			}
 	};
 

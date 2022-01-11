@@ -18,8 +18,9 @@ namespace	ft
 		public:
 
 			typedef	Key									key_type;
-			typedef	T									mapped_type;
-			typedef pair<const Key, T>					value_type;
+			typedef	T									value_type;
+			typedef	NodeMap<value_type>				node;
+			typedef typename node::value_type							node_value;
 			typedef	size_t								size_type;
 			typedef	ptrdiff_t							difference_type;
 			typedef Compare								key_compare;
@@ -28,11 +29,10 @@ namespace	ft
 			typedef	typename Allocator::const_reference	const_reference;
 			typedef	typename Allocator::pointer			pointer;
 			typedef	typename Allocator::const_pointer	const_pointer;
-			typedef	MapIterator<value_type>					iterator;
+			typedef	MapIterator<NodeMap<value_type > >					iterator;
 			typedef ConstMapIterator<value_type>			const_iterator;
 			typedef	ft::reverse_iterator<iterator>			reverse_iterator;
 			typedef	ft::reverse_iterator<const_iterator>	const_reverse_iterator;
-			typedef	NodeMap<value_type>				node;
 
 		private:
 			allocator_type	m_alloc;
@@ -41,6 +41,8 @@ namespace	ft
 			size_type		m_count;
 
 			node 	*m_root(void) const {
+				//pair<int, int> newPair = make_pair(3, 5);
+				//newPair.first = 6;
 				return (m_parentNode->parent);
 			}
 			node	*m_left(void) const {

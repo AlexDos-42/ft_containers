@@ -5,24 +5,28 @@
 # include <cstddef>
 
 #include "../utils/nodeMap.hpp"
+#include "../utils/others.hpp"
 
 namespace ft
 {
-	template < class Pair >
-	class MapIterator
+	template < class NodeMap >
+	class MapIterator : ft::iterator<ft::bidirectional_iterator_tag, NodeMap>
 	{
 		public:
-			typedef Pair					value_type;
-			typedef	Pair&					reference;
-			typedef Pair*					pointer;
+			typedef NodeMap 								*iterator_type;
+			typedef NodeMap								iterator_value;
+			typedef typename iterator_value::value_type	value_type;
+			//typedef Pair					value_type;
+			typedef	NodeMap&					reference;
+			typedef NodeMap*					pointer;
 			typedef	ptrdiff_t				difference_type;
 			typedef	size_t					size_type;
 			
-			NodeMap<value_type>	*m_node;
-			NodeMap<value_type>	*m_parentNode;
+			iterator_type m_node;
+			iterator_type m_parentNode;
 
 			MapIterator(): m_node(nullptr), m_parentNode(nullptr)  {}
-			MapIterator(NodeMap<value_type>	*n, NodeMap<value_type>	*pN): m_node(n), m_parentNode(pN)  {}
+			MapIterator(iterator_type	*n, iterator_type	*pN): m_node(n), m_parentNode(pN)  {}
 			MapIterator(const MapIterator& ref): m_node(ref.m_node), m_parentNode(ref.m_parentNode)  {}
 			~MapIterator() {}
 			MapIterator& operator=(const MapIterator& ref) {

@@ -69,15 +69,15 @@ namespace ft
 	template <class InputIterator1, class InputIterator2>
 	bool lexicographical_compare (InputIterator1 lhs_begin, InputIterator1 lhs_end,
 		InputIterator2 rhs_begin, InputIterator2 rhs_end) {
-		while (lhs_begin != lhs_end && rhs_begin != rhs_end) {
-			if (*rhs_begin < *lhs_begin)
+		while (lhs_begin != lhs_end) {
+			if (rhs_begin == lhs_end || *rhs_begin < *lhs_begin)
 				return false;
 			if (*lhs_begin < *rhs_begin)
 				return true;
 			++lhs_begin;
 			++rhs_begin;
 		}
-		return (lhs_begin == lhs_end && rhs_begin != rhs_end);
+		return (rhs_begin != rhs_end);
 	}
 
 	struct input_iterator_tag {};
