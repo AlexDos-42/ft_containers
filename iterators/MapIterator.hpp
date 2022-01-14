@@ -21,7 +21,7 @@ namespace ft
 			NodeMap<value_type>	*m_node;
 			NodeMap<value_type>	*m_parentNode;
 
-			MapIterator(): m_node(nullptr), m_parentNode(nullptr)  {}
+			MapIterator(): m_node(NULL), m_parentNode(NULL)  {}
 			MapIterator(NodeMap<value_type>	*n, NodeMap<value_type>	*pN): m_node(n), m_parentNode(pN)  {}
 			MapIterator(const MapIterator& ref): m_node(ref.m_node), m_parentNode(ref.m_parentNode)  {}
 			~MapIterator() {}
@@ -103,7 +103,7 @@ namespace ft
 			NodeMap<value_type>	*m_node;
 			NodeMap<value_type>	*m_parentNode;
 
-			ConstMapIterator(): m_node(nullptr), m_parentNode(nullptr)  {}
+			ConstMapIterator(): m_node(NULL), m_parentNode(NULL)  {}
 			ConstMapIterator(NodeMap<value_type>	*n, NodeMap<value_type>	*pN): m_node(n), m_parentNode(pN)  {}
 			ConstMapIterator(const MapIterator<value_type>& ref): m_node(ref.m_node), m_parentNode(ref.m_parentNode)  {}
 			~ConstMapIterator() {}

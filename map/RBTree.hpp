@@ -59,7 +59,7 @@ namespace	ft
 				m_parentNode = _alloc.allocate(1);
 				_alloc.construct(m_parentNode, value_type());
 				m_parentNode->m_color = RED;
-				m_parentNode->parent = nullptr;
+				m_parentNode->parent = NULL;
 				m_parentNode->left = m_parentNode;
 				m_parentNode->right = m_parentNode;
 			}
@@ -78,16 +78,16 @@ namespace	ft
 				_alloc.construct(nodeleft, value_type());
 				_alloc.construct(noderight, value_type());
 
-				res->parent = nullptr;
+				res->parent = NULL;
 				nodeleft->parent = res;
 				noderight->parent = res;
 
 				res->left = nodeleft;
 				res->right = noderight;
-				//nodeleft->left = nullptr;
-				//nodeleft->right = nullptr;
-				// noderight->left = nullptr;
-				// noderight->right = nullptr;
+				//nodeleft->left = NULL;
+				//nodeleft->right = NULL;
+				// noderight->left = NULL;
+				// noderight->right = NULL;
 
 				res->m_color = c;
 				nodeleft->m_color = BLACK;
@@ -107,11 +107,11 @@ namespace	ft
 					else
 						n = n->right;
 				}
-				return (nullptr);
+				return (NULL);
 			}
 
 			void 	replace_node(node *oldn, node *newn) {
-				if (oldn->parent == nullptr)
+				if (oldn->parent == NULL)
 					m_parentNode->parent = newn;
 				else
 					if (oldn == oldn->parent->left)
@@ -125,7 +125,7 @@ namespace	ft
 				node	*r = n->right;
 				replace_node(n, r);
 				n->right = r->left;
-				if (r->left != nullptr)
+				if (r->left != NULL)
 					r->left->parent = n;
 				r->left = n;
 				n->parent = r;
@@ -135,7 +135,7 @@ namespace	ft
 				node	*L = n->left;
 				replace_node(n, L);
 				n->left = L->right;
-				if (L->right != nullptr)
+				if (L->right != NULL)
 					L->right->parent = n;
 				L->right = n;
 				n->parent = L;
@@ -145,7 +145,7 @@ namespace	ft
 
 			pair<iterator, bool> 	insert(const value_type &p) {
 				node	*inserted_node = newNode(p, RED);
-				if (m_root() == nullptr) {
+				if (m_root() == NULL) {
 					m_parentNode->parent = inserted_node;
 					m_parentNode->right = inserted_node;
 					m_parentNode->left = inserted_node;
@@ -191,7 +191,7 @@ namespace	ft
 			}
 
 			void 	insert_case1(node *n) {
-				if (n->parent == nullptr)
+				if (n->parent == NULL)
 					n->m_color = BLACK;
 				else
 					insert_case2(n);
@@ -205,7 +205,7 @@ namespace	ft
 			}
 
 			void 	insert_case3(node *n) {
-				if (n->uncle() != nullptr && n->uncle()->m_color == RED) {
+				if (n->uncle() != NULL && n->uncle()->m_color == RED) {
 					n->parent->m_color = BLACK;
 					n->uncle()->m_color = BLACK;
 					n->grandparent()->m_color = RED;
@@ -239,7 +239,7 @@ namespace	ft
 		/* Deletion: https://www.youtube.com/watch?v=eO3GzpCCUSg */
 
 			void 	delete_node(node *n) {
-				if (n == nullptr || n->leaf())
+				if (n == NULL || n->leaf())
 					return ;
 				color	n_color = n->m_color;
 				node	*replacement;
@@ -298,7 +298,7 @@ namespace	ft
 				_alloc.deallocate(n->right, 1);
 				_alloc.destroy(n);
 				_alloc.deallocate(n, 1);
-				m_parentNode->parent = nullptr;
+				m_parentNode->parent = NULL;
 				m_parentNode->left = m_parentNode;
 				m_parentNode->right = m_parentNode;
 				m_count--;
@@ -341,7 +341,7 @@ namespace	ft
 				node	*w = x->sibling();
 				if (x->m_color == RED)
 					delete_case0(x);
-				else if (w != nullptr) {
+				else if (w != NULL) {
 					if (w->m_color == RED)
 						delete_case1(x, w);
 					else {
@@ -428,16 +428,16 @@ namespace	ft
 				destructor_helper(m_root());
 				m_parentNode->right = m_parentNode;
 				m_parentNode->left = m_parentNode;
-				m_parentNode->parent = nullptr;
+				m_parentNode->parent = NULL;
 				m_count = 0;
 			}
 
 			void 	destructor_helper(node *n) {
-				if (n == nullptr)
+				if (n == NULL)
 					return ;
-				if (n->right != nullptr)
+				if (n->right != NULL)
 					destructor_helper(n->right);
-				if (n->left != nullptr)
+				if (n->left != NULL)
 					destructor_helper(n->left);
 				_alloc.destroy(n);
 				_alloc.deallocate(n, 1);
@@ -459,7 +459,7 @@ namespace	ft
 			iterator	find(const Key &key) {
 				node *n = search_node(key);
 
-				if (n == nullptr)
+				if (n == NULL)
 					return (end());
 				else
 					return (iterator(n, m_parentNode));
@@ -468,7 +468,7 @@ namespace	ft
 			const_iterator	find(const Key& key) const {
 				node *n = search_node(key);
 
-				if (n == nullptr)
+				if (n == NULL)
 					return (end());
 				else
 					return (const_iterator(n, m_parentNode));
@@ -516,11 +516,11 @@ namespace	ft
 
 			void print_tree_helper(node *n, int indent) {
 				int i;
-				if (n == nullptr) {
+				if (n == NULL) {
 					fputs("<empty tree>", stdout);
 					return;
 				}
-				if (n->right != nullptr) 
+				if (n->right != NULL) 
 					print_tree_helper(n->right, indent + 4);
 				for(i = 0; i < indent; i++) {
 					fputs(" ", stdout);
@@ -532,7 +532,7 @@ namespace	ft
 				else
 					std::cout << "\x1b[47m" << "\x1b[31m" << n->pair->first;
 				std::cout << "\x1b[0m" << std::endl;
-				if (n->left != nullptr)
+				if (n->left != NULL)
 					print_tree_helper(n->left, indent + 4);
 			}
 

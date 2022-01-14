@@ -151,7 +151,7 @@ namespace ft
 			}
 			size_type	erase(const key_type& key) {
 				NodeMap<value_type>	*to_delete = m_tree.search_node(key);
-				if (to_delete == nullptr)
+				if (to_delete == NULL)
 					return 0;
 				else {
 					m_tree.delete_node(to_delete);
@@ -183,7 +183,7 @@ namespace ft
 				return m_tree.find(k);
 			}
 			size_type	count(const key_type& k) const {
-				if (m_tree.search_node(k) == nullptr)
+				if (m_tree.search_node(k) == NULL)
 					return 0;
 				else
 					return 1;

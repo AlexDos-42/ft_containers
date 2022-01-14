@@ -29,14 +29,14 @@ namespace ft
 			NodeMap(value_type newPair):
 				 parent(NULL), left(NULL), right(NULL), m_color(BLACK), pair(newPair) {}
 			NodeMap		*grandparent() {
-				if (parent == nullptr)
-					return nullptr;
+				if (parent == NULL)
+					return NULL;
 				return (parent->parent);
 			}
 
 			NodeMap		*sibling() {
-				if (parent == nullptr)
-					return nullptr;
+				if (parent == NULL)
+					return NULL;
 				if (this == parent->left)
 					return (parent->right);
 				else
@@ -44,15 +44,15 @@ namespace ft
 			}
 
 			NodeMap		*uncle() {
-				if (parent == nullptr)
-					return nullptr;
-				if (grandparent() == nullptr)
-					return nullptr;
+				if (parent == NULL)
+					return NULL;
+				if (grandparent() == NULL)
+					return NULL;
 				return (parent->sibling());
 			}
 
 			bool		leaf() {
-				if (left == nullptr && right == nullptr)
+				if (left == NULL && right == NULL)
 					return (true);
 				else
 					return (false);

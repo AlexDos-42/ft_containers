@@ -20,7 +20,7 @@ namespace ft
 			Node(const value_type &val, allocator_type& alloc = allocator_type()) {
 				m_value = alloc.allocate(1);
 				alloc.construct(m_value, val);
-				initLink(nullptr, nullptr);
+				initLink(NULL, NULL);
 			}
 			~Node() {
 				allocator_type		alloc;
