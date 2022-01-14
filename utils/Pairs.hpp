@@ -1,5 +1,4 @@
-#ifndef PAIRS
-# define PAIRS
+#pragma once
 # include <utility>
 
 namespace ft
@@ -13,10 +12,10 @@ namespace ft
 		second_type second;
 
 		pair() : first(), second() {}
-		pair(const pair& copy) : first(copy.first), second(copy.second) {}
+		pair(const first_type &a, const second_type &b) : first(a), second(b) {}
+		pair(const pair<T1, T2>& copy) : first(copy.first), second(copy.second) {}
 		template<class U, class V>
 		pair(const pair<U, V>& pr) : first(pr.first), second(pr.second) {}
-		pair(const first_type &a, const second_type &b) : first(a), second(b) {}
 		pair &operator=(const pair &copy) {
 			if (this != &copy) {
 				first = copy.first;
@@ -32,28 +31,26 @@ namespace ft
 	};
 	template <class T1, class T2>
 	bool operator!=(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs) {
-		return (lhs.first == rhs.first && lhs.second == rhs.second);
+		return !(lhs == rhs);
 	};
 	template <class T1, class T2>
 	bool operator<(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs) {
-		return (lhs.first < rhs.first && lhs.second < rhs.second);
+		return (lhs.first < rhs.first || (!(lhs.first < rhs.first) && lhs.second < rhs.second));
 	};
 	template <class T1, class T2>
 	bool operator<=(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs) {
-		return (lhs.first <= rhs.first && lhs.second <= rhs.second);
+		return !(rhs < lhs);
 	};
 	template <class T1, class T2>
 	bool operator>(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs) {
-		return (lhs.first > rhs.first && lhs.second > rhs.second);
+		return (rhs < lhs);
 	};
 	template <class T1, class T2>
 	bool operator>=(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs) {
-		return (lhs.first >= rhs.first && lhs.second >= rhs.second);
+		return !(lhs < rhs);
 	};
 	template<class T1, class T2>
 	pair<T1, T2> make_pair(T1 x, T2 y) {
 		return (pair<T1, T2>(x, y));
 	}
 }
-
-#endif

@@ -66,18 +66,16 @@ namespace ft
 		static const bool value = true;
 	};
 
-	template <class InputIterator1, class InputIterator2>
-	bool lexicographical_compare (InputIterator1 lhs_begin, InputIterator1 lhs_end,
-		InputIterator2 rhs_begin, InputIterator2 rhs_end) {
-		while (lhs_begin != lhs_end) {
-			if (rhs_begin == lhs_end || *rhs_begin < *lhs_begin)
-				return false;
-			if (*lhs_begin < *rhs_begin)
-				return true;
-			++lhs_begin;
-			++rhs_begin;
+	
+	template<class InputIt1, class InputIt2>
+	bool lexicographical_compare(InputIt1 first1, InputIt1 last1,
+								InputIt2 first2, InputIt2 last2)
+	{
+		for ( ; (first1 != last1) && (first2 != last2); ++first1, (void) ++first2 ) {
+			if (*first1 < *first2) return true;
+			if (*first2 < *first1) return false;
 		}
-		return (rhs_begin != rhs_end);
+		return (first1 == last1) && (first2 != last2);
 	}
 
 	struct input_iterator_tag {};

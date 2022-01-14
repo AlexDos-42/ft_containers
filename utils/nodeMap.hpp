@@ -1,8 +1,8 @@
-#ifndef NODEMAP_HPP
-# define NODEMAP_HPP
+#pragma once
 
 #include "./Pairs.hpp"
 #include "./others.hpp"
+
 namespace ft
 {
 	enum color {
@@ -22,11 +22,12 @@ namespace ft
 			NodeMap		*left;
 			NodeMap		*right;
 			color		m_color;
-			value_type		*pair;
 
 		public:
+			value_type		pair;
+			NodeMap() {}
 			NodeMap(value_type newPair):
-				pair(newPair), m_color(BLACK), parent(NULL), left(NULL), right(NULL) {}
+				 parent(NULL), left(NULL), right(NULL), m_color(BLACK), pair(newPair) {}
 			NodeMap		*grandparent() {
 				if (parent == nullptr)
 					return nullptr;
@@ -51,12 +52,10 @@ namespace ft
 			}
 
 			bool		leaf() {
-				if (pair == nullptr)
+				if (left == nullptr && right == nullptr)
 					return (true);
 				else
 					return (false);
 			}
 	};
 }
-
-#endif

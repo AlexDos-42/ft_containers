@@ -1,5 +1,4 @@
-#ifndef MAPITERATOR
-# define MAPITERATOR
+#pragma once
 
 # include <memory>
 # include <cstddef>
@@ -9,27 +8,26 @@
 
 namespace ft
 {
-	template < class NodeMap >
-	class MapIterator : ft::iterator<ft::bidirectional_iterator_tag, NodeMap>
+	template < class Pair >
+	class MapIterator: ft::iterator<ft::bidirectional_iterator_tag, Pair>
 	{
 		public:
-			typedef NodeMap 								*iterator_type;
-			typedef NodeMap								iterator_value;
-			typedef typename iterator_value::value_type	value_type;
-			//typedef Pair					value_type;
-			typedef	NodeMap&					reference;
-			typedef NodeMap*					pointer;
+			typedef Pair					value_type;
+			typedef	Pair&					reference;
+			typedef Pair*					pointer;
 			typedef	ptrdiff_t				difference_type;
 			typedef	size_t					size_type;
-			
-			iterator_type m_node;
-			iterator_type m_parentNode;
+
+			NodeMap<value_type>	*m_node;
+			NodeMap<value_type>	*m_parentNode;
 
 			MapIterator(): m_node(nullptr), m_parentNode(nullptr)  {}
-			MapIterator(iterator_type	*n, iterator_type	*pN): m_node(n), m_parentNode(pN)  {}
+			MapIterator(NodeMap<value_type>	*n, NodeMap<value_type>	*pN): m_node(n), m_parentNode(pN)  {}
 			MapIterator(const MapIterator& ref): m_node(ref.m_node), m_parentNode(ref.m_parentNode)  {}
 			~MapIterator() {}
 			MapIterator& operator=(const MapIterator& ref) {
+				if (this == &ref)
+					return *this;
 				m_node = ref.m_node;
 				m_parentNode = ref.m_parentNode;
 				return *this;
@@ -70,7 +68,7 @@ namespace ft
 			MapIterator	operator++(int) {
 				MapIterator	tmp(*this);
 				operator++();
-				return (tmp);
+				return tmp;
 			}
 			MapIterator	operator--(int) {
 				MapIterator	tmp(*this);
@@ -78,17 +76,17 @@ namespace ft
 				return tmp;
 			}
 			pointer operator->() const {
-				return(m_node->pair);
+				return &(m_node->pair);
 			}
 			reference operator*() const {
-				return(*(m_node->pair));
+				return (*&(m_node->pair));
 			}
 			
-			bool	operator==(const MapIterator &it) {
-				return (m_node == it.m_node);
+			friend bool	operator==(const MapIterator &it, const MapIterator &ite) {
+				return (it.m_node == ite.m_node);
 			}
-			bool	operator!=(const MapIterator &it) {
-				return (m_node != it.m_node);
+			friend bool	operator!=(const MapIterator &it, const MapIterator &ite) {
+				return (it.m_node != ite.m_node);
 			}
 	};
 
@@ -97,8 +95,8 @@ namespace ft
 	{
 		public:
 			typedef Pair					value_type;
-			typedef	Pair&					reference;
-			typedef Pair*					pointer;
+			typedef	const Pair&					reference;
+			typedef const Pair*					pointer;
 			typedef	ptrdiff_t				difference_type;
 			typedef	size_t					size_type;
 			
@@ -110,6 +108,8 @@ namespace ft
 			ConstMapIterator(const MapIterator<value_type>& ref): m_node(ref.m_node), m_parentNode(ref.m_parentNode)  {}
 			~ConstMapIterator() {}
 			ConstMapIterator& operator=(ConstMapIterator const &ref) {
+				if (this == &ref)
+					return *this;
 				m_node = ref.m_node;
 				m_parentNode = ref.m_parentNode;
 				return *this;
@@ -158,17 +158,17 @@ namespace ft
 				return tmp;
 			}
 			pointer operator->() const {
-				return(m_node->pair);
+				return &(m_node->pair);
 			}
 			reference operator*() const {
-				return(*(m_node->pair));
+				return (*&(m_node->pair));
 			}
 			
-			bool	operator==(const ConstMapIterator &it) {
-				return (m_node == it.m_node);
+			friend bool	operator==(const ConstMapIterator &it, const ConstMapIterator &ite) {
+				return (it.m_node == ite.m_node);
 			}
-			bool	operator!=(const ConstMapIterator &it) {
-				return (m_node != it.m_node);
+			friend bool	operator!=(const ConstMapIterator &it, const ConstMapIterator &ite) {
+				return (it.m_node != ite.m_node);
 			}
 	};
 
@@ -192,6 +192,8 @@ namespace ft
 
 			template<class U>
 			reverse_iterator& operator=(const reverse_iterator<U> &other) {
+				if (this == &other)
+					return *this;
 				m_it = other.m_it;
 				return *this;
 			};
@@ -291,5 +293,3 @@ namespace ft
 		return lhs.base() - rhs.base();
 	};
 };
-
-#endif

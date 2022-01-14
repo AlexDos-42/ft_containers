@@ -18,9 +18,8 @@ namespace	ft
 		public:
 
 			typedef	Key									key_type;
-			typedef	T									value_type;
-			typedef	NodeMap<value_type>				node;
-			typedef typename node::value_type							node_value;
+			typedef	T									mapped_type;
+			typedef pair<const Key, T>					value_type;
 			typedef	size_t								size_type;
 			typedef	ptrdiff_t							difference_type;
 			typedef Compare								key_compare;
@@ -29,20 +28,20 @@ namespace	ft
 			typedef	typename Allocator::const_reference	const_reference;
 			typedef	typename Allocator::pointer			pointer;
 			typedef	typename Allocator::const_pointer	const_pointer;
-			typedef	MapIterator<NodeMap<value_type > >					iterator;
+			typedef	MapIterator<value_type>					iterator;
 			typedef ConstMapIterator<value_type>			const_iterator;
 			typedef	ft::reverse_iterator<iterator>			reverse_iterator;
 			typedef	ft::reverse_iterator<const_iterator>	const_reverse_iterator;
+			typedef	NodeMap<value_type>						node;
+			typedef typename Allocator::template rebind<node>::other alloc;
 
 		private:
-			allocator_type	m_alloc;
 			key_compare		m_comp;
 			node			*m_parentNode;
 			size_type		m_count;
+			alloc			_alloc;
 
 			node 	*m_root(void) const {
-				//pair<int, int> newPair = make_pair(3, 5);
-				//newPair.first = 6;
 				return (m_parentNode->parent);
 			}
 			node	*m_left(void) const {
@@ -55,30 +54,29 @@ namespace	ft
 		public:
 		
 			RBTree(const key_compare& comp = key_compare(), const allocator_type &alloc = allocator_type())
-				: m_alloc(alloc), m_comp(comp), m_count(0) {
-				m_parentNode = new node;
+				: m_comp(comp), m_count(0) {
+				(void)alloc;
+				m_parentNode = _alloc.allocate(1);
+				_alloc.construct(m_parentNode, value_type());
 				m_parentNode->m_color = RED;
 				m_parentNode->parent = nullptr;
 				m_parentNode->left = m_parentNode;
 				m_parentNode->right = m_parentNode;
-				m_parentNode->pair = m_alloc.allocate(1);
-				m_alloc.construct(m_parentNode->pair, value_type());
 			}
 			~RBTree(void) {
 				destructor_helper(m_root());
-				m_alloc.deallocate(m_parentNode->pair, 1);
-				delete m_parentNode;
+				_alloc.destroy(m_parentNode);
+				_alloc.deallocate(m_parentNode, 1);
 			}
 
 			node	*newNode(const value_type &p, color c) {
-				node	*res = new node;
-				node	*nodeleft = new node;
-				node	*noderight = new node;
+				node	*res = _alloc.allocate(1);
+				node	*nodeleft = _alloc.allocate(1);
+				node	*noderight = _alloc.allocate(1);
 
-				res->pair = m_alloc.allocate(1);
-				m_alloc.construct(res->pair, p);
-				nodeleft->pair = nullptr;
-				noderight->pair = nullptr;
+				_alloc.construct(res, p);
+				_alloc.construct(nodeleft, value_type());
+				_alloc.construct(noderight, value_type());
 
 				res->parent = nullptr;
 				nodeleft->parent = res;
@@ -86,10 +84,10 @@ namespace	ft
 
 				res->left = nodeleft;
 				res->right = noderight;
-				nodeleft->left = nullptr;
-				nodeleft->right = nullptr;
-				noderight->left = nullptr;
-				noderight->right = nullptr;
+				//nodeleft->left = nullptr;
+				//nodeleft->right = nullptr;
+				// noderight->left = nullptr;
+				// noderight->right = nullptr;
 
 				res->m_color = c;
 				nodeleft->m_color = BLACK;
@@ -101,8 +99,8 @@ namespace	ft
 			node	*search_node(const key_type k) const {
 				node	*n = m_root();
 				while (!n->leaf()) {
-					int	comp_result = m_comp(k, n->pair->first);
-					if (comp_result == false && !m_comp(n->pair->first, k))
+					int	comp_result = m_comp(k, n->pair.first);
+					if (comp_result == false && !m_comp(n->pair.first, k))
 						return (n);
 					else if (comp_result == true)
 						n = n->left;
@@ -155,14 +153,15 @@ namespace	ft
 				else {
 					node	*n = m_root();
 					while (1) {
-						int		result = m_comp(p.first, n->pair->first);
-						if (result == false && !m_comp(n->pair->first, p.first)) {
+						int		result = m_comp(p.first, n->pair.first);
+						if (result == false && !m_comp(n->pair.first, p.first)) {
 							destructor_helper(inserted_node);
 							return (ft::make_pair(iterator(n, m_parentNode), false));
 						}
 						else if (result == true) {
 							if (n->left->leaf()) {
-								delete n->left;
+								_alloc.destroy(n->left);
+								_alloc.deallocate(n->left, 1);
 								n->left = inserted_node;
 								break ;
 							}
@@ -171,7 +170,8 @@ namespace	ft
 						}
 						else {
 							if (n->right->leaf()) {
-								delete n->right;
+								_alloc.destroy(n->right);
+								_alloc.deallocate(n->right, 1);
 								n->right = inserted_node;
 								break ;
 							}
@@ -262,18 +262,18 @@ namespace	ft
 
 				if (n->left->leaf() && n->right->leaf()) {
 					replacement = x = n->right;
-					delete n->left;
-					n->left = nullptr;
+					_alloc.destroy(n->left);
+					_alloc.deallocate(n->left, 1);
 				}
 				else if (!n->left->leaf() && n->right->leaf()) {
 					replacement = x = n->left;
-					delete n->right;
-					n->right = nullptr;
+					_alloc.destroy(n->right);
+					_alloc.deallocate(n->right, 1);
 				}
 				else if (!n->right->leaf() && n->left->leaf()) {
 					replacement = x = n->right;
-					delete n->left;
-					n->left = nullptr;
+					_alloc.destroy(n->left);
+					_alloc.deallocate(n->left, 1);
 				}
 				else {
 					replacement = n->right;
@@ -290,11 +290,14 @@ namespace	ft
 				}
 			}
 
+			
 			void	delete_last(node *n) {
-				delete n->left;
-				delete n->right;
-				m_alloc.deallocate(n->pair, 1);
-				delete n;
+				_alloc.destroy(n->left);
+				_alloc.deallocate(n->left, 1);
+				_alloc.destroy(n->right);
+				_alloc.deallocate(n->right, 1);
+				_alloc.destroy(n);
+				_alloc.deallocate(n, 1);
 				m_parentNode->parent = nullptr;
 				m_parentNode->left = m_parentNode;
 				m_parentNode->right = m_parentNode;
@@ -309,15 +312,15 @@ namespace	ft
 				else {
 					replace_node(replacement, x);
 					replace_node(n, replacement);
-					delete replacement->left;
+					_alloc.destroy(replacement->left);
+					_alloc.deallocate(replacement->left, 1);
 					replacement->left = n->left;
 					replacement->right = n->right;
 					replacement->left->parent = replacement;
 					replacement->right->parent = replacement;
 				}
-				m_alloc.deallocate(n->pair, 1);
-				delete n;
-				n = nullptr;
+				_alloc.destroy(n);
+				_alloc.deallocate(n, 1);
 			}
 
 			void 	initial_step2(node *replacement, node *x, color n_color) {
@@ -436,13 +439,8 @@ namespace	ft
 					destructor_helper(n->right);
 				if (n->left != nullptr)
 					destructor_helper(n->left);
-
-				if (n->pair != nullptr) {
-					m_alloc.deallocate(n->pair, 1);
-					n->pair = nullptr;
-				}
-				delete n;
-				n = nullptr;
+				_alloc.destroy(n);
+				_alloc.deallocate(n, 1);
 			}
 
 			void 	swap(RBTree& other) {
@@ -510,6 +508,10 @@ namespace	ft
 							return (it);
 					}
 				return (end());
+			}
+
+			size_type		max_size() const {
+				return _alloc.max_size();
 			}
 
 			void print_tree_helper(node *n, int indent) {

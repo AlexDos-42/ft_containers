@@ -1,5 +1,4 @@
-#ifndef VECTORITERATOR_HPP
-# define VECTORITERATOR_HPP
+#pragma once
 
 #include "../utils/others.hpp"
 
@@ -280,5 +279,3 @@ namespace ft
 	}
 
 };
-
-#endif
