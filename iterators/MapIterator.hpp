@@ -95,8 +95,8 @@ namespace ft
 	{
 		public:
 			typedef Pair					value_type;
-			typedef	const Pair&					reference;
-			typedef const Pair*					pointer;
+			typedef	const Pair&				reference;
+			typedef const Pair*				pointer;
 			typedef	ptrdiff_t				difference_type;
 			typedef	size_t					size_type;
 			
@@ -175,7 +175,7 @@ namespace ft
 	template <class Iterator>
 	class	reverse_iterator {
 		public:
-			typedef	Iterator						iterator_type;
+			typedef	Iterator							iterator_type;
 			typedef typename Iterator::value_type		value_type;
 			typedef typename Iterator::difference_type	difference_type;
 			typedef typename Iterator::reference		reference;
@@ -242,6 +242,15 @@ namespace ft
 			reference	operator[](difference_type n) const {
 				return m_it[-n - 1];
 			};
+	};
+	template <class Iterator>
+  	bool operator== (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs) {
+		return lhs.base() == rhs.base();
+	};
+
+	template <class IterL, class IterR>
+	bool operator== (const reverse_iterator<IterL>& lhs, const reverse_iterator<IterR>& rhs) { 
+		return lhs.base() == rhs.base();
 	};
 
 	template <class Iterator>

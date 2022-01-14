@@ -514,6 +514,10 @@ namespace	ft
 				return _alloc.max_size();
 			}
 
+			allocator_type	get_allocator() const 	{
+				return allocator_type();
+			}
+
 			void print_tree_helper(node *n, int indent) {
 				int i;
 				if (n == NULL) {

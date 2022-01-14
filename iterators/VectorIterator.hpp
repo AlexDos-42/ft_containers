@@ -240,9 +240,6 @@ namespace ft
 			reference operator[](const difference_type n) {
 				return *(ptr - n);
 			}
-			bool	operator==(ReverseVectorIterator const &ref) const {
-				return ptr == ref.base();
-			}
 	};
 	template <class T, class U>
 	typename ReverseVectorIterator<T>::difference_type
@@ -253,9 +250,17 @@ namespace ft
 	ReverseVectorIterator<T> operator+(typename ReverseVectorIterator<T>::difference_type n, const ReverseVectorIterator<T> &rhs) {
 		return ReverseVectorIterator<T>(rhs.base() - n);
 	}
+	template <class T>
+	bool operator==(const ReverseVectorIterator<T> &lhs,const ReverseVectorIterator<T> &rhs) {
+		return (lhs.base() == rhs.base());
+	}
 	template <class T, class U>
 	bool operator==(const ReverseVectorIterator<T> &lhs,const ReverseVectorIterator<U> &rhs) {
 		return (lhs.base() == rhs.base());
+	}
+	template <class T>
+	bool operator!=(const ReverseVectorIterator<T> &lhs,const ReverseVectorIterator<T> &rhs) {
+		return (lhs.base() != rhs.base());
 	}
 	template <class T, class U>
 	bool operator!=(const ReverseVectorIterator<T> &lhs,const ReverseVectorIterator<U> &rhs) {

@@ -165,6 +165,10 @@ namespace ft
 				m_tree.clear();
 			}
 
+			allocator_type	get_allocator() const {
+				return m_tree.get_allocator();
+			}
+
 			///////// OBSERVERS /////////
 
 			key_compare		key_comp() const {

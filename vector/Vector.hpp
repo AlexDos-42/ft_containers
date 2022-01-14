@@ -41,7 +41,7 @@ namespace ft
 			/* Constructor default */
 			explicit vector(const allocator_type& alloc = allocator_type()):
 					_allocator(alloc), m_length(0), m_capacity(0) {
-				m_ptr = _allocator.allocate(0);
+				m_ptr = NULL;
 			}
 			/* Constructor fill */
 			explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()):
@@ -74,10 +74,12 @@ namespace ft
 			~vector(){
 				for (size_type i = 0; i < m_length; ++i)
 					_allocator.destroy(&m_ptr[i]);
+				_allocator.deallocate(m_ptr, m_capacity);
 			}
 			/* Assign content */
 			vector &operator=(const vector& x){
-
+				if (this == &x)
+					return *this;
 				vector tmp(x);
 				if (this->capacity() > tmp.capacity())
 					tmp.reserve(this->capacity());
@@ -134,12 +136,12 @@ namespace ft
 			}
 			/* Change size */
 			void resize(size_type n, value_type val = value_type()) {
-				if (n < m_length)
-					m_length = n;
+				if (n < m_length){
+					for (; n < m_length;)
+						pop_back();
+				}
 				else if (n > m_length)
 				{
-					if(n > 2 * this->capacity())
-						reserve(n);
 					for (size_t i = m_length; i < n; i++)
 						push_back(val);
 				}
@@ -163,13 +165,19 @@ namespace ft
 				else if (n > m_capacity) {
 					tmp = _allocator.allocate(n);
 					if (m_capacity > 0) {
-						for (size_t i = 0; i < m_length; i++)
+						for (size_t i = 0; i < m_length; i++){
 							_allocator.construct(&tmp[i], m_ptr[i]);
+							_allocator.destroy(m_ptr + i);
+						}
 						_allocator.deallocate(m_ptr, m_capacity);
 					}
 					m_capacity = n;
 					m_ptr = tmp;
 				}
+			}
+
+			allocator_type get_allocator() const {
+				return allocator_type();
 			}
 
 			///////// ELEMENTS ACCESS /////////
@@ -218,7 +226,7 @@ namespace ft
 			void assign(InputIterator first, InputIterator last,
 				typename enable_if<!is_integral<InputIterator>::value>::type * = 0){
 				size_t i = 0;
-				clear();
+				//clear();
 				for (InputIterator it = first; it != last; ++it)
 					i++;
 				reserve(i);
@@ -229,7 +237,7 @@ namespace ft
 			}
 			/* Assign vector content fill */
 			void assign(size_type n, const value_type &val){
-				clear();
+				//clear();
 				reserve(n);
 				size_type i = -1;
 				while (++i < n) {
@@ -240,7 +248,7 @@ namespace ft
 			void push_back(const value_type& val) {
 				if (!m_capacity)
 					reserve(1);
-				else if (m_length + 1 > m_capacity){
+				else if (m_length >= m_capacity){
 					reserve(m_capacity * 2);
 				}
 				_allocator.construct(&m_ptr[m_length++], val);
@@ -290,7 +298,7 @@ namespace ft
 				typename enable_if<!std::numeric_limits<InputIterator>::is_specialized>::type * = 0){
 				vector tmp(position, end());
 				InputIterator tmpIterator = first;
-				size_t n = n = size();
+				size_t n = size();
 				while (tmpIterator != last) {
 					n++;
 					++tmpIterator;
@@ -339,6 +347,7 @@ namespace ft
 				size_type i = 0;
 				for ( ; i < m_length; i++)
 					_allocator.destroy(&m_ptr[m_length - i]);
+					
 				m_length -= i;
 			}
 			/* Swap content */
@@ -368,8 +377,10 @@ namespace ft
 				else if (n > m_capacity) {
 					tmp = _allocator.allocate(n);
 					if (m_capacity > 0) {
-						for (size_t i = 0; i < m_length; i++)
+						for (size_t i = 0; i < m_length; i++){
 							_allocator.construct(&tmp[i], m_ptr[i]);
+							_allocator.destroy(m_ptr + i);
+						}
 						_allocator.deallocate(m_ptr, m_capacity);
 					}
 					m_capacity = n;
@@ -378,8 +389,10 @@ namespace ft
 				else if (n < m_capacity) {
 					tmp = _allocator.allocate(n);
 					if (m_capacity > 0) {
-						for (size_t i = 0; i < m_length; i++)
+						for (size_t i = 0; i < m_length; i++){
 							_allocator.construct(&tmp[i], m_ptr[i]);
+							_allocator.destroy(m_ptr + i);
+						}
 						_allocator.deallocate(m_ptr, m_capacity);
 					}
 					m_capacity = n;
