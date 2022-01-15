@@ -1,7 +1,6 @@
-#ifndef STACK
-# define STACK
+#pragma once
 
-# include "../vector/Vector.hpp"
+# include "../vector/vector.hpp"
 
 namespace ft
 {
@@ -14,31 +13,31 @@ namespace ft
 			typedef typename container_type::reference       reference;
 			typedef typename container_type::const_reference const_reference;
 			typedef typename container_type::size_type       size_type;
-		private:
-			Container s;
+		protected:
+			Container c;
 
 		public:
-			explicit stack (const container_type& ctnr = container_type()): s(ctnr){}
+			explicit stack (const container_type& ctnr = container_type()): c(ctnr){}
 			bool empty() const {
-				return s.empty();
+				return c.empty();
 			}
 			size_type size() const {
-				return s.size();
+				return c.size();
 			}
 			value_type& top() {
-				return s.back();
+				return c.back();
 			}
 			const value_type& top() const {
-				return s.back();
+				return c.back();
 			}
 			void push (const value_type& val) {
-				s.push_back(val);
+				c.push_back(val);
 			}
 			void pop() {
-				s.pop_back();
+				c.pop_back();
 			}
 			Container getS() const{
-				return s;
+				return c;
 			}
 	};
 	template <class T, class Container>
@@ -66,5 +65,3 @@ namespace ft
 		return (lhs.getS() >= rhs.getS());
 	}
 };
-
-#endif

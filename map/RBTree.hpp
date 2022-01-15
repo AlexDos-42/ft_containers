@@ -1,5 +1,4 @@
-#ifndef RBTREE_HPP
-# define RBTREE_HPP
+#pragma once
 
 #include <memory>
 #include <cstddef>
@@ -7,7 +6,7 @@
 #include <iostream>
 #include <cstdio>
 #include "../utils/nodeMap.hpp"
-#include "../utils/Pairs.hpp"
+#include "../utils/pair.hpp"
 #include "../iterators/MapIterator.hpp"
 
 namespace	ft
@@ -550,5 +549,3 @@ namespace	ft
 			}
 	};
 };
-
-#endif

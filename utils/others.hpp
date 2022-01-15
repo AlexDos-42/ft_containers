@@ -1,5 +1,4 @@
-#ifndef OTHERS_HPP
-# define OTHERS_HPP
+#pragma once
 
 #include <cstddef>
 
@@ -184,5 +183,3 @@ namespace ft
 		typedef Reference						reference;
 	};
 }
-
-#endif

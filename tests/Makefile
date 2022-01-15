@@ -69,10 +69,10 @@ SRC = main.cpp
 
 # Our tests
 SRC+= TestsVector.cpp TestsStack.cpp TestsMap.cpp
-SRC+= TestsTypeTraits.cpp
+#SRC+= TestsTypeTraits.cpp
 #   SRC+=TestsUtility.cpp
 # SRC+= TestsIterator.cpp
-SRC+= TestsAlgorithm.cpp
+#SRC+= TestsAlgorithm.cpp
 # SRC+= TestsFunction.cpp
 
 # SRC+= TestsRbTree.cpp

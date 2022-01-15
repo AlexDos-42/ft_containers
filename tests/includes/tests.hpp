@@ -11,7 +11,7 @@ namespace ft {}
 
 namespace cn = ::NS_NAME;
 
-#include "Pairs.hpp" //the file containing pair definition
+#include "pair.hpp" //the file containing pair definition
 
 namespace NS_NAME
 {

@@ -14,6 +14,7 @@ _WHITE		=\e[97m
 NAME = container
 
 SRC = main.cpp \
+		map.cpp
 
 PATHSRCS = .
 SRCS = $(addprefix $(PATHSRCS)/,$(SRC))

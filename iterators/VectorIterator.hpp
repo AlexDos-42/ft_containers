@@ -17,7 +17,7 @@ namespace ft
 		protected:
 			class_type		ptr;
 		public:
-			explicit VectorIterator(): ptr(nullptr) {}
+			explicit VectorIterator(): ptr(NULL) {}
 			explicit VectorIterator(class_type newptr): ptr(newptr) {}
 			template<class Iter>
 			VectorIterator(VectorIterator<Iter> const &ref) {
@@ -156,7 +156,7 @@ namespace ft
 		protected:
 			class_type		ptr;
 		public:
-			explicit ReverseVectorIterator(): ptr(nullptr) {}
+			explicit ReverseVectorIterator(): ptr(NULL) {}
 			ReverseVectorIterator(typename Iterator::value_type *newptr) { 
 				ptr = Iterator(newptr);
 			}

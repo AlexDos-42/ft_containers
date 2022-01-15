@@ -6,7 +6,7 @@
 # include <iostream>
 # include <functional>
 # include "../iterators/MapIterator.hpp"
-# include "../utils/Pairs.hpp"
+# include "../utils/pair.hpp"
 # include "../utils/others.hpp"
 # include "RBTree.hpp"
 
@@ -17,7 +17,6 @@ namespace ft
 		public:
 			typedef	Key											key_type;
 			typedef	T											mapped_type;
-			//typedef ft::pair<const key_type, mapped_type>		value_type;
 			typedef Allocator									allocator_type;
 			typedef Compare										key_compare;
 
@@ -56,17 +55,21 @@ namespace ft
 			RBTree<Key, T, Compare, Allocator>					m_tree;
 
 		public:
+			/* Constructor default */
 			explicit map(const Compare& comp = Compare(), const Allocator& alloc = Allocator()) : m_alloc(alloc), m_comp(comp), m_tree(comp, alloc) {}
-
+			/* Constructor range */
 			template <class InputIterator>
 			map(InputIterator first, InputIterator last, const Compare &comp = Compare(), const Allocator& alloc = Allocator()): m_alloc(alloc), m_comp(comp), m_tree(comp, alloc) {
 				insert(first, last);
 			}
+			/* Constructor copy */
 			map(const map &other): m_alloc(other.m_alloc), m_comp(other.m_comp), m_tree(m_comp, m_alloc) {
 				if (!(other.empty()))
 					insert(other.begin(), other.end());
 			}
+			/* Map destructor */
 			~map() {};
+			/* Assign content */
 			map&	operator=(const map &other) {
 				if (&other == this)
 					return *this;
@@ -78,59 +81,74 @@ namespace ft
 
 			///////// ITERATORS /////////
 
+			/* Returns an iterator pointing to the first element in the Map. */
 			iterator		begin() {
 				return m_tree.begin();
 			}
+			/* Returns an iterator pointing to the first element in the Map. */
 			const_iterator		begin() const {
 				return m_tree.begin();
 			}
+			/* Return iterator to end */
 			iterator		end() {
 				return m_tree.end();
 			}
+			/* Return iterator to end */
 			const_iterator		end() const {
 				return m_tree.end();
 			}
+			/* Return reverse iterator to reverse beginning */
 			reverse_iterator	rbegin() {
 				return reverse_iterator(end());
 			}
+			/* Return reverse iterator to reverse beginning */
 			const_reverse_iterator	rbegin() const {
 				return const_reverse_iterator(end());
 			}
+			/* Return reverse iterator to reverse end */
 			reverse_iterator	rend() {
 				return reverse_iterator(begin());
 			}
+			/* Return reverse iterator to reverse end */
 			reverse_iterator	rend() const {
 				return cont_reverse_iterator(begin());
 			}
 
 			///////// CAPACITY /////////
 
+			/* Test whether map is empty */
 			bool			empty() const {
 				return (m_tree.get_size() == 0);
 			}
+			/* Return size */
 			size_type		size() const {
 				return m_tree.get_size();
 			}
+			/* Return maximum size */
 			size_type		max_size() const {
 				return m_tree.max_size();
 			}
 
 			///////// ELEMENTS ACCESS /////////
 
+			/* Access element */
 			mapped_type&		operator[](const key_type& key) {
 				return insert(ft::make_pair(key, mapped_type())).first->second;
 			}
 
 			///////// MODIFIERS /////////
 
+			/* Insert elements single element */
 			pair<iterator, bool>	insert(const value_type& value) {
 				return m_tree.insert(value);
 			}
+			/* Insert elements single element with hint*/
 			iterator	insert(iterator hint, const value_type& value) {
 				(void)hint;
 
 				return insert(value).first;
 			}
+			/* Insert elements range*/
 			template <class InputIterator>
 			void 		insert(InputIterator first, InputIterator last) {
 				while (first != last) {
@@ -138,9 +156,11 @@ namespace ft
 					first++;
 				}
 			}
+			/* Erase element */
 			void 		erase(iterator pos) {
 				m_tree.delete_node(pos.m_node);
 			}
+			/* Erase elements */
 			void 		erase(iterator first, iterator last) {
 				NodeMap<value_type>	*to_delete;
 				while (first != last) {
@@ -149,6 +169,7 @@ namespace ft
 					m_tree.delete_node(to_delete);
 				}
 			}
+			/* Erase element */
 			size_type	erase(const key_type& key) {
 				NodeMap<value_type>	*to_delete = m_tree.search_node(key);
 				if (to_delete == NULL)
@@ -158,59 +179,76 @@ namespace ft
 					return 1;
 				}
 			}
+			/* Swap content */
 			void 		swap(map& other) {
 				m_tree.swap(other.m_tree);
 			}
+			/* Clear content */
 			void 	clear() {
 				m_tree.clear();
 			}
 
-			allocator_type	get_allocator() const {
-				return m_tree.get_allocator();
-			}
-
 			///////// OBSERVERS /////////
 
+			/* Return key comparison object */
 			key_compare		key_comp() const {
 				return key_compare();
 			}
+			/* Return value comparison object */
 			value_compare	value_comp() const {
 				return value_compare(key_compare());
 			}
 
 			///////// OPERATIONS /////////
 
+			/* Get iterator to element */
 			iterator		find(const key_type& k) {
 				return m_tree.find(k);
 			}
+			/* Get iterator to element */
 			const_iterator	find(const key_type& k) const {
 				return m_tree.find(k);
 			}
+			/* Count elements with a specific key */
 			size_type	count(const key_type& k) const {
 				if (m_tree.search_node(k) == NULL)
 					return 0;
 				else
 					return 1;
 			}
+			/* Get range of equal elements */
 			pair<iterator,iterator>	equal_range(const key_type& k) {
 				return make_pair(m_tree.lower_bound(k), m_tree.upper_bound(k));
 			}
+			/* Get range of equal elements */
 			pair<const_iterator,const_iterator> equal_range(const key_type& k) const {
 				return make_pair(m_tree.lower_bound(k), m_tree.upper_bound(k));
 			}
+			/* Return iterator to lower bound */
 			iterator	lower_bound(const key_type &k) {
 				return m_tree.lower_bound(k);
 			}
+			/* Return iterator to lower bound */
 			const_iterator	lower_bound(const key_type &k) const {
 				return m_tree.lower_bound(k);
 			}
+			/* Return iterator to upper bound */
 			iterator	upper_bound(const key_type &k) {
 				return m_tree.upper_bound(k);
 			}
+			/* Return iterator to upper bound */
 			const_iterator	upper_bound(const key_type &k) const {
 				return m_tree.upper_bound(k);
 			}
 
+			///////// ALLOCATOR /////////
+
+			/* Returns a copy of the allocator  */
+			allocator_type	get_allocator() const {
+				return m_tree.get_allocator();
+			}
+
+		private:
 			///////// PRINT /////////
 
 			void 		print(void) {

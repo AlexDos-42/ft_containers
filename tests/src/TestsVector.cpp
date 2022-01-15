@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <string>
-#include "Vector.hpp"
+#include "vector.hpp"
 
 TEMPLATE_TEST_CASE( "vector - construct", "[vector][constructors][leak]", int, IsLeaky )
 {

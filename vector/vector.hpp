@@ -1,5 +1,4 @@
-#ifndef VECTOR_HPP
-# define VECTOR_HPP
+#pragma once
 
 # include <cstddef>
 # include <limits>
@@ -7,10 +6,11 @@
 # include <iterator>
 # include <memory>
 # include <string>
+# include <sstream>
 
 #include "../iterators/VectorIterator.hpp"
 #include "../utils/others.hpp"
-#include "../utils/Pairs.hpp"
+#include "../utils/pair.hpp"
 
 namespace ft
 {
@@ -65,10 +65,11 @@ namespace ft
 			}
 			/* Constructor copy */
 			vector(const vector& copy): m_ptr(copy.m_ptr), m_length(copy.m_length), m_capacity(copy.m_capacity) {
+				if (this == &copy)
+					return;
 				m_ptr = _allocator.allocate(m_capacity);
-				for (ft::pair<int, const_iterator> i(0, copy.begin());
-					i.second != copy.end(); ++i.first, ++i.second)
-				_allocator.construct(&m_ptr[i.first], *i.second);
+				for (ft::pair<int, const_iterator> i(0, copy.begin()); i.second != copy.end(); ++i.first, ++i.second)
+					_allocator.construct(&m_ptr[i.first], *i.second);
 			}
 			/* Vector destructor */
 			~vector(){
@@ -159,9 +160,14 @@ namespace ft
 				value_type	*tmp;
 				if (n == 0)
 					return ;
-				if (n > max_size())
-					throw (std::length_error("new capacity (which is " + std::to_string(n) \
-					+ ") > max_size() (which is " + std::to_string(max_size()) + ")"));
+				if (n > max_size()){
+					std::ostringstream oss;
+					std::ostringstream oss2;
+					oss << n;
+					oss2 << max_size();
+					throw (std::length_error("new capacity (which is " + oss.str() \
+					 + ") > max_size() (which is " + oss2.str() + ")"));
+				}
 				else if (n > m_capacity) {
 					tmp = _allocator.allocate(n);
 					if (m_capacity > 0) {
@@ -174,10 +180,6 @@ namespace ft
 					m_capacity = n;
 					m_ptr = tmp;
 				}
-			}
-
-			allocator_type get_allocator() const {
-				return allocator_type();
 			}
 
 			///////// ELEMENTS ACCESS /////////
@@ -226,7 +228,6 @@ namespace ft
 			void assign(InputIterator first, InputIterator last,
 				typename enable_if<!is_integral<InputIterator>::value>::type * = 0){
 				size_t i = 0;
-				//clear();
 				for (InputIterator it = first; it != last; ++it)
 					i++;
 				reserve(i);
@@ -237,7 +238,6 @@ namespace ft
 			}
 			/* Assign vector content fill */
 			void assign(size_type n, const value_type &val){
-				//clear();
 				reserve(n);
 				size_type i = -1;
 				while (++i < n) {
@@ -266,6 +266,8 @@ namespace ft
 				vector tmp(position, end());
 				size_t a = size() + 1;
 				m_length -= ft::distance(position, end());
+				for (iterator supp = position; supp != end() ; supp++)
+					erase(supp);
 				if (capacity() == a)
 					reserve(a * 2);
 				push_back(val);
@@ -281,6 +283,8 @@ namespace ft
 				vector tmp(position, end());
 				int a = size() + n;
 				m_length -= ft::distance(position, end());
+				for (iterator supp = position; supp != end() ; supp++)
+					erase(supp);
 				reserve(a);
 				while (n) {
 					push_back(val);
@@ -306,6 +310,8 @@ namespace ft
 				if (!(n > 2 * capacity() || !size()))
 					n = 0;
 				m_length -= ft::distance(position, end());
+				for (iterator supp = position; supp != end() ; supp++)
+					erase(supp);
 				if (n)
 					reserve(n);
 				while (first != last) {
@@ -318,7 +324,7 @@ namespace ft
 					++it;
 				}
 			}
-			/* Erase elements */
+			/* Erase element */
 			iterator erase(iterator position){
 				return erase(position, position + 1);
 			}
@@ -357,6 +363,13 @@ namespace ft
 				m_swap(m_ptr, x.m_ptr);
 			}
 			
+			///////// ALLOCATOR /////////
+
+			/* Returns a copy of the allocator  */
+			allocator_type get_allocator() const {
+				return allocator_type();
+			}
+
 		private:
 			void	m_realloc(size_type newCapacity){
 				value_type* tmp = _allocator.allocate(newCapacity);
@@ -371,9 +384,14 @@ namespace ft
 				value_type	*tmp;
 				if (n == 0)
 					return ;
-				if (n > max_size())
-					throw (std::length_error("new capacity (which is " + std::to_string(n) \
-					+ ") > max_size() (which is " + std::to_string(max_size()) + ")"));
+				if (n > max_size()) {
+					std::ostringstream oss;
+					std::ostringstream oss2;
+					oss << n;
+					oss2 << max_size();
+					throw (std::length_error("new capacity (which is " + oss.str() \
+					 + ") > max_size() (which is " + oss2.str() + ")"));
+				}
 				else if (n > m_capacity) {
 					tmp = _allocator.allocate(n);
 					if (m_capacity > 0) {
@@ -434,5 +452,3 @@ namespace ft
 		x.swap(y);
 	}
 }
-
-#endif
