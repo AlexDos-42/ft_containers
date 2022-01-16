@@ -9,8 +9,8 @@
 #include <vector>
 
 // ft
-#include "Map.hpp"
-#include "Stack.hpp"
+#include "map.hpp"
+#include "stack.hpp"
 #include "vector.hpp"
 
 #if !defined(NS_NAME)

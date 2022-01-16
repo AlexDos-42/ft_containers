@@ -110,7 +110,7 @@ namespace ft
 				return reverse_iterator(begin());
 			}
 			/* Return reverse iterator to reverse end */
-			reverse_iterator	rend() const {
+			const_reverse_iterator	rend() const {
 				return cont_reverse_iterator(begin());
 			}
 
