@@ -19,15 +19,15 @@ void Construct() {
   first['b']=30;
   first['c']=50;
   first['d']=70;
-  for (ft::MapIterator<ft::pair<const char, int> > it = first.begin(); it != first.end(); it++)
+  for (ft::map<char,int>::iterator it = first.begin(); it != first.end(); it++)
   	std::cout << it->second << " ";
   std::cout << std::endl << "range constructor: " << std::endl;
   ft::map<char,int> second (first.begin(),first.end());
-  for (ft::MapIterator<ft::pair<const char, int> > it = second.begin(); it != second.end(); it++)
+  for (ft::map<char,int>::iterator it = second.begin(); it != second.end(); it++)
   	std::cout << it->second << " ";
   std::cout << std::endl << "copy constructor: " << std::endl;
   ft::map<char,int> third (second);
-  for (ft::MapIterator<ft::pair<const char, int> > it = third.begin(); it != third.end(); it++)
+  for (ft::map<char,int>::iterator it = third.begin(); it != third.end(); it++)
   	std::cout << it->second << " ";
   std::cout << std::endl;
 
@@ -43,10 +43,10 @@ void operatorEgale() {
 
   second=first;
   std::cout << "first: " << std::endl;
-  for (ft::MapIterator<ft::pair<const char, int> > it = first.begin(); it != first.end(); it++)
+  for (ft::map<char,int>::iterator it = first.begin(); it != first.end(); it++)
   	std::cout << it->second << " ";
   std::cout << std::endl << "second: " << std::endl;
-  for (ft::MapIterator<ft::pair<const char, int> > it = second.begin(); it != second.end(); it++)
+  for (ft::map<char,int>::iterator it = second.begin(); it != second.end(); it++)
   	std::cout << it->second << " ";
   std::cout << std::endl;
 }
@@ -59,7 +59,7 @@ void begin() {
   mymap['b'] = 100;
   mymap['a'] = 200;
   mymap['c'] = 300;
-  for (ft::MapIterator<ft::pair<const char, int> > it=mymap.begin(); it!=mymap.end(); ++it)
+  for (ft::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
     std::cout << it->first << " => " << it->second << '\n';
 }
 void end() {
@@ -69,7 +69,7 @@ void end() {
   mymap['b'] = 100;
   mymap['a'] = 200;
   mymap['c'] = 300;
-  for (ft::MapIterator<ft::pair<const char, int> > it=mymap.begin(); it!=mymap.end(); ++it)
+  for (ft::map<char,int>::iterator it =mymap.begin(); it!=mymap.end(); ++it)
     std::cout << it->first << " => " << it->second << '\n';
 }
 void rbegin() {
@@ -225,11 +225,11 @@ void swap() {
   foo.swap(bar);
 
   std::cout << "foo contains:\n";
-  for (ft::MapIterator<ft::pair<const char, int> > it=foo.begin(); it!=foo.end(); ++it)
+  for (ft::map<char,int>::iterator it=foo.begin(); it!=foo.end(); ++it)
     std::cout << it->first << " => " << it->second << '\n';
 
   std::cout << "bar contains:\n";
-  for (ft::MapIterator<ft::pair<const char, int> > it=bar.begin(); it!=bar.end(); ++it)
+  for (ft::map<char,int>::iterator it =bar.begin(); it!=bar.end(); ++it)
     std::cout << it->first << " => " << it->second << '\n';
     
 }
@@ -242,7 +242,7 @@ void clear() {
   mymap['z']=300;
 
   std::cout << "mymap contains:\n";
-  for (ft::MapIterator<ft::pair<const char, int> > it=mymap.begin(); it!=mymap.end(); ++it)
+  for (ft::map<char,int>::iterator it =mymap.begin(); it!=mymap.end(); ++it)
     std::cout << it->first << " => " << it->second << '\n';
 
   mymap.clear();
@@ -250,7 +250,7 @@ void clear() {
   mymap['b']=2202;
 
   std::cout << "mymap contains:\n";
-  for (ft::MapIterator<ft::pair<const char, int> > it=mymap.begin(); it!=mymap.end(); ++it)
+  for (ft::map<char,int>::iterator it =mymap.begin(); it!=mymap.end(); ++it)
     std::cout << it->first << " => " << it->second << '\n';
 }
 
@@ -269,7 +269,7 @@ void key_comp() {
 
   char highest = mymap.rbegin()->first;     // key value of last element
 
-  ft::MapIterator<ft::pair<const char, int> > it = mymap.begin();
+  ft::map<char,int>::iterator it = mymap.begin();
   do {
     std::cout << it->first << " => " << it->second << '\n';
   } while ( mycomp((*it++).first, highest) );
@@ -288,7 +288,7 @@ void value_comp() {
 
   ft::pair<char,int> highest = *mymap.rbegin();          // last element
 
-  ft::MapIterator<ft::pair<const char, int> > it = mymap.begin();
+  ft::map<char,int>::iterator it = mymap.begin();
   do {
     std::cout << it->first << " => " << it->second << '\n';
   } while ( mymap.value_comp()(*it++, highest) );
@@ -350,7 +350,7 @@ void lower_bound() {
   mymap.erase(itlow,itup);        // erases [itlow,itup)
 
   // print content:
-  for (ft::MapIterator<ft::pair<const char, int> > it=mymap.begin(); it!=mymap.end(); ++it)
+  for (ft::map<char,int>::iterator it = mymap.begin(); it!=mymap.end(); ++it)
     std::cout << it->first << " => " << it->second << '\n';
     
 }
@@ -371,7 +371,7 @@ void upper_bound() {
   mymap.erase(itlow,itup);        // erases [itlow,itup)
 
   // print content:
-  for (ft::MapIterator<ft::pair<const char, int> > it=mymap.begin(); it!=mymap.end(); ++it)
+  for (ft::map<char,int>::iterator it = mymap.begin(); it!=mymap.end(); ++it)
     std::cout << it->first << " => " << it->second << '\n';
     
 }
@@ -383,7 +383,7 @@ void  equal_range() {
   mymap['b']=20;
   mymap['c']=30;
 
-  ft::pair<ft::MapIterator<ft::pair<const char, int> >,ft::MapIterator<ft::pair<const char, int> > > ret;
+  ft::pair<ft::map<char,int>::iterator,ft::map<char,int>::iterator > ret;
   ret = mymap.equal_range('b');
 
   std::cout << "lower bound points to: ";

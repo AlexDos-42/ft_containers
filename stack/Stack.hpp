@@ -37,26 +37,26 @@ namespace ft
 	};
 	template <class T, class Container>
 	bool operator==(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
-		return (lhs.getS() == rhs.getS());
+		return (lhs == rhs);
 	}
 	template <class T, class Container>
 	bool operator!=(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
-		return (lhs.getS() != rhs.getS());
+		return (lhs != rhs);
 	}
 	template <class T, class Container>
 	bool	operator<(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
-		return (lhs.getS() < rhs.getS());
+		return (lhs < rhs);
 	}
 	template <class T, class Container>
 	bool	operator<=(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
-		return (lhs.getS() <= rhs.getS());
+		return (lhs <= rhs);
 	}
 	template <class T, class Container>
 	bool operator>(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
-		return (lhs.getS() > rhs.getS());
+		return (lhs > rhs);
 	}
 	template <class T, class Container>
 	bool operator>=(const stack<T, Container>& lhs, const stack<T, Container>& rhs) {
-		return (lhs.getS() >= rhs.getS());
+		return (lhs >= rhs);
 	}
 };
