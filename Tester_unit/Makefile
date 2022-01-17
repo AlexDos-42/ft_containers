@@ -33,30 +33,17 @@ _IMAGENTA =\e[45m
 _ICYAN    =\e[106m
 _IWHITE   =\e[107m
 
-#******************************************************************************#
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: juligonz <juligonz@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2020/05/20 12:43:01 by juligonz          #+#    #+#              #
-#    Updated: 2020/08/24 16:37:55 by juligonz         ###   ########.fr        #
-#                                                                              #
-#******************************************************************************#
-
 UNAME := $(shell uname)
 
 NAME = tests
 
-SRC_DIR = ./src ../src
+SRC_DIR = ./src 
 BUILD_DIR = ./build
 INC_DIR = $(shell find . -type d -name "includes")
 INC_DIR+= $(shell find ../vector -type d)
 INC_DIR+= $(shell find ../utils -type d )
 INC_DIR+= $(shell find ../stack -type d )
 INC_DIR+= $(shell find ../map -type d )
-INC_DIR+= $(shell find ../includes -type d)
 
 OBJ_DIR = obj
 
@@ -69,13 +56,6 @@ SRC = main.cpp
 
 # Our tests
 SRC+= TestsVector.cpp TestsStack.cpp TestsMap.cpp
-#SRC+= TestsTypeTraits.cpp
-#   SRC+=TestsUtility.cpp
-# SRC+= TestsIterator.cpp
-#SRC+= TestsAlgorithm.cpp
-# SRC+= TestsFunction.cpp
-
-# SRC+= TestsRbTree.cpp
 
 
 OBJ = $(addprefix  $(OBJ_DIR)/,$(SRC:%.cpp=%.o))
@@ -103,8 +83,6 @@ ifeq ($(strip $(NS_NAME)),)
 NS_NAME := ft
 endif
 CXXFLAGS += -D NS_NAME=$(NS_NAME)
-# https://www.cmcrossroads.com/article/rebuilding-when-cppflags-changes
-# -include signature
 
 all:  $(BUILD_DIR)/$(NAME)
 
@@ -116,40 +94,9 @@ $(BUILD_DIR)/$(NAME): $(OBJ)
 	mkdir -p $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) $(IFLAGS) -o $@ $(OBJ) $(LDFLAGS)
 	@printf "$(_GREEN)Compiled : $(_MAGENTA)$(NAME)$(_R)\n"
-	@printf "\nDo $(_CYAN)$(_BOLD)make show$(_R) to debug the Makefile\n"
-	@printf "Do $(_RED)$(_BOLD)make debug$(_R) to run tests with lldb\n"
-	@printf "Do $(_YELLOW)$(_BOLD)make valgrind$(_R) to run valgrind $(_MAGENTA)(May have falses positives under OSX)$(_R)\n"
-	@printf "Do $(_GREEN)$(_BOLD)make check$(_R) to run unit tests $(_R)\n"
 
 run:  $(BUILD_DIR)/$(NAME)
 	@./$(NAME)
-
-debug:	CXXFLAGS += -g
-debug: $(BUILD_DIR)/$(NAME)
-	@lldb $(BUILD_DIR)/$(NAME) $(ARGS)
-
-valgrind: $(BUILD_DIR)/$(NAME)
-	@valgrind --leak-check=full --show-leak-kinds=all --show-reachable=yes --track-origins=yes --log-file=output_valgrind ./$(BUILD_DIR)/$(NAME) $(ARGS)
-	@printf "$(_BOLD)$(_RED)################################################################$(_R)\n"
-	@printf "$(_BOLD)$(_RED)##########################  $(_GREEN)Valgrind$(_RED)  ##########################$(_R)\n"
-	@printf "$(_BOLD)$(_RED)################################################################$(_R)\n\n"
-	@cat output_valgrind
-
-show:
-	@printf "$(_MAGENTA)UNAME  :$(_GREEN)  $(UNAME)$(_END)\n"
-	@printf "$(_MAGENTA)ARCH   :$(_GREEN)  $(shell uname -p)$(_END)\n\n"
-	@printf "$(_CYAN)NAME   :$(_RED)  $(NAME)$(_END)\n"
-	@printf "$(_CYAN)NS_NAME:$(_RED)  $(NS_NAME)$(_END)\n\n"
-	@printf "$(_CYAN)CXX    :$(_RED)  $(CXX)$(_END)\n"
-	@printf "$(_CYAN)CXXFLAGS :$(_RED)  $(CXXFLAGS)$(_END)\n"
-	@printf "$(_CYAN)IFLAGS :$(_RED)  $(IFLAGS)$(_END)\n"
-	@printf "$(_CYAN)LDFLAGS :$(_RED)  $(LDFLAGS)$(_END)\n\n"
-	@printf "$(_CYAN)SRC_DIR:$(_RED)  $(SRC_DIR)$(_END)\n"
-	@printf "$(_CYAN)INC_DIR:$(_RED)  $(INC_DIR)$(_END)\n"
-	@printf "$(_CYAN)LIB_DIR:$(_RED)  $(LIB_DIR)$(_END)\n\n"
-	@printf "$(_CYAN)SRC    :$(_RED)  $(SRC)$(_END)\n"
-	@printf "$(_CYAN)OBJ    :$(_RED)  $(OBJ)$(_END)\n"
-	@printf "$(_CYAN)DEP     :$(_RED)  $(DEP)$(_END)\n"
 
 clean:
 	@rm -rf $(OBJ_DIR) output_valgrind
@@ -167,38 +114,3 @@ re: fclean all
 -include $(DEP)
 
 .PHONY: all run debug valgrind show clean fclean check re
-
-#******************************************************************************#
-#                                  REMINDER                                    #  
-#******************************************************************************# \
-                                                                                 \
-                                                                                 \
-Automatic variables :                                                            \
-                                                                                 \
-$@ : rule name  target.         			                                     \
-                                                                                 \
-$^ : The names of all the prerequisites, with spaces between them. For           \
-prerequisites which are archive members, only the named member is used.          \
-                                                                                 \
-$< : The name of the first prerequisite. If the target got its recipe from an    \
-implicit rule, this will be the first prerequisite added by the implicit rule.   \
-                                                                                 \
-$? : The names of all the prerequisites that are newer than the target, with     \
-spaces between them. For prerequisites which are archive members, only the       \
-named member is used.                                                            \
-                                                                                 \
-                                                                                 \
-source :                                                                         \
-https://www.gnu.org/software/make/manual/html_node/Automatic-Variables.html      \
-
-#******************************************************************************#
-#                                  RESSOURCES                                  #  
-#******************************************************************************# \
-resources :                                                                      \
-https://www.gnu.org/software/make/manual/html_node/index.html#SEC_Contents       \
-http://web.mit.edu/gnu/doc/html/make_toc.html#SEC88                              \
-https://www3.nd.edu/~zxu2/acms60212-40212/Makefile.pdf                           \
-																				 \
-cpp:																			 \
-																				 \
-https://www.gnu.org/software/make/manual/html_node/Catalogue-of-Rules.html

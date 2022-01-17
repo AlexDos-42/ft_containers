@@ -16,6 +16,7 @@ NAME = container
 SRC = main.cpp \
 		map.cpp \
 		vector.cpp \
+		stack.cpp \
 
 PATHSRCS = .
 SRCS = $(addprefix $(PATHSRCS)/,$(SRC))

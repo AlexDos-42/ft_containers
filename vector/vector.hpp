@@ -73,8 +73,9 @@ namespace ft
 			}
 			/* Vector destructor */
 			~vector(){
-				for (size_type i = 0; i < m_length; ++i)
+				for (size_type i = m_length; i < m_length; --i){
 					_allocator.destroy(&m_ptr[i]);
+				}
 				_allocator.deallocate(m_ptr, m_capacity);
 			}
 			/* Assign content */
@@ -433,7 +434,7 @@ namespace ft
 	}
 	template <class T, class Alloc>
 	bool operator<(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs){
-		return lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+		return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
 	}
 	template <class T, class Alloc>
 	bool operator<=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs){

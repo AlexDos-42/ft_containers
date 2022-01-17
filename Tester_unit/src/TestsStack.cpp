@@ -1,6 +1,6 @@
 #include "tests.hpp"
 
-#include "Stack.hpp"
+#include "stack.hpp"
 
 #include <stack>
 #include <string>

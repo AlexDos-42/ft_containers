@@ -1,4 +1,3 @@
-# https://misc.flogisoft.com/bash/tip_colors_and_formatting
 _BOLD      =\e[1m
 _DIM       =\e[2m
 _UNDERLINE =\e[4m
@@ -33,29 +32,15 @@ _IMAGENTA =\e[45m
 _ICYAN    =\e[106m
 _IWHITE   =\e[107m
 
-#******************************************************************************#
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: juligonz <juligonz@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2020/05/20 12:43:01 by juligonz          #+#    #+#              #
-#    Updated: 2020/08/24 16:37:55 by juligonz         ###   ########.fr        #
-#                                                                              #
-#******************************************************************************#
-
 UNAME := $(shell uname)
 
 NAME  = a.out
 
-SRC_DIR = ./ ../src 
-INC_DIR = $(shell find . -type d -name "includes")
+SRC_DIR = ./
 INC_DIR+= $(shell find ../vector -type d)
 INC_DIR+= $(shell find ../utils -type d )
 INC_DIR+= $(shell find ../stack -type d )
 INC_DIR+= $(shell find ../map -type d )
-INC_DIR+= $(shell find ../includes -type d)
 
 OBJ_DIR = obj
 
@@ -65,18 +50,15 @@ vpath %.hpp $(INC_DIR)
 
 SRC = main.cpp
 
-
-
 OBJ = $(addprefix  $(OBJ_DIR)/,$(SRC:%.cpp=%.o))
 vpath %.cpp $(SRCS_DIR)
 
 DEP = $(addprefix  $(OBJ_DIR)/,$(SRC:%.cpp=%.d))
 
-
 LDFLAGS = $(foreach lib, $(LIB_DIR),-L$(lib))  $(foreach lib, $(LIB),-l$(lib))
 
 CXX = clang++
-CXXFLAGS  = -Wall -Wextra -Werror -std=c++98 -MMD -MP #-g -fstandalone-debug #-fsanitize=address  -fsanitize=undefined -fstack-protector  
+CXXFLAGS  = -Wall -Wextra -Werror -std=c++98 -MMD -MP  
 IFLAGS  = $(foreach inc, $(INC_DIR),-I$(inc))
 
 ifeq ($(strip $(NS_NAME)),)
@@ -93,27 +75,9 @@ $(OBJ_DIR)/%.o: %.cpp
 $(NAME): $(OBJ)
 	$(CXX) $(CXXFLAGS) $(IFLAGS) -o $@ $(OBJ) $(LDFLAGS)
 	@printf "$(_GREEN)Compiled : $(_MAGENTA)$(NAME)$(_R)\n"
-	@printf "\nDo $(_CYAN)$(_BOLD)make show$(_R) to debug the Makefile\n"
-	@printf "Do $(_RED)$(_BOLD)make debug$(_R) to run tests with lldb\n"
 
 run: $(NAME)
 	@./$(NAME)
-
-show:
-	@printf "$(_MAGENTA)UNAME  :$(_GREEN)  $(UNAME)$(_END)\n"
-	@printf "$(_MAGENTA)ARCH   :$(_GREEN)  $(shell uname -p)$(_END)\n\n"
-	@printf "$(_CYAN)NAME   :$(_RED)  $(NAME)$(_END)\n"
-	@printf "$(_CYAN)NS_NAME:$(_RED)  $(NS_NAME)$(_END)\n\n"
-	@printf "$(_CYAN)CXX    :$(_RED)  $(CXX)$(_END)\n"
-	@printf "$(_CYAN)CXXFLAGS :$(_RED)  $(CXXFLAGS)$(_END)\n"
-	@printf "$(_CYAN)IFLAGS :$(_RED)  $(IFLAGS)$(_END)\n"
-	@printf "$(_CYAN)LDFLAGS :$(_RED)  $(LDFLAGS)$(_END)\n\n"
-	@printf "$(_CYAN)SRC_DIR:$(_RED)  $(SRC_DIR)$(_END)\n"
-	@printf "$(_CYAN)INC_DIR:$(_RED)  $(INC_DIR)$(_END)\n"
-	@printf "$(_CYAN)LIB_DIR:$(_RED)  $(LIB_DIR)$(_END)\n\n"
-	@printf "$(_CYAN)SRC    :$(_RED)  $(SRC)$(_END)\n"
-	@printf "$(_CYAN)OBJ    :$(_RED)  $(OBJ)$(_END)\n"
-	@printf "$(_CYAN)DEP     :$(_RED)  $(DEP)$(_END)\n"
 
 clean:
 	@rm -rf $(OBJ_DIR) output_valgrind

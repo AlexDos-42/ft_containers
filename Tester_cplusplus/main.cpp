@@ -4,7 +4,7 @@
 
 void mapTest();
 void vectorTest();
-//void stackTest();
+void stackTest();
 
 void next()
 {
@@ -31,7 +31,7 @@ void map()
 void stack()
 {
 	std::cout << std::endl << "////////// STACK //////////"  << std::endl;
-	//stackTest();
+	stackTest();
 	std::cout << "////////// STACK //////////"  << std::endl << std::endl;
 }
 

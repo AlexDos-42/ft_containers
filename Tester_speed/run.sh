@@ -27,8 +27,6 @@ execute_speed_test()
 	START=$(date +%s.%N)
 	time  > /dev/null 2>&1 "$1" "$2" 
 	END=$(date +%s.%N)
-	DIFF=$(echo "$END - $START" | bc)
-	echo "$DIFF sec"
 }
 
 
@@ -46,7 +44,6 @@ parse_args(){
 			show_help
 			exit 0;;
 		"") 
-			log_info "No seed provided, falling back to default seed '$DEFAULT_SEED'"
 			return;;
 		*)	return;;
 	esac
@@ -65,18 +62,17 @@ main(){
 
 	local seed="${1:-$DEFAULT_SEED}"
 	parse_args "$@"
-	log_info "Seed: $seed"
 	log_info "Benching std..."
-	execute_speed_test ./speed_std $seed
-	execute_speed_test ./speed_std $seed
-	execute_speed_test ./speed_std $seed
-	execute_speed_test ./speed_std $seed
+	execute_speed_test ./speed_std "$seed"
+	execute_speed_test ./speed_std "$seed"
+	execute_speed_test ./speed_std "$seed"
+	execute_speed_test ./speed_std "$seed"
 	
 	log_info "Benching ft..."
-	execute_speed_test ./speed_ft $seed
-	execute_speed_test ./speed_ft $seed
-	execute_speed_test ./speed_ft $seed
-	execute_speed_test ./speed_ft $seed
+	execute_speed_test ./speed_ft "$seed"
+	execute_speed_test ./speed_ft "$seed"
+	execute_speed_test ./speed_ft "$seed"
+	execute_speed_test ./speed_ft "$seed"
 
 }
 
