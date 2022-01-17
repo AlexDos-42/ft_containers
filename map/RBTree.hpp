@@ -83,10 +83,6 @@ namespace	ft
 
 				res->left = nodeleft;
 				res->right = noderight;
-				//nodeleft->left = NULL;
-				//nodeleft->right = NULL;
-				// noderight->left = NULL;
-				// noderight->right = NULL;
 
 				res->m_color = c;
 				nodeleft->m_color = BLACK;
@@ -97,6 +93,8 @@ namespace	ft
 
 			node	*search_node(const key_type k) const {
 				node	*n = m_root();
+				if (m_count == 0)
+					return (NULL);
 				while (!n->leaf()) {
 					int	comp_result = m_comp(k, n->pair.first);
 					if (comp_result == false && !m_comp(n->pair.first, k))
@@ -110,13 +108,15 @@ namespace	ft
 			}
 
 			void 	replace_node(node *oldn, node *newn) {
-				if (oldn->parent == NULL)
+				if (oldn->parent == NULL){
 					m_parentNode->parent = newn;
-				else
+				}
+				else{
 					if (oldn == oldn->parent->left)
 						oldn->parent->left = newn;
 					else
 						oldn->parent->right = newn;
+				}
 				newn->parent = oldn->parent;
 			}
 
@@ -139,8 +139,6 @@ namespace	ft
 				L->right = n;
 				n->parent = L;
 			}
-
-		/*Insertion: https://iq.opengenus.org/red-black-tree-insertion/ */
 
 			pair<iterator, bool> 	insert(const value_type &p) {
 				node	*inserted_node = newNode(p, RED);
@@ -235,14 +233,12 @@ namespace	ft
 					left_rotate(n->grandparent());
 			}
 
-		/* Deletion: https://www.youtube.com/watch?v=eO3GzpCCUSg */
-
 			void 	delete_node(node *n) {
 				if (n == NULL || n->leaf())
 					return ;
 				color	n_color = n->m_color;
 				node	*replacement;
-				node	*x;
+				node	*token;
 
 				if (m_count == 1) {
 					delete_last(n);
@@ -250,38 +246,50 @@ namespace	ft
 				}
 				if (n == m_left()) {
 					m_parentNode->left = n->parent;
-					if (n == m_root())
-						m_parentNode->left = n->right;
+					if (n == m_root()){
+						if (!n->right->leaf())
+							m_parentNode->left = n->right;
+						else
+							m_parentNode->left = n->left;
+					}
 				}
 				else if (n == m_right()) {
 					m_parentNode->right = n->parent;
-					if (n == m_root())
-						m_parentNode->right = n->left;
+					if (n == m_root()){
+						if (!n->left->leaf())
+							m_parentNode->right = n->left;
+						else
+							m_parentNode->left = n->right;
+					
+					}
 				}
 
 				if (n->left->leaf() && n->right->leaf()) {
-					replacement = x = n->right;
+					replacement = n->right;
 					_alloc.destroy(n->left);
 					_alloc.deallocate(n->left, 1);
+					token = replacement;
 				}
 				else if (!n->left->leaf() && n->right->leaf()) {
-					replacement = x = n->left;
+					replacement = n->left;
 					_alloc.destroy(n->right);
 					_alloc.deallocate(n->right, 1);
+					token = replacement;
 				}
 				else if (!n->right->leaf() && n->left->leaf()) {
-					replacement = x = n->right;
+					replacement = n->right;
 					_alloc.destroy(n->left);
 					_alloc.deallocate(n->left, 1);
+					token = replacement;
 				}
 				else {
 					replacement = n->right;
 					while (!replacement->left->leaf())
 						replacement = replacement->left;
-					x = replacement->right;
+					token = replacement->right;
 				}
-				delete_and_replace(n, replacement, x);
-				initial_step2(replacement, x, n_color);
+				delete_and_replace(n, replacement, token);
+				redistrib(replacement, token, n_color);
 				m_count--;
 				if (m_count == 0) {
 					m_parentNode->left = m_parentNode;
@@ -303,13 +311,13 @@ namespace	ft
 				m_count--;
 			}
 
-			void 	delete_and_replace(node *n, node *replacement, node *x) {
-				if (replacement->leaf() && x->leaf())
+			void 	delete_and_replace(node *n, node *replacement, node *token) {
+				if (replacement->leaf() && token->leaf())
 					replace_node(n, replacement);
-				else if (replacement == x)
+				else if (replacement == token)
 					replace_node(n, replacement);
 				else {
-					replace_node(replacement, x);
+					replace_node(replacement, token);
 					replace_node(n, replacement);
 					_alloc.destroy(replacement->left);
 					_alloc.deallocate(replacement->left, 1);
@@ -322,7 +330,7 @@ namespace	ft
 				_alloc.deallocate(n, 1);
 			}
 
-			void 	initial_step2(node *replacement, node *x, color n_color) {
+			void 	redistrib(node *replacement, node *token, color n_color) {
 				if (n_color == RED) {
 					if (replacement->leaf() || replacement->m_color == RED)
 						return ;
@@ -333,54 +341,54 @@ namespace	ft
 					replacement->m_color = BLACK;
 					return ;
 				}
-				choose_case(x);
+				choose_case(token);
 			}
 
-			void 	choose_case(node *x) {
-				node	*w = x->sibling();
-				if (x->m_color == RED)
-					delete_case0(x);
+			void 	choose_case(node *token) {
+				node	*w = token->sibling();
+				if (token->m_color == RED)
+					delete_case0(token);
 				else if (w != NULL) {
 					if (w->m_color == RED)
-						delete_case1(x, w);
+						delete_case1(token, w);
 					else {
 						if (w->left->m_color == BLACK && w->right->m_color == BLACK)
-							delete_case2(x, w);
-						else if ((x == x->parent->left && w->right->m_color == RED)
-							|| (x == x->parent->right && w->left->m_color == RED))
-							delete_case4(x, w);
+							delete_case2(token, w);
+						else if ((token == token->parent->left && w->right->m_color == RED)
+							|| (token == token->parent->right && w->left->m_color == RED))
+							delete_case4(token, w);
 						else
-							delete_case3(x, w);
+							delete_case3(token, w);
 					}
 				}
 			}
 
-			void 	delete_case0(node *x) {
-				x->m_color = BLACK;
+			void 	delete_case0(node *token) {
+				token->m_color = BLACK;
 			}
 
-			void 	delete_case1(node *x, node *w) {
+			void 	delete_case1(node *token, node *w) {
 				w->m_color = BLACK;
-				x->parent->m_color = RED;
-				if (x == x->parent->left)
-					left_rotate(x->parent);
+				token->parent->m_color = RED;
+				if (token == token->parent->left)
+					left_rotate(token->parent);
 				else
-					right_rotate(x->parent);
-				choose_case(x);
+					right_rotate(token->parent);
+				choose_case(token);
 			}
 
-			void 	delete_case2(node *x, node *w) {
+			void 	delete_case2(node *token, node *w) {
 				w->m_color = RED;
-				x = x->parent;
-				if (x->m_color == RED)
-					x->m_color = BLACK;
+				token = token->parent;
+				if (token->m_color == RED)
+					token->m_color = BLACK;
 				else
-					choose_case(x);
+					choose_case(token);
 			}
 
-			void 	delete_case3(node *x, node *w) {
+			void 	delete_case3(node *token, node *w) {
 				w->m_color = RED;
-				if (x == x->parent->left) {
+				if (token == token->parent->left) {
 					w->left->m_color = BLACK;
 					right_rotate(w);
 				}
@@ -388,22 +396,20 @@ namespace	ft
 					w->right->m_color = BLACK;
 					left_rotate(w);
 				}
-				w = x->sibling();
-				delete_case4(x, w);
+				w = token->sibling();
+				delete_case4(token, w);
 			}
 
-			void 	delete_case4(node *x, node *w) {
-				w->m_color = x->parent->m_color;
-				x->parent->m_color = BLACK;
-				if (x == x->parent->left)
-				{
+			void 	delete_case4(node *token, node *w) {
+				w->m_color = token->parent->m_color;
+				token->parent->m_color = BLACK;
+				if (token == token->parent->left) {
 					w->right->m_color = BLACK;
-					left_rotate(x->parent);
+					left_rotate(token->parent);
 				}
-				else
-				{
+				else {
 					w->left->m_color = BLACK;
-					right_rotate(x->parent);
+					right_rotate(token->parent);
 				}
 			}
 
@@ -459,32 +465,32 @@ namespace	ft
 				node *n = search_node(key);
 
 				if (n == NULL)
-					return (end());
+					return end();
 				else
-					return (iterator(n, m_parentNode));
+					return iterator(n, m_parentNode);
 			}
 
 			const_iterator	find(const Key& key) const {
 				node *n = search_node(key);
 
 				if (n == NULL)
-					return (end());
+					return end();
 				else
-					return (const_iterator(n, m_parentNode));
+					return const_iterator(n, m_parentNode);
 			}
 
 			iterator		lower_bound(const Key& key) {
 				for (iterator it = begin(); it != end(); it++)
 					if (m_comp((*it).first, key) == false)
 						return (it);
-				return (end());
+				return end();
 			}
 
 			const_iterator	lower_bound(const Key& key) const {
 				for (const_iterator it = begin(); it != end(); it++)
 					if (m_comp((*it).first, key) == false)
 						return (it);
-				return (end());
+				return end();
 			}
 
 			iterator		upper_bound(const Key& key) {
@@ -495,7 +501,7 @@ namespace	ft
 						else
 							return (it);
 					}
-				return (end());
+				return end();
 			}
 
 			const_iterator		upper_bound(const Key& key) const {
@@ -506,7 +512,7 @@ namespace	ft
 						else
 							return (it);
 					}
-				return (end());
+				return end();
 			}
 
 			size_type		max_size() const {
@@ -531,9 +537,9 @@ namespace	ft
 				if (n->leaf())
 					std::cout << "L" << std::endl;
 				else if (n->m_color == BLACK)
-					std::cout << "\x1b[47m" << "\x1b[30m" << n->pair->first;
+					std::cout << "\x1b[47m" << "\x1b[30m" << n->pair.first;
 				else
-					std::cout << "\x1b[47m" << "\x1b[31m" << n->pair->first;
+					std::cout << "\x1b[47m" << "\x1b[31m" << n->pair.first;
 				std::cout << "\x1b[0m" << std::endl;
 				if (n->left != NULL)
 					print_tree_helper(n->left, indent + 4);
