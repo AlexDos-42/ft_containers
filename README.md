@@ -6,3 +6,7 @@
 <p align="right">
 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" width="40" height="40"/>
 </p>
+
+C++ containers, easy mode
+Summary: The multiple available containers in C++ all have very different usage. To
+make sure you understand them, let’s re-implement them!
